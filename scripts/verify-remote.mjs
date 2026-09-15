@@ -8,6 +8,6 @@ if (!url || !/^https:\/\//i.test(url)) {
 const command = process.platform === 'win32' ? 'npx.cmd' : 'npx';
 const child = spawn(command, ['playwright', 'test', '--config=playwright.remote.config.ts'], {
   stdio: 'inherit',
-  env: { ...process.env, REMOTE_BASE_URL: url.replace(/\/+$/, '') },
+  env: { ...process.env, REMOTE_BASE_URL: url.endsWith('/') ? url : url + '/' },
 });
 child.on('exit', code => process.exit(code ?? 1));

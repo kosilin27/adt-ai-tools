@@ -1,8 +1,9 @@
 export type Role = 'design'|'research'|'text';
 export type ToolStatus = 'ready'|'beta'|'development';
 export type ToolType = 'plugin'|'agent'|'bot'|'service'|'skill'|'workflow';
-import { ACTIONS_BY_NODE_ID, FIGMA_FILE_URL, TOOL_NODE_IDS, type ToolAction } from './figmaSource';
-export interface Tool { id:string; figmaNodeId?:string; title:string; shortDescription:string; problem?:string; whenToUse?:string; whatItDoes?:string; audiences:Role[]; categories:string[]; type:ToolType; status:ToolStatus; statusNote?:string; metrics?:{value:string;label:string}[]; impactTags:string[]; howToStart:string[]; authors:string[]; updatedAt:string; createdAt:string; relatedToolIds?:string[]; actions?:ToolAction[]; caseSource?:string; links?:{tool?:string;guide?:string;caseSource?:string}; featured?:boolean; }
+import { ACTIONS_BY_NODE_ID, FIGMA_FILE_URL, TOOL_NODE_IDS, type ToolAction } from './figmaSource.ts';
+import { FIGMA_CASE_BY_NODE_ID, type FigmaCaseSnapshot } from './figmaCasesSnapshot.ts';
+export interface Tool { id:string; figmaNodeId?:string; title:string; shortDescription:string; problem?:string; whenToUse?:string; whatItDoes?:string; audiences:Role[]; categories:string[]; type:ToolType; status:ToolStatus; statusNote?:string; metrics?:{value:string;label:string}[]; impactTags:string[]; howToStart:string[]; authors:string[]; updatedAt:string; createdAt:string; relatedToolIds?:string[]; actions?:ToolAction[]; caseSource?:string; links?:{tool?:string;guide?:string;caseSource?:string}; sourceRecord?:FigmaCaseSnapshot; sourceText?:string[]; sourceLinks?:string[]; sourceSection?:string; featured?:boolean; }
 const seedTools:Tool[] = [
 {id:'tov-editor',title:'TOV & text editor',shortDescription:'Checks interface copy against Avito standards and suggests edits.',problem:'Different wording and late editorial reviews create extra iterations and dilute the product voice.',whenToUse:'Use when you need to review or rewrite interface text before release.',whatItDoes:'A Figma plugin with the editorial policy, tone of voice and AI-assisted rewriting in context.',audiences:['design','text'],categories:['Text','Design review'],type:'plugin',status:'beta',statusNote:'Being tested with the team.',metrics:[{value:'−50%',label:'iterations after review'},{value:'+75%',label:'first-pass rate'}],impactTags:['Improve quality','Save time'],howToStart:['Open the plugin in Figma.','Select a frame with interface copy.','Run the check and review suggestions.'],authors:['Никита Мосолов · Артем Кучеров · Алексей Моторов · Георгий Раков · Амир Маликов'],updatedAt:'2026-09-08',createdAt:'2026-06-01',relatedToolIds:['typography-text','editorial-policy'],featured:true},
 {id:'typography-text',title:'Text typography',shortDescription:'Prepares text for development using Avito typography and editorial rules.',whenToUse:'Use when interface copy is ready to hand off and needs a final formatting check.',whatItDoes:'Switch between ready symbols or developer asterisks while keeping typography rules consistent.',audiences:['design','text'],categories:['Text','Design System'],type:'plugin',status:'beta',metrics:[{value:'4 sec',label:'instead of ~3 min'}],impactTags:['Save time','Improve quality'],howToStart:['Launch the plugin in Figma.','Select text layers.','Choose the handoff mode.'],authors:['Аня Акулова'],updatedAt:'2026-09-02',createdAt:'2026-05-20',relatedToolIds:['tov-editor','editorial-policy']},
@@ -41,43 +42,6 @@ const seedRu:Record<string,Partial<Tool>>={
   'research-skills':{shortDescription:'Каталог AI-скиллов и агентов, которые уже используются в исследованиях.',whenToUse:'Когда исследовательской задаче нужен готовый AI-сценарий.',whatItDoes:'Собирает skills, инструкции по установке и карту исследовательских агентов.'},
   'interview-analyzer':{shortDescription:'Кодирует транскрипты интервью и готовит отчёт с привязкой к доказательствам.',whenToUse:'Когда есть транскрипты и нужно найти паттерны, гипотезы и структуру отчёта.',whatItDoes:'Строит матрицу «респондент × задача», находит паттерны и связывает выводы с цитатами.'}
 };
-const linkOverrides:Record<string,{tool?:string;guide?:string;caseSource?:string}>={
-  'tov-editor':{tool:'https://www.figma.com/community/plugin/1621150885892028917'},
-  'text-version-control':{tool:'https://www.figma.com/community/plugin/1610550602787796018/textsync'},
-  'graphics-plugin':{tool:'https://www.figma.com/community/plugin/1638816840468168578'},
-  'competitor-agents':{tool:'https://cf.avito.ru/x/sDyaNQ'},
-  'cursor-csat':{tool:'https://cf.avito.ru/x/x2wmNg'},
-  'logo-resizer':{tool:'https://www.figma.com/community/plugin/1636333597458971823/re-logo-resizer'},
-  'vibe-code-hosting':{guide:'https://docs.k.avito.ru/service-paas-docs/genai/pages/use_cases/prototype_hosting/'},
-  'competency-matrix':{tool:'https://apakulova.github.io/skills-matrix/'},
-  'heuristic-screen-audit':{tool:'https://caxapoff.github.io/design_osmotr/'},
-  'classified-news':{tool:'https://t.me/classifiedsnews'},
-  'team-building-quiz':{tool:'https://teamquiz-production.up.railway.app'},
-  'akita-icon-generator':{tool:'https://www.figma.com/community/plugin/1628831664417940031'},
-  'akita-icons-validator':{tool:'https://www.figma.com/community/plugin/1629179776041025350'},
-  'component-regression':{guide:'https://cf.avito.ru/spaces/DS/pages/908478754/Regress'},
-  'component-spec-generator':{tool:'https://plato.k.avito.ru/skills/cd2ae6c4-c2f4-4371-826a-4c920a4d24a4'},
-  'akita-variables-export':{tool:'https://www.figma.com/community/plugin/1654863800712143195'},
-  atlas:{tool:'https://t.me/iidem_dalshe/309'},
-};
-export interface Idea { id:string; title:string; description:string; status?:'EXPLORING'|'LOOKING FOR OWNER'; owner?:string; }
-const sourceFigma='https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades';
-const legacyTools:Tool[]=seedTools.map(t=>({...t,...seedRu[t.id]})).concat(additionalTools).map(t=>({...t,links:{caseSource:sourceFigma,...(linkOverrides[t.id]||{})}}));
-const legacyIdeas:Idea[] = [{id:'backlog-enrichment',title:'Обогащение беклога',description:'Дополнять тикеты актуальной информацией и считать количество сигналов без привлечения команды саппорта.'}];
-
-function validateLegacyTools(dataset:Tool[]=legacyTools){
-  const ids=new Set<string>();
-  for(const tool of dataset){
-    if(ids.has(tool.id)) throw new Error(`Duplicate tool id: ${tool.id}`);
-    ids.add(tool.id);
-    const toolUrl=tool.links?.tool||'';
-    if(/figma\.com\/design\/nVLcu3bbLgz0lJhSUexjvx/i.test(toolUrl)) throw new Error(`Case source cannot be a tool URL: ${tool.id}`);
-    if(tool.links?.tool&&tool.links?.caseSource===tool.links.tool) throw new Error(`Tool and caseSource must differ: ${tool.id}`);
-  }
-  return true;
-}
-validateLegacyTools(legacyTools);
-
 const sourceIdByToolId:Record<string,string>={
  'tov-editor':'374:1509','typography-text':'2687:10311','graphics-plugin':'470:6413','confetti-shader':'3469:10852',
  'text-version-control':'374:5992','reviews':'374:3855','charts-plugin':'374:1651','logo-resizer':'374:10246','annotation-widget':'842:10794','stakeholder-approvals':'1971:9081','comments-system':'1862:8991','platform-reviewer':'842:11282',
@@ -95,27 +59,38 @@ const sourceIdByToolId:Record<string,string>={
  'guide-builder':'4108:12334','brief-audit':'4108:12451','methodology-planner':'4108:12568','voc-report-generator':'4108:12685',
  'synthetic-respondents':'4108:12802','survey-alert-bot':'4108:12919','uxf-bundle':'5003:15213'
 };
+Object.assign(sourceIdByToolId,{
+ 'editorial-policy':'3469:10969','stiletto-bot':'374:7695','video-to-json':'2988:9922','lottie-prompt':'374:7207',
+ 'feedback-service':'374:1580','real-content':'374:7451','research-skills':'374:8305','interview-analyzer':'3188:10318',
+ 'script-tov-check':'374:614','design-review-auto':'2988:9842','visual-search':'374:3761','safe-json-handoff':'374:8061',
+ 'similar-layouts':'842:10306','edge-case-generator':'842:10672','figma-production-map':'2465:9156','cjm-tech-stack':'2466:9226',
+ 'platform-consistency':'374:9880','reminder-coordinator':'4108:11866','research-report-skill':'4108:12100'
+});
 const extraTools:Tool[]=[
  x('text-editor-legacy','Figma плагин для редактуры текста','Плагин для работы с текстами и редакционной политикой.',['design','text'],['Text'],'plugin','beta','374:7329'),
  x('ai-editor-development','Развитие и тестирование AI-редактора','Развитие внутреннего AI-редактора текстов.',['text'],['Text'],'agent','development','374:5594'),
  x('backlog-enrichment','Обогащение беклога','Дополняет тикеты актуальной информацией и помогает считать сигналы.',['research'],['Research','Automation'],'workflow','ready','374:10002'),
  x('ai-prototyping','AI-прототипирование','Создаёт прототипы для тестирования.',['design','research'],['Prototyping'],'plugin','ready','374:9636')
 ];
-const reserved=new Set(extraTools.map(t=>t.figmaNodeId||''));
-const used=new Set(Object.values(sourceIdByToolId));
-const fallbackIds=TOOL_NODE_IDS.filter(id=>!used.has(id)&&!reserved.has(id));
-let fallbackIndex=0;
-const normalizedBase=seedTools.map(t=>({...t,...seedRu[t.id]})).concat(additionalTools).map(tool=>{
-  const figmaNodeId=sourceIdByToolId[tool.id]||fallbackIds[fallbackIndex++];
-  return {...tool,figmaNodeId,actions:ACTIONS_BY_NODE_ID[figmaNodeId]||[],caseSource:FIGMA_FILE_URL+'?node-id='+figmaNodeId.replace(':','-')};
+const explicitNodeIdByToolId:Record<string,string>={...sourceIdByToolId};
+for(const tool of extraTools){ if(!tool.figmaNodeId) throw new Error(`Missing explicit Figma node ID: ${tool.id}`); explicitNodeIdByToolId[tool.id]=tool.figmaNodeId; }
+const productTools=seedTools.map(t=>({...t,...seedRu[t.id]})).concat(additionalTools);
+const normalizedTools=[...productTools,...extraTools].map(tool=>{
+  const figmaNodeId=explicitNodeIdByToolId[tool.id];
+  if(!figmaNodeId) throw new Error(`Missing explicit Figma node mapping: ${tool.id}`);
+  const sourceRecord=FIGMA_CASE_BY_NODE_ID[figmaNodeId];
+  if(!sourceRecord) throw new Error(`Unknown Figma node mapping: ${tool.id} -> ${figmaNodeId}`);
+  return {...tool,links:undefined,figmaNodeId,title:sourceRecord.title,sourceRecord,sourceText:sourceRecord.sourceText,sourceLinks:sourceRecord.sourceLinks,sourceSection:sourceRecord.section,actions:ACTIONS_BY_NODE_ID[figmaNodeId]||[],caseSource:FIGMA_FILE_URL+'?node-id='+figmaNodeId.replace(':','-')};
 });
-export const tools:Tool[]=[...normalizedBase,...extraTools].map(tool=>({...tool,actions:ACTIONS_BY_NODE_ID[tool.figmaNodeId||'']||tool.actions||[],caseSource:FIGMA_FILE_URL+'?node-id='+(tool.figmaNodeId||'').replace(':','-')}));
+export const tools:Tool[]=normalizedTools;
 export function validateTools(dataset:Tool[]=tools){
   const ids=dataset.map(tool=>tool.figmaNodeId||'');
   if(dataset.length!==85) throw new Error('Expected 85 tools, got '+dataset.length);
   if(new Set(ids).size!==ids.length) throw new Error('Duplicate Figma node ID');
   if(ids.some(id=>!TOOL_NODE_IDS.includes(id))||TOOL_NODE_IDS.some(id=>!ids.includes(id))) throw new Error('Tool node IDs do not match source snapshot');
   for(const tool of dataset){
+    if(!tool.figmaNodeId||!FIGMA_CASE_BY_NODE_ID[tool.figmaNodeId]) throw new Error('Missing source record: '+tool.id);
+    if(tool.title!==FIGMA_CASE_BY_NODE_ID[tool.figmaNodeId].title) throw new Error('Title mismatch: '+tool.figmaNodeId);
     const expected=ACTIONS_BY_NODE_ID[tool.figmaNodeId||'']||[];
     if(JSON.stringify(tool.actions||[])!==JSON.stringify(expected)) throw new Error('Action mismatch: '+tool.figmaNodeId);
     if((tool.actions||[]).filter(action=>action.primary).length>1) throw new Error('Multiple primary actions: '+tool.figmaNodeId);

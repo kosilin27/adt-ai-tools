@@ -8,6 +8,7 @@ const auditPath = 'test-results/catalog-audit.json';
 const caseSource = (id: string) => 'https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades?node-id=' + id.replace(':', '-');
 const detailUrl = (tool: Tool) => 'tool/' + tool.id;
 const primaryFor = (tool: Tool) => (tool.actions || []).find(action => action.primary);
+const tovTitle = 'Плагин-редактор в Figma с оценкой текста на соответствие корпоративным стандартам (TOV и редполитика), реадактирование на основе ИИ';
 
 test.beforeAll(async () => {
   validateTools(tools);
@@ -25,8 +26,8 @@ test('catalog smoke flow keeps tools, Ideas, search and filters', async ({ page 
   await expect(page.getByText('NEW THIS MONTH')).toHaveCount(0);
   await expect(page.getByText('6 new this month')).toHaveCount(0);
   await expect(page.getByText('See what\'s new')).toHaveCount(0);
-  await page.locator('#catalog-search').fill('TOV & text editor');
-  await expect(page.getByRole('heading', { name: 'TOV & text editor', exact: true }).first()).toBeVisible();
+  await page.locator('#catalog-search').fill('TOV и редполитика');
+  await expect(page.getByRole('heading', { name: tovTitle, exact: true }).first()).toBeVisible();
   await page.locator('#catalog-search').fill('query-that-cannot-match');
   await expect(page.getByText('Ничего не нашли.')).toBeVisible();
   await page.getByRole('button', { name: 'Сбросить всё' }).click();
@@ -55,7 +56,7 @@ test('intent filters are semantic and shareable', async ({ page }) => {
 
 test('favorites persist, do not open cards, and filter independently', async ({ page }) => {
   await page.goto('');
-  const card = page.locator('#catalog .tool-card').filter({ has: page.getByRole('heading', { name: 'TOV & text editor', exact: true }) });
+  const card = page.locator('#catalog .tool-card').filter({ has: page.getByRole('heading', { name: tovTitle, exact: true }) });
   const star = card.locator('.favorite');
   await star.click();
   await expect(star).toHaveAttribute('aria-pressed', 'true');
@@ -103,6 +104,27 @@ test('TOV editor uses the live Figma primary action', async ({ page }) => {
   await expect(cta).toHaveAttribute('href', 'https://www.figma.com/community/plugin/1621150885892028917');
   await expect(cta).toHaveAttribute('target', '_blank');
   await expect(page.locator('.case-source a')).toHaveAttribute('href', caseSource('374:1509'));
+});
+
+test('canonical source titles and aliases remain searchable', async ({ page }) => {
+  await page.goto('');
+  const cases = [
+    ['Анализатор качественных интервью', 'Анализатор качественных интервью (qual-interview-analyzer)'],
+    ['qual-interview-analyzer', 'Анализатор качественных интервью (qual-interview-analyzer)'],
+    ['Анализатор количественных опросов', 'Анализатор количественных опросов (quant-survey-analyzer)'],
+    ['quant-survey-analyzer', 'Анализатор количественных опросов (quant-survey-analyzer)'],
+    ['Конструктор исследовательских инструментов', 'Конструктор исследовательских инструментов (guide-builder)'],
+    ['guide-builder', 'Конструктор исследовательских инструментов (guide-builder)'],
+    ['эвристик', 'AI для проведения анализа экранов по эвристическому методу (исследование)'],
+    ['Figma плагин для редактуры текста', 'Figma плагин для редактуры текста'],
+    ['Развитие и тестирование AI-редактора', 'Развитие и тестирование AI-редактора'],
+    ['Автоматическая проверка скриптов КЦ', 'Автоматическая проверка скриптов КЦ по ТоВ и редполитике'],
+    ['Система комментарирования', 'Система комментарирования и отслеживания комментариев редакторов'],
+  ];
+  for (const [query, title] of cases) {
+    await page.locator('#catalog-search').fill(query);
+    await expect(page.getByRole('heading', { name: title, exact: true }).first()).toBeVisible();
+  }
 });
 
 test('full source snapshot to UI actions audit', async ({ page, context }) => {
@@ -162,11 +184,11 @@ test('full source snapshot to UI actions audit', async ({ page, context }) => {
 
 test('keyboard detail routing regression', async ({ page }) => {
   await page.goto('');
-  const card = page.locator('#catalog .tool-card').filter({ has: page.getByRole('heading', { name: 'TOV & text editor', exact: true }) });
+  const card = page.locator('#catalog .tool-card').filter({ has: page.getByRole('heading', { name: tovTitle, exact: true }) });
   await card.focus();
   await card.press('Enter');
   await expect(page).toHaveURL(/\/tool\/tov-editor$/);
-  await expect(page.getByRole('dialog', { name: 'TOV & text editor' })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: tovTitle })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page).toHaveURL(/\/$/);
 });

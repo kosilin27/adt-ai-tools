@@ -1032,7 +1032,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "sourceLinks": [
       "https://avikot.k.avito.ru/"
     ],
-    "section": "Коммуникация / Боты"
+    "section": "Оптимизация процессов"
   },
   {
     "figmaNodeId": "3469:11086",

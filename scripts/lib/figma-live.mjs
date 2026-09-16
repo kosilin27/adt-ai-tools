@@ -68,15 +68,11 @@ export function parseToolsFrame(frame) {
     const title = directText(child, 'Проект')?.characters?.trim();
     if (title === 'Проект') continue;
     if (!title) throw new Error(`Unable to parse title for row ${child.id}`);
-    const statusNode = namedNode(child, '31');
-    const audienceNode = namedNode(child, '32');
     rows.push({
       figmaNodeId: child.id,
       title: normalizeText(title),
       sourceText: text,
       sourceLinks: linksFrom(child).map(link => link.url),
-      ...(statusNode ? { sourceStatusValues: textNodes(statusNode).map(item => normalizeText(item.characters)).filter(Boolean) } : {}),
-      ...(audienceNode ? { audienceValues: textNodes(audienceNode).map(item => normalizeText(item.characters)).filter(Boolean) } : {}),
       section: normalizeText(section),
     });
   }
@@ -109,7 +105,8 @@ export function diffSnapshots(before, after, expectedIds) {
   for (const row of after) if (!expected.has(row.figmaNodeId)) unsafe.push({ nodeId: row.figmaNodeId, field: 'figmaNodeId', classification: 'unsafe-unknown-row' });
   const orderChanged = before.map(row => row.figmaNodeId).join('|') !== after.map(row => row.figmaNodeId).join('|');
   if (orderChanged && !added.length && !removed.length) unsafe.push({ nodeId: '', field: 'row-order', classification: 'safe-order-change' });
-  return { changed, added, removed, duplicateIds, unsafe, orderChanged, hasChanges: changed.length > 0 || added.length > 0 || removed.length > 0 || duplicateIds.length > 0 || orderChanged };
+  const structuralChanges = added.length > 0 || removed.length > 0 || duplicateIds.length > 0 || orderChanged || unsafe.some(item => !String(item.classification).startsWith('safe-'));
+  return { changed, added, removed, duplicateIds, unsafe, orderChanged, hasChanges: structuralChanges };
 }
 
 export function formatDiff(diff) {

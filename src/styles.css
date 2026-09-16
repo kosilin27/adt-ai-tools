@@ -74,3 +74,8 @@
 @media(max-width:800px){.control-row{gap:14px;flex-wrap:wrap}.control-row .roles{order:1;width:100%;overflow:auto;gap:16px}.favorites-toggle,.filter-button{order:2}.filter-panel{position:fixed;left:20px;right:20px;top:auto;bottom:20px;width:auto}.filter-panel.is-sticky{top:auto;right:20px}.filter-panel select{min-width:150px}.sticky-toolbar{padding:9px 20px}.sticky-toolbar .toolbar-controls{display:block}.sticky-toolbar .search-input{width:100%;margin-bottom:7px}.sticky-toolbar .control-row{display:flex;flex-wrap:nowrap}.sticky-toolbar .control-row .roles{width:auto;overflow:auto;flex-wrap:nowrap}.sticky-toolbar .control-row .roles>span{display:none}.sticky-toolbar .roles button{font-size:13px}.sticky-toolbar .favorites-toggle,.sticky-toolbar .filter-button{font-size:11px}.intent-row{gap:12px}.status-group{margin-top:38px}.card-metric{margin-top:14px}.sheet-title-row .favorite{margin-top:10px}.case-details{margin-top:22px}.section-head{display:block}.section-head>.result-count{display:block;margin-top:14px}}
 .sheet h2{overflow-wrap:break-word}
 @media(max-width:800px){.sheet h2{font-size:clamp(2.5rem,11vw,4rem);line-height:.88}}
+@font-face{font-family:AvitoDisplay;src:local(Arial)}
+@font-face{font-family:AvitoText;src:local(Arial)}
+@font-face{font-family:AvitoMono;src:local("Courier New")}
+.sheet h2{overflow-wrap:break-word}
+@media(max-width:800px){.sheet h2{font-size:clamp(2.5rem,11vw,4rem);line-height:.88}}

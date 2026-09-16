@@ -60,7 +60,7 @@
 .sticky-toolbar .roles button{font-size:14px}
 .sticky-toolbar-spacer{height:55px}
 .sheet-title-row{display:flex;align-items:flex-start;gap:16px}
-.sheet-title-row h2{flex:1;margin-bottom:0}
+.sheet-title-row h2{flex:1;min-width:0;margin-bottom:0;overflow-wrap:break-word}
 .sheet-title-row .favorite{color:#555;margin-top:17px;font-size:28px}
 .sheet-title-row .favorite.is-favorite{color:#111}
 .detail-secondary-copy{margin-top:14px!important;color:#555}
@@ -72,3 +72,5 @@
 .idea-card .idea-owner{margin-top:6px}
 .idea-card>a{display:block;margin-top:auto;padding-top:20px;font:12px AvitoMono;text-decoration:underline;text-underline-offset:4px}
 @media(max-width:800px){.control-row{gap:14px;flex-wrap:wrap}.control-row .roles{order:1;width:100%;overflow:auto;gap:16px}.favorites-toggle,.filter-button{order:2}.filter-panel{position:fixed;left:20px;right:20px;top:auto;bottom:20px;width:auto}.filter-panel.is-sticky{top:auto;right:20px}.filter-panel select{min-width:150px}.sticky-toolbar{padding:9px 20px}.sticky-toolbar .toolbar-controls{display:block}.sticky-toolbar .search-input{width:100%;margin-bottom:7px}.sticky-toolbar .control-row{display:flex;flex-wrap:nowrap}.sticky-toolbar .control-row .roles{width:auto;overflow:auto;flex-wrap:nowrap}.sticky-toolbar .control-row .roles>span{display:none}.sticky-toolbar .roles button{font-size:13px}.sticky-toolbar .favorites-toggle,.sticky-toolbar .filter-button{font-size:11px}.intent-row{gap:12px}.status-group{margin-top:38px}.card-metric{margin-top:14px}.sheet-title-row .favorite{margin-top:10px}.case-details{margin-top:22px}.section-head{display:block}.section-head>.result-count{display:block;margin-top:14px}}
+.sheet h2{overflow-wrap:break-word}
+@media(max-width:800px){.sheet h2{font-size:clamp(2.5rem,11vw,4rem);line-height:.88}}

@@ -22,21 +22,78 @@ test('catalog smoke flow keeps tools, Ideas, search and filters', async ({ page 
   await expect(page.getByRole('heading', { name: 'AI TOOLS THAT WORK' })).toBeVisible();
   await expect(page.locator('#catalog .tool-card')).toHaveCount(85);
   await expect(page.locator('#ideas .idea-card')).toHaveCount(13);
-  await expect(page.getByText('Обогащение беклога', { exact: true })).toBeVisible();
-  await page.getByLabel('Что хотите сделать?').fill('TOV & text editor');
+  await expect(page.getByText('NEW THIS MONTH')).toHaveCount(0);
+  await expect(page.getByText('6 new this month')).toHaveCount(0);
+  await expect(page.getByText('See what\'s new')).toHaveCount(0);
+  await page.locator('#catalog-search').fill('TOV & text editor');
   await expect(page.getByRole('heading', { name: 'TOV & text editor', exact: true }).first()).toBeVisible();
-  await page.getByLabel('Что хотите сделать?').fill('query-that-cannot-match');
-  await expect(page.getByText('No tools match this search.')).toBeVisible();
-  await page.getByRole('button', { name: 'Clear all filters' }).click();
+  await page.locator('#catalog-search').fill('query-that-cannot-match');
+  await expect(page.getByText('Ничего не нашли.')).toBeVisible();
+  await page.getByRole('button', { name: 'Сбросить всё' }).click();
   await expect(page.locator('#catalog .tool-card')).toHaveCount(85);
   for (const role of ['Дизайн', 'Исследования', 'Текст']) {
-    await page.locator('.roles').getByRole('button', { name: role, exact: true }).click();
+    await page.locator('.search-wrap .roles').getByRole('button', { name: role, exact: true }).click();
     await expect(page.locator('#catalog .tool-card').first()).toBeVisible();
   }
-  for (const status of ['READY', 'BETA', 'IN DEVELOPMENT']) {
-    await page.getByLabel('Статус').selectOption({ label: status });
-    await expect(page.locator('.tool-card').first()).toBeVisible();
-  }
+  await page.getByRole('button', { name: 'Фильтры' }).click();
+  await expect(page.getByRole('dialog', { name: 'Фильтры' })).toBeVisible();
+  await page.getByLabel('Статус').selectOption('ready');
+  await expect(page).toHaveURL(/status=ready/);
+  await page.getByRole('button', { name: /Фильтры/ }).click();
+});
+
+test('intent filters are semantic and shareable', async ({ page }) => {
+  await page.goto('');
+  await page.getByRole('button', { name: /Сделать прототип/ }).click();
+  await expect(page).toHaveURL(/intent=prototype/);
+  await expect(page.locator('.active-intent')).toContainText('Сделать прототип');
+  await expect(page.locator('#catalog .tool-card')).not.toHaveCount(85);
+  await page.getByRole('button', { name: /Автоматизировать/ }).click();
+  await expect(page).toHaveURL(/intent=automate/);
+  await expect(page.locator('.intent-row button.active')).toHaveCount(1);
+});
+
+test('favorites persist, do not open cards, and filter independently', async ({ page }) => {
+  await page.goto('');
+  const card = page.locator('#catalog .tool-card').filter({ has: page.getByRole('heading', { name: 'TOV & text editor', exact: true }) });
+  const star = card.locator('.favorite');
+  await star.click();
+  await expect(star).toHaveAttribute('aria-pressed', 'true');
+  await expect(page).not.toHaveURL(/\/tool\//);
+  await page.locator('.search-wrap .favorites-toggle').click();
+  await expect(page.locator('#catalog .tool-card')).toHaveCount(1);
+  await page.reload();
+  await expect(page.locator('.search-wrap .favorites-toggle')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#catalog .tool-card')).toHaveCount(85);
+});
+
+test('status groups stay ordered and shortcut focuses active search', async ({ page }) => {
+  await page.goto('');
+  await page.keyboard.press('Meta+k');
+  await expect(page.locator('#catalog-search')).toBeFocused();
+  const groups = page.locator('.status-group');
+  await expect(groups).toHaveCount(3);
+  await expect(groups.nth(0)).toHaveClass(/status-group-ready/);
+  await expect(groups.nth(1)).toHaveClass(/status-group-beta/);
+  await expect(groups.nth(2)).toHaveClass(/status-group-development/);
+  await page.evaluate(() => window.scrollTo(0, 1200));
+  await expect(page.locator('.sticky-toolbar')).toBeVisible();
+  await page.keyboard.press('Meta+k');
+  await expect(page.locator('#sticky-catalog-search')).toBeFocused();
+});
+
+test('mobile catalog keeps controls, drawer and detail usable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBeTruthy();
+  await page.evaluate(() => window.scrollTo(0, 1200));
+  await expect(page.locator('.sticky-toolbar')).toBeVisible();
+  await page.locator('.sticky-toolbar .filter-button').click();
+  await expect(page.getByRole('dialog', { name: 'Фильтры' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.locator('#catalog .tool-card').first().click();
+  await expect(page.getByRole('dialog').last()).toBeVisible();
+  await expect(page.getByRole('dialog').last()).toHaveCSS('width', '390px');
 });
 
 test('TOV editor uses the live Figma primary action', async ({ page }) => {

@@ -7,9 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "verify": "npm run build && npm run verify:figma-parity && playwright test",
+    "verify": "npm run test:figma-sync && npm run build && npm run verify:figma-parity && playwright test",
     "verify:figma-parity": "node --experimental-strip-types scripts/verify-figma-parity.mjs",
-    "verify:remote": "node scripts/verify-remote.mjs"
+    "verify:remote": "node scripts/verify-remote.mjs",
+    "sync:figma": "node --experimental-strip-types scripts/sync-figma.mjs",
+    "check:figma-live": "node --experimental-strip-types scripts/sync-figma.mjs --check",
+    "test:figma-sync": "node scripts/test-figma-live.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

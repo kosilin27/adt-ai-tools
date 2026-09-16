@@ -1,0 +1,63 @@
+name: Sync Figma
+
+on:
+  schedule:
+    - cron: '5 17 * * *'
+      timezone: 'Europe/Moscow'
+  workflow_dispatch:
+
+concurrency:
+  group: adt-figma-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Sync live Figma
+        id: sync
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+        run: npm run sync:figma
+      - name: Upload sync report
+        if: always() && steps.sync.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: figma-sync-report
+          path: test-results/figma-sync-diff.*
+          if-no-files-found: ignore
+      - name: Verify, build and E2E
+        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+        run: npm run verify
+      - name: Commit and push source
+        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+        run: |
+          if git diff --quiet; then echo 'No source changes to commit.'; exit 0; fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/data/figmaCasesSnapshot.ts
+          git commit -m "chore: sync catalog from Figma"
+          git push origin main
+      - name: Deploy GitHub Pages
+        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+        run: |
+          git fetch origin gh-pages
+          rm -rf /tmp/adt-gh-pages
+          git worktree add --detach /tmp/adt-gh-pages origin/gh-pages
+          rsync -a --delete --exclude=.git dist/ /tmp/adt-gh-pages/
+          touch /tmp/adt-gh-pages/.nojekyll
+          git -C /tmp/adt-gh-pages add -A
+          git -C /tmp/adt-gh-pages commit -m "Deploy Figma-synced catalog" || true
+          git -C /tmp/adt-gh-pages push origin HEAD:gh-pages
+      - name: Remote QA
+        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+        run: npm run verify:remote -- https://kosilin27.github.io/adt-ai-tools/

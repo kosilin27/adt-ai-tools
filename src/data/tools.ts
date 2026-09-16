@@ -47,7 +47,7 @@ const sourceIdByToolId:Record<string,string>={
  'text-version-control':'374:5992','reviews':'374:3855','charts-plugin':'374:1651','logo-resizer':'374:10246','annotation-widget':'842:10794','stakeholder-approvals':'1971:9081','comments-system':'1862:8991','platform-reviewer':'842:11282',
  'day-of-judgement-machine':'374:9026','vibe-code-hosting':'2687:10083','ux-research-hub':'3469:10501','library-refresh':'842:11160',
  'stiletto-slides':'4734:14155','task-decomposer':'842:11038','figma-prototype-builder':'3712:11319','competency-matrix':'2687:10197',
- 'bootcamp-review-bot':'3469:11086','sync-critique':'2687:9969','briefolog':'3575:11190','mattermost-digest':'374:3577',
+ 'bootcamp-review-bot':'3469:11086','sync-critique':'2687:9969','avikot-review-extension':'5084:13751','briefolog':'3575:11190','mattermost-digest':'374:3577',
  'adt-training-app':'374:10612','respondent-exporter':'374:8660','survey-structurer':'374:8904','research-report-reviewer':'374:9392','research-copy-editor':'842:10550',
  'briefing-assistant':'469:8077','cursor-csat':'374:9758','competitor-agents':'374:10124','gate-okr-docs':'2577:9936',
  'ai-backlog':'2589:10131','production-copy-agent':'842:9940','heuristic-screen-audit':'374:5779','classified-news':'3469:10618',
@@ -70,7 +70,8 @@ const extraTools:Tool[]=[
  x('text-editor-legacy','Figma плагин для редактуры текста','Плагин для работы с текстами и редакционной политикой.',['design','text'],['Text'],'plugin','beta','374:7329'),
  x('ai-editor-development','Развитие и тестирование AI-редактора','Развитие внутреннего AI-редактора текстов.',['text'],['Text'],'agent','development','374:5594'),
  x('backlog-enrichment','Обогащение беклога','Дополняет тикеты актуальной информацией и помогает считать сигналы.',['research'],['Research','Automation'],'workflow','ready','374:10002'),
- x('ai-prototyping','AI-прототипирование','Создаёт прототипы для тестирования.',['design','research'],['Prototyping'],'plugin','ready','374:9636')
+ x('ai-prototyping','AI-прототипирование','Создаёт прототипы для тестирования.',['design','research'],['Prototyping'],'plugin','ready','374:9636'),
+ x('avikot-review-extension','Авикот — Расширение для быстрого дизайн-ревью сайтов в контуре Авито (авторизация, совместные комменты, уведосления ММ)','',['design'],['Design review'],'service','ready','5084:13751')
 ];
 const explicitNodeIdByToolId:Record<string,string>={...sourceIdByToolId};
 for(const tool of extraTools){ if(!tool.figmaNodeId) throw new Error(`Missing explicit Figma node ID: ${tool.id}`); explicitNodeIdByToolId[tool.id]=tool.figmaNodeId; }
@@ -85,7 +86,7 @@ const normalizedTools=[...productTools,...extraTools].map(tool=>{
 export const tools:Tool[]=normalizedTools;
 export function validateTools(dataset:Tool[]=tools){
   const ids=dataset.map(tool=>tool.figmaNodeId||'');
-  if(dataset.length!==85) throw new Error('Expected 85 tools, got '+dataset.length);
+  if(dataset.length!==86) throw new Error('Expected 86 tools, got '+dataset.length);
   if(new Set(ids).size!==ids.length) throw new Error('Duplicate Figma node ID');
   if(ids.some(id=>!TOOL_NODE_IDS.includes(id))||TOOL_NODE_IDS.some(id=>!ids.includes(id))) throw new Error('Tool node IDs do not match source snapshot');
   for(const tool of dataset){

@@ -28,12 +28,12 @@ const announcementOnly = tools.filter(tool => (tool.actions || []).length > 0 &&
 const sourceMismatch = tools.filter(tool => JSON.stringify(tool.actions || []) !== JSON.stringify(ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || [])).length;
 const fallbackMappings = /fallback|fallbackIds|fallbackIndex/i.test(readFileSync(new URL('../src/data/tools.ts', import.meta.url), 'utf8')) ? 1 : 0;
 const checks = {
-  'FIGMA ROWS': `${FIGMA_CASES_SNAPSHOT.length} / 85`,
-  'EXACT TITLE MATCH': `${rows.filter(row => row.titleMatch).length} / 85`,
-  'EXPLICIT NODE MAPPING': `${[...expected].filter(id => actual.has(id)).length} / 85`,
-  'SOURCE LINK MATCH': `${rows.filter(row => row.linksMatch).length} / 85`,
-  'SOURCE STATUS MATCH': `${rows.filter(row => row.statusMatch).length} / 85`,
-  'SOURCE AUTHORS MATCH': `${rows.filter(row => row.authorsMatch).length} / 85`,
+  'FIGMA ROWS': `${FIGMA_CASES_SNAPSHOT.length} / 86`,
+  'EXACT TITLE MATCH': `${rows.filter(row => row.titleMatch).length} / 86`,
+  'EXPLICIT NODE MAPPING': `${[...expected].filter(id => actual.has(id)).length} / 86`,
+  'SOURCE LINK MATCH': `${rows.filter(row => row.linksMatch).length} / 86`,
+  'SOURCE STATUS MATCH': `${rows.filter(row => row.statusMatch).length} / 86`,
+  'SOURCE AUTHORS MATCH': `${rows.filter(row => row.authorsMatch).length} / 86`,
   'ORPHAN CATALOG TOOLS': tools.filter(tool => !expected.has(tool.figmaNodeId || '')).length,
   'ORPHAN FIGMA ROWS': TOOL_NODE_IDS.filter(id => !actual.has(id)).length,
   'FALLBACK MAPPINGS': fallbackMappings,
@@ -44,7 +44,7 @@ const checks = {
   'IDEAS': IDEA_NODE_IDS.length,
 };
 const failed = Object.entries(checks).filter(([key, value]) => {
-  if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH') return value !== '85 / 85';
+  if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH') return value !== '86 / 86';
   return ['ORPHAN CATALOG TOOLS','ORPHAN FIGMA ROWS','FALLBACK MAPPINGS','FIELD PARITY ERRORS'].includes(key) ? value !== 0 : false;
 });
 mkdirSync('test-results', { recursive: true });

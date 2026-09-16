@@ -59,7 +59,7 @@ export function parseToolsFrame(frame) {
   let section = '';
   for (const child of frame.children || []) {
     const direct = textNodes(child);
-    if (child.type !== 'INSTANCE' || child.name !== 'Cell') {
+    if (child.name !== 'Cell') {
       const heading = direct.map(text => normalizeText(text.characters)).find(value => value && !/^[-–—]$/.test(value));
       if (heading && child.type !== 'INSTANCE') section = heading;
       continue;

@@ -27,7 +27,7 @@ export const ACTIONS_BY_NODE_ID:Record<string,ToolAction[]>= {
  '2687:9969':[a('tool','Открыть инструмент','https://caxapoff.github.io/design_osmotr/',true)],
  '3575:11190':[a('tool','Открыть брифолог','https://llm.k.avito.ru/project/afb0e117-1315-4d54-834a-9d0adffc14ce',true)],
  '842:10550':[a('chat','Открыть редактор','https://chatgpt.com/g/g-6900c234c8c88191ad9e2d7daf38e418-ruchnoi-redaktor-dlia-issledovatelei',true)],
- '374:5779':[a('chat','Открыть UX-аудит','https://chatgpt.com/g/g-68ee5b25ffd481919f78683f6a2bc5bc-ux-audit/c/69e779af-7aa8-8324-a120-3e51ef08c598',true)],
+ '374:5779':[a('chat','Открыть UX-аудит','https://chatgpt.com/g/g-68ee5b25ffd481919f78683f6a2bc5bc-ux-audit/c/69e779af-7aa8-8324-a120-3e51ef08c598',true),a('guide','Открыть исследование','https://arxiv.org/pdf/2507.02306')],
  '3469:10618':[a('channel','Открыть канал','https://t.me/classifiedsnews',true)],
  '3469:10735':[a('tool','Открыть квиз','https://teamquiz-production.up.railway.app',true)],
  '842:10184':[a('tool','Открыть плагин','https://www.figma.com/community/plugin/1628831664417940031',true)],
@@ -39,7 +39,17 @@ export const ACTIONS_BY_NODE_ID:Record<string,ToolAction[]>= {
  '2957:9843':[a('tool','Открыть плагин','https://www.figma.com/community/plugin/1643602237421717731',true)],
  '4996:14045':[a('announcement','Посмотреть анонс','https://t.me/iidem_dalshe/309')],
  '4996:13925':[a('announcement','Посмотреть анонс','https://t.me/iidem_dalshe/309')],
- '5084:13751':[a('tool','Открыть инструмент','https://avikot.k.avito.ru/',true)]
+ '5084:13751':[a('tool','Открыть инструмент','https://avikot.k.avito.ru/',true)],
+ '4108:11983':[a('tool','Открыть каталог скиллов','https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html',true),a('guide','Открыть документацию','https://cf.avito.ru/x/NCkSNQ')],
+ '4108:12100':[a('tool','Открыть каталог скиллов','https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html',true),a('guide','Открыть документацию','https://cf.avito.ru/x/NCkSNQ')],
+ '4108:12217':[a('tool','Открыть каталог скиллов','https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html',true),a('guide','Открыть документацию','https://cf.avito.ru/x/NCkSNQ')],
+ '4108:12334':[a('tool','Открыть каталог скиллов','https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html',true),a('guide','Открыть документацию','https://cf.avito.ru/x/NCkSNQ')],
+ '4108:12451':[a('tool','Открыть каталог скиллов','https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html',true),a('guide','Открыть документацию','https://cf.avito.ru/x/NCkSNQ')],
+ '4108:12568':[a('tool','Открыть каталог скиллов','https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html',true),a('guide','Открыть документацию','https://cf.avito.ru/x/NCkSNQ')],
+ '4108:12685':[a('tool','Открыть каталог скиллов','https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html',true),a('guide','Открыть документацию','https://cf.avito.ru/x/NCkSNQ')],
+ '4108:11866':[a('guide','Открыть описание','https://cf.avito.ru/x/NlbbOw')],
+ '374:9758':[a('guide','Открыть описание','https://cf.avito.ru/x/x2wmNg')],
+ '374:10124':[a('guide','Открыть описание','https://cf.avito.ru/x/sDyaNQ')],
 };
 
 export function validateSourceSnapshot(){

@@ -81,7 +81,9 @@ const normalizedTools=[...productTools,...extraTools].map(tool=>{
   if(!figmaNodeId) throw new Error(`Missing explicit Figma node mapping: ${tool.id}`);
   const sourceRecord=FIGMA_CASE_BY_NODE_ID[figmaNodeId];
   if(!sourceRecord) throw new Error(`Unknown Figma node mapping: ${tool.id} -> ${figmaNodeId}`);
-  return {...tool,links:undefined,figmaNodeId,title:sourceRecord.title,sourceRecord,sourceText:sourceRecord.sourceText,sourceLinks:sourceRecord.sourceLinks,sourceSection:sourceRecord.section,actions:ACTIONS_BY_NODE_ID[figmaNodeId]||[],caseSource:FIGMA_FILE_URL+'?node-id='+figmaNodeId.replace(':','-')};
+  const sourceTextLinks=[...(sourceRecord.sourceText||[]).flatMap(value=>value.match(/https?:\/\/[^\s]+/g)||[])];
+  const sourceLinks=[...new Set([...(sourceRecord.sourceLinks||[]),...sourceTextLinks])];
+  return {...tool,links:undefined,figmaNodeId,title:sourceRecord.title,sourceRecord,sourceText:sourceRecord.sourceText,sourceLinks,sourceSection:sourceRecord.section,actions:ACTIONS_BY_NODE_ID[figmaNodeId]||[],caseSource:FIGMA_FILE_URL+'?node-id='+figmaNodeId.replace(':','-')};
 });
 export const tools:Tool[]=normalizedTools;
 export function validateTools(dataset:Tool[]=tools){

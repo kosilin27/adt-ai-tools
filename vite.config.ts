@@ -6,6 +6,12 @@ export default defineConfig({
   base: '/adt-ai-tools/',
   plugins: [react(), {
     name: 'strip-unpublished-fonts',
+    enforce: 'pre',
+    transform(code, id) {
+      if (id.endsWith('/src/styles.css')) {
+        return code.replace(/@font-face\{[^}]*src:url\([^}]+\)[^}]*\}/g, '');
+      }
+    },
     generateBundle(_options, bundle) {
       for (const output of Object.values(bundle)) {
         if (output.type === 'asset' && output.fileName.endsWith('.css') && typeof output.source === 'string') {

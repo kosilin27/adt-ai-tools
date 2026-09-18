@@ -6,7 +6,7 @@ const SOURCE_COLUMN_NAMES = ['caseNumber', 'size', 'project', 'audience', 'link'
 const API_ROOT = 'https://api.figma.com/v1';
 
 export const normalizeText = value => String(value ?? '')
-  .replaceAll('\r\n', '\n').replaceAll('\u00a0', ' ')
+  .replaceAll('\r\n', '\n').replace(/[\u2028\u2029]/g, '\n').replaceAll('\u00a0', ' ')
   .replace(/[ \t]+/g, ' ').replace(/[ \t]*\n[ \t]*/g, '\n').trim();
 
 async function figmaRequest(path, token) {
@@ -29,9 +29,14 @@ function walk(node, visit) {
   for (const child of node.children || []) walk(child, visit);
 }
 
-function textNodes(node) {
+function textNodes(node, inheritedHidden = false) {
   const result = [];
-  walk(node, child => { if (child.type === 'TEXT' && child.characters) result.push(child); });
+  const visit = (current, hidden) => {
+    const currentHidden = hidden || current.hidden === true;
+    if (!currentHidden && current.type === 'TEXT' && current.characters) result.push(current);
+    for (const child of current.children || []) visit(child, currentHidden);
+  };
+  visit(node, inheritedHidden);
   return result;
 }
 
@@ -136,7 +141,7 @@ export function diffSnapshots(before, after, expectedIds) {
   for (const row of after) if (!expected.has(row.figmaNodeId)) unsafe.push({ nodeId: row.figmaNodeId, field: 'figmaNodeId', classification: 'unsafe-unknown-row' });
   const orderChanged = before.map(row => row.figmaNodeId).join('|') !== after.map(row => row.figmaNodeId).join('|');
   if (orderChanged && !added.length && !removed.length) unsafe.push({ nodeId: '', field: 'row-order', classification: 'safe-order-change' });
-  const structuralChanges = added.length > 0 || removed.length > 0 || duplicateIds.length > 0 || orderChanged || unsafe.some(item => !String(item.classification).startsWith('safe-'));
+  const structuralChanges = changed.length > 0 || added.length > 0 || removed.length > 0 || duplicateIds.length > 0 || orderChanged || unsafe.some(item => !String(item.classification).startsWith('safe-'));
   return { changed, added, removed, duplicateIds, unsafe, orderChanged, hasChanges: structuralChanges };
 }
 

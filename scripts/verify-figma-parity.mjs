@@ -14,7 +14,7 @@ const rows = FIGMA_CASES_SNAPSHOT.map(source => {
   const linksMatch = JSON.stringify(catalogActions) === JSON.stringify(sourceActions);
   const audienceMatch = source.audienceValues === undefined || JSON.stringify(tool?.audiences || []) === JSON.stringify([...new Set(source.audienceValues.map(value => value.toLowerCase()).filter(value => ['design', 'research', 'text'].includes(value)))])
   const authorMatch = source.authorValues === undefined || JSON.stringify(tool?.authors || []) === JSON.stringify(source.authorValues || [])
-  const statusMatch = source.sourceStatusValues === undefined || tool?.status === statusFromSource(source.sourceStatusValues || [])
+  const statusMatch = source.sourceStatusValues === undefined || source.sourceStatusValues.length === 0 || tool?.status === statusFromSource(source.sourceStatusValues || [])
   return {
     figmaNodeId: source.figmaNodeId,
     figmaTitle: source.title,

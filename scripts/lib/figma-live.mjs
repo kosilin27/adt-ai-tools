@@ -104,6 +104,7 @@ export function parseToolsFrame(frame) {
     const structured = parseStructuredColumns(child);
     rows.push({
       figmaNodeId: child.id,
+      ...(structured ? { caseNumber: structured.sourceColumns.caseNumber?.[0] || '', size: structured.sourceColumns.size?.[0] || '' } : {}),
       title: normalizeText(title),
       sourceText: text,
       sourceLinks: linksFrom(child).map(link => link.url),

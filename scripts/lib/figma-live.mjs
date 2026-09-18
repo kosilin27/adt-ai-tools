@@ -32,7 +32,7 @@ function walk(node, visit) {
 function textNodes(node, inheritedHidden = false) {
   const result = [];
   const visit = (current, hidden) => {
-    const currentHidden = hidden || current.hidden === true;
+    const currentHidden = hidden || current.hidden === true || current.visible === false;
     if (!currentHidden && current.type === 'TEXT' && current.characters) result.push(current);
     for (const child of current.children || []) visit(child, currentHidden);
   };

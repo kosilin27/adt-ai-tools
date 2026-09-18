@@ -111,10 +111,26 @@ body{background:#0f1113;color:#f2f2ef}
 .status-beta{color:#a7adb2}
 .status-development{color:#737a80}
 .idea-card{background:#16191c;border-color:#2b3035;border-radius:4px}
+.audience-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.audience-badge{display:inline-flex;align-items:center;border:1px solid transparent;border-radius:3px;padding:3px 6px;font:10px AvitoMono;line-height:1.1;letter-spacing:.03em}
+.audience-design{background:rgba(70,145,210,.12);border-color:rgba(139,185,222,.25);color:#8bb9de}
+.audience-research{background:rgba(145,190,70,.10);border-color:rgba(174,207,118,.22);color:#aecf76}
+.audience-text{background:rgba(150,120,190,.10);border-color:rgba(183,160,208,.22);color:#b7a0d0}
+.tool-card:hover p{color:#b5bac0}
+.tool-card:hover .card-top,.tool-card:hover .card-tags span{color:#a7adb2}
+.tool-card:hover .audience-badge{filter:brightness(1.08)}
+.stats div:nth-child(2){padding-left:32px}
+.sheet-meta{align-items:center;gap:10px;flex-wrap:wrap}
+.audience-badges-detail{width:100%;margin-top:4px}
+.sheet h2{font-weight:400;font-size:clamp(2.15rem,4vw,2.65rem);line-height:1.12;letter-spacing:-.01em}
+.author-line{display:block}
 @media(max-width:800px){
   .new-grid,.tool-grid{grid-template-columns:1fr;gap:10px}
   .tool-card,.tool-card:nth-child(3n),.tool-card:hover,.tool-card.is-development:hover{padding:16px;min-height:0}
   .tool-card h3{font-size:19px;line-height:1.18;letter-spacing:-.005em}
+  .stats div:nth-child(2){padding-left:20px}
+  .sheet-meta{gap:8px}
+  .sheet h2{font-size:clamp(1.8rem,8.5vw,2.2rem);line-height:1.12;letter-spacing:0}
 }
 .sheet-source-links{border-top:1px solid #b5b5b2;padding:18px 0}
 .sheet-source-links small{display:block;color:#666;margin-bottom:10px}

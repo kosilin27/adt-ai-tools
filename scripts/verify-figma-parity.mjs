@@ -5,21 +5,26 @@ import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
 
 const expected = new Set(TOOL_NODE_IDS);
 const actual = new Set(tools.map(tool => tool.figmaNodeId));
+const statusFromSource = values => values.includes('Разрабатывается') || values.includes('В разработке') ? 'development' : values.includes('Тестируется') ? 'beta' : values.includes('На проде') || values.includes('Разработан') ? 'ready' : null;
 const rows = FIGMA_CASES_SNAPSHOT.map(source => {
   const tool = tools.find(item => item.figmaNodeId === source.figmaNodeId);
   const sourceActions = ACTIONS_BY_NODE_ID[source.figmaNodeId] || [];
   const catalogActions = tool?.actions || [];
   const titleMatch = tool?.title === source.title;
   const linksMatch = JSON.stringify(catalogActions) === JSON.stringify(sourceActions);
+  const audienceMatch = source.audienceValues === undefined || JSON.stringify(tool?.audiences || []) === JSON.stringify([...new Set(source.audienceValues.map(value => value.toLowerCase()).filter(value => ['design', 'research', 'text'].includes(value)))])
+  const authorMatch = source.authorValues === undefined || JSON.stringify(tool?.authors || []) === JSON.stringify(source.authorValues || [])
+  const statusMatch = source.sourceStatusValues === undefined || tool?.status === statusFromSource(source.sourceStatusValues || [])
   return {
     figmaNodeId: source.figmaNodeId,
     figmaTitle: source.title,
     catalogTitle: tool?.title || '',
     titleMatch,
     linksMatch,
-    statusMatch: Boolean(tool?.sourceRecord && tool.sourceRecord.sourceText.join('\u0000') === source.sourceText.join('\u0000')),
-    authorsMatch: Boolean(tool?.sourceRecord && tool.sourceRecord.sourceText.join('\u0000') === source.sourceText.join('\u0000')),
-    overall: Boolean(tool && titleMatch && linksMatch),
+    statusMatch,
+    authorsMatch: authorMatch,
+    audienceMatch,
+    overall: Boolean(tool && titleMatch && linksMatch && statusMatch && authorMatch && audienceMatch),
   };
 });
 const primary = tools.flatMap(tool => tool.actions || []).filter(action => action.primary);
@@ -34,6 +39,7 @@ const checks = {
   'SOURCE LINK MATCH': `${rows.filter(row => row.linksMatch).length} / 86`,
   'SOURCE STATUS MATCH': `${rows.filter(row => row.statusMatch).length} / 86`,
   'SOURCE AUTHORS MATCH': `${rows.filter(row => row.authorsMatch).length} / 86`,
+  'SOURCE AUDIENCE MATCH': `${rows.filter(row => row.audienceMatch).length} / 86`,
   'ORPHAN CATALOG TOOLS': tools.filter(tool => !expected.has(tool.figmaNodeId || '')).length,
   'ORPHAN FIGMA ROWS': TOOL_NODE_IDS.filter(id => !actual.has(id)).length,
   'FALLBACK MAPPINGS': fallbackMappings,
@@ -44,7 +50,7 @@ const checks = {
   'IDEAS': IDEA_NODE_IDS.length,
 };
 const failed = Object.entries(checks).filter(([key, value]) => {
-  if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH') return value !== '86 / 86';
+  if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH' || key === 'SOURCE AUDIENCE MATCH') return value !== '86 / 86';
   return ['ORPHAN CATALOG TOOLS','ORPHAN FIGMA ROWS','FALLBACK MAPPINGS','FIELD PARITY ERRORS'].includes(key) ? value !== 0 : false;
 });
 mkdirSync('test-results', { recursive: true });

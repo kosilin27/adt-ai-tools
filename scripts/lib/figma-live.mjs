@@ -2,6 +2,7 @@ export const FIGMA_FILE_KEY = 'nVLcu3bbLgz0lJhSUexjvx';
 export const TOOLS_FRAME_NODE_ID = '374:1308';
 export const KNOWN_STATUS_LABELS = new Set(['На проде', 'Тестируется', 'Разработан', 'Разрабатывается']);
 export const KNOWN_AUDIENCE_LABELS = new Set(['Design', 'Research', 'Text']);
+const SOURCE_COLUMN_NAMES = ['caseNumber', 'size', 'project', 'audience', 'link', 'problem', 'metric', 'author', 'status', 'valueAfterLaunch', 'participants', 'related', 'notes'];
 const API_ROOT = 'https://api.figma.com/v1';
 
 export const normalizeText = value => String(value ?? '')
@@ -54,6 +55,33 @@ function namedNode(node, name) {
   return null;
 }
 
+function nodeX(node, fallback) {
+  return typeof node.x === 'number' ? node.x : typeof node.absoluteBoundingBox?.x === 'number' ? node.absoluteBoundingBox.x : fallback;
+}
+
+function directColumnNodes(row) {
+  const children = (row.children || []).filter(child => textNodes(child).length || linksFrom(child).length);
+  return children.map((child, index) => ({ child, index, x: nodeX(child, index) })).sort((a, b) => a.x - b.x).map(item => item.child);
+}
+
+function splitSourceValues(values) {
+  return values.flatMap(value => normalizeText(value).split(/\n+/).map(normalizeText)).filter(Boolean);
+}
+
+function parseStructuredColumns(row) {
+  const columns = directColumnNodes(row);
+  if (columns.length < 4) return null;
+  const sourceColumns = {};
+  columns.forEach((column, index) => {
+    const key = SOURCE_COLUMN_NAMES[index] || `column${index + 1}`;
+    sourceColumns[key] = splitSourceValues(textNodes(column).map(text => text.characters));
+  });
+  const audienceValues = [...new Set((sourceColumns.audience || []).filter(value => KNOWN_AUDIENCE_LABELS.has(value)))];
+  const sourceStatusValues = [...new Set((sourceColumns.status || []).filter(value => KNOWN_STATUS_LABELS.has(value)))];
+  const authorValues = (sourceColumns.author || []).filter(value => value !== 'Кто участвует / роль' && value !== 'Автор / участники');
+  return { sourceColumns, audienceValues, sourceStatusValues, authorValues };
+}
+
 export function parseToolsFrame(frame) {
   const rows = [];
   let section = '';
@@ -68,12 +96,14 @@ export function parseToolsFrame(frame) {
     const title = directText(child, 'Проект')?.characters?.trim();
     if (title === 'Проект') continue;
     if (!title) throw new Error(`Unable to parse title for row ${child.id}`);
+    const structured = parseStructuredColumns(child);
     rows.push({
       figmaNodeId: child.id,
       title: normalizeText(title),
       sourceText: text,
       sourceLinks: linksFrom(child).map(link => link.url),
       section: normalizeText(section),
+      ...(structured || {}),
     });
   }
   if (!rows.length) throw new Error('No tool rows parsed from authoritative frame');
@@ -91,9 +121,10 @@ export function diffSnapshots(before, after, expectedIds) {
   for (const row of after) {
     const old = beforeById.get(row.figmaNodeId);
     if (!old) continue;
-    for (const field of ['title', 'sourceText', 'sourceLinks', 'section']) {
+    for (const field of ['title', 'sourceText', 'sourceLinks', 'section', 'audienceValues', 'authorValues', 'sourceStatusValues', 'sourceColumns']) {
       if (JSON.stringify(old[field]) !== JSON.stringify(row[field])) changed.push({ nodeId: row.figmaNodeId, field, before: old[field], after: row[field], classification: field === 'sourceLinks' ? 'safe-link-change' : 'safe' });
     }
+    if (JSON.stringify(old.authorValues || []) !== JSON.stringify(row.authorValues || [])) changed.push({ nodeId: row.figmaNodeId, field: 'authors', before: old.authorValues || [], after: row.authorValues || [], classification: 'safe-author-change' });
     for (const value of row.sourceStatusValues || []) if (!KNOWN_STATUS_LABELS.has(value) && value !== 'Статус') unsafe.push({ nodeId: row.figmaNodeId, field: 'sourceStatus', before: '', after: value, classification: 'unsafe-unknown-status' });
     for (const value of row.audienceValues || []) if (!KNOWN_AUDIENCE_LABELS.has(value) && value !== 'Кто участвует / роль') unsafe.push({ nodeId: row.figmaNodeId, field: 'audience', before: '', after: value, classification: 'unsafe-unknown-audience' });
     if (row.ambiguousLinkStructure) unsafe.push({ nodeId: row.figmaNodeId, field: 'links', classification: 'unsafe-ambiguous-link' });

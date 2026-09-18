@@ -6,6 +6,10 @@ export interface FigmaCaseSnapshot {
   sourceText: string[];
   sourceLinks: string[];
   section: string;
+  audienceValues?: string[];
+  authorValues?: string[];
+  sourceStatusValues?: string[];
+  sourceColumns?: Record<string, string[]>;
 }
 
 // Live Figma snapshot for file nVLcu3bbLgz0lJhSUexjvx, page “30 Cases 2026”, frame 374:1308.

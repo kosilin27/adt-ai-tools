@@ -297,9 +297,9 @@ body{background:#0f1113;color:#f2f2ef}
 }
 
 /* Final overrides: keep the stats divider clear and remove status-header rules. */
-.stats > div + div{padding-left:32px;padding-right:24px}
+.stats > div:not(:first-child){padding-left:32px;padding-right:24px}
 .group-head{border-bottom:0;margin-bottom:12px;padding-bottom:0}
 @media(max-width:800px){
-  .stats > div + div{padding-left:20px;padding-right:12px}
+  .stats > div:not(:first-child){padding-left:20px;padding-right:12px}
   .group-head{margin-bottom:10px}
 }

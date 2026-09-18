@@ -295,3 +295,11 @@ body{background:#0f1113;color:#f2f2ef}
   .tool-card,.tool-card:nth-child(3n),.tool-card:hover,.tool-card.is-development:hover{padding:16px;min-height:0}
   .tool-card h3{font-size:19px;line-height:1.18;letter-spacing:-.005em}
 }
+
+/* Final overrides: keep the stats divider clear and remove status-header rules. */
+.stats > div + div{padding-left:32px;padding-right:24px}
+.group-head{border-bottom:0;margin-bottom:12px;padding-bottom:0}
+@media(max-width:800px){
+  .stats > div + div{padding-left:20px;padding-right:12px}
+  .group-head{margin-bottom:10px}
+}

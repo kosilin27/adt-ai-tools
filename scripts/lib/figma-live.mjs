@@ -82,9 +82,11 @@ function parseStructuredColumns(row) {
     sourceColumns[key] = splitSourceValues(textNodes(column).map(text => text.characters));
   });
   const audienceValues = [...new Set((sourceColumns.audience || []).filter(value => KNOWN_AUDIENCE_LABELS.has(value)))];
-  const sourceStatusValues = [...new Set((sourceColumns.status || []).filter(value => KNOWN_STATUS_LABELS.has(value)))];
+  const sourceStatusValues = columns.length > 8
+    ? [...new Set((sourceColumns.status || []).filter(value => KNOWN_STATUS_LABELS.has(value)))]
+    : undefined;
   const authorValues = (sourceColumns.author || []).filter(value => value !== 'Кто участвует / роль' && value !== 'Автор / участники');
-  return { sourceColumns, audienceValues, sourceStatusValues, authorValues };
+  return { sourceColumns, audienceValues, ...(sourceStatusValues === undefined ? {} : { sourceStatusValues }), authorValues };
 }
 
 export function parseToolsFrame(frame) {

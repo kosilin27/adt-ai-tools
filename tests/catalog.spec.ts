@@ -8,6 +8,7 @@ const auditPath = 'test-results/catalog-audit.json';
 const caseSource = (id: string) => 'https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades?node-id=' + id.replace(':', '-');
 const detailUrl = (tool: Tool) => 'tool/' + tool.id;
 const primaryFor = (tool: Tool) => (tool.actions || []).find(action => action.primary);
+const appRootUrl = () => new URL('./', process.env.REMOTE_BASE_URL || 'http://127.0.0.1:4173/adt-ai-tools/').toString();
 const tovTitle = 'Плагин-редактор в Figma с оценкой текста на соответствие корпоративным стандартам (TOV и редполитика), реадактирование на основе ИИ';
 
 test.beforeAll(async () => {
@@ -190,5 +191,5 @@ test('keyboard detail routing regression', async ({ page }) => {
   await expect(page).toHaveURL(/\/tool\/tov-editor$/);
   await expect(page.getByRole('dialog', { name: tovTitle })).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(appRootUrl());
 });

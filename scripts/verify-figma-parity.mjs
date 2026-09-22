@@ -33,13 +33,13 @@ const announcementOnly = tools.filter(tool => (tool.actions || []).length > 0 &&
 const sourceMismatch = tools.filter(tool => JSON.stringify(tool.actions || []) !== JSON.stringify(ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || [])).length;
 const fallbackMappings = /fallback|fallbackIds|fallbackIndex/i.test(readFileSync(new URL('../src/data/tools.ts', import.meta.url), 'utf8')) ? 1 : 0;
 const checks = {
-  'FIGMA ROWS': `${FIGMA_CASES_SNAPSHOT.length} / 86`,
-  'EXACT TITLE MATCH': `${rows.filter(row => row.titleMatch).length} / 86`,
-  'EXPLICIT NODE MAPPING': `${[...expected].filter(id => actual.has(id)).length} / 86`,
-  'SOURCE LINK MATCH': `${rows.filter(row => row.linksMatch).length} / 86`,
-  'SOURCE STATUS MATCH': `${rows.filter(row => row.statusMatch).length} / 86`,
-  'SOURCE AUTHORS MATCH': `${rows.filter(row => row.authorsMatch).length} / 86`,
-  'SOURCE AUDIENCE MATCH': `${rows.filter(row => row.audienceMatch).length} / 86`,
+  'FIGMA ROWS': `${FIGMA_CASES_SNAPSHOT.length} / 87`,
+  'EXACT TITLE MATCH': `${rows.filter(row => row.titleMatch).length} / 87`,
+  'EXPLICIT NODE MAPPING': `${[...expected].filter(id => actual.has(id)).length} / 87`,
+  'SOURCE LINK MATCH': `${rows.filter(row => row.linksMatch).length} / 87`,
+  'SOURCE STATUS MATCH': `${rows.filter(row => row.statusMatch).length} / 87`,
+  'SOURCE AUTHORS MATCH': `${rows.filter(row => row.authorsMatch).length} / 87`,
+  'SOURCE AUDIENCE MATCH': `${rows.filter(row => row.audienceMatch).length} / 87`,
   'ORPHAN CATALOG TOOLS': tools.filter(tool => !expected.has(tool.figmaNodeId || '')).length,
   'ORPHAN FIGMA ROWS': TOOL_NODE_IDS.filter(id => !actual.has(id)).length,
   'FALLBACK MAPPINGS': fallbackMappings,
@@ -50,7 +50,7 @@ const checks = {
   'IDEAS': IDEA_NODE_IDS.length,
 };
 const failed = Object.entries(checks).filter(([key, value]) => {
-  if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH' || key === 'SOURCE AUDIENCE MATCH') return value !== '86 / 86';
+  if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH' || key === 'SOURCE AUDIENCE MATCH') return value !== '87 / 87';
   return ['ORPHAN CATALOG TOOLS','ORPHAN FIGMA ROWS','FALLBACK MAPPINGS','FIELD PARITY ERRORS'].includes(key) ? value !== 0 : false;
 });
 mkdirSync('test-results', { recursive: true });

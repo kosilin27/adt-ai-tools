@@ -71,7 +71,8 @@ const extraTools:Tool[]=[
  x('ai-editor-development','Развитие и тестирование AI-редактора','Развитие внутреннего AI-редактора текстов.',['text'],['Text'],'agent','development','374:5594'),
  x('backlog-enrichment','Обогащение беклога','Дополняет тикеты актуальной информацией и помогает считать сигналы.',['research'],['Research','Automation'],'workflow','ready','374:10002'),
  x('ai-prototyping','AI-прототипирование','Создаёт прототипы для тестирования.',['design','research'],['Prototyping'],'plugin','ready','374:9636'),
- x('avikot-review-extension','Авикот — Расширение для быстрого дизайн-ревью сайтов в контуре Авито (авторизация, совместные комменты, уведосления ММ)','',['design'],['Design review'],'service','ready','5084:13751')
+ x('avikot-review-extension','Авикот — Расширение для быстрого дизайн-ревью сайтов в контуре Авито (авторизация, совместные комменты, уведосления ММ)','',['design'],['Design review'],'service','ready','5084:13751'),
+ x('uxf-bundle-5158','uxf-bundle (uxf-analyzer + uxf-pipeline)','',['research'],['Research'],'workflow','ready','5158:14469')
 ];
 const explicitNodeIdByToolId:Record<string,string>={...sourceIdByToolId};
 for(const tool of extraTools){ if(!tool.figmaNodeId) throw new Error(`Missing explicit Figma node ID: ${tool.id}`); explicitNodeIdByToolId[tool.id]=tool.figmaNodeId; }
@@ -92,7 +93,7 @@ const normalizedTools=[...productTools,...extraTools].map(tool=>{
 export const tools:Tool[]=normalizedTools;
 export function validateTools(dataset:Tool[]=tools){
   const ids=dataset.map(tool=>tool.figmaNodeId||'');
-  if(dataset.length!==86) throw new Error('Expected 86 tools, got '+dataset.length);
+  if(dataset.length!==87) throw new Error('Expected 87 tools, got '+dataset.length);
   if(new Set(ids).size!==ids.length) throw new Error('Duplicate Figma node ID');
   if(ids.some(id=>!TOOL_NODE_IDS.includes(id))||TOOL_NODE_IDS.some(id=>!ids.includes(id))) throw new Error('Tool node IDs do not match source snapshot');
   for(const tool of dataset){

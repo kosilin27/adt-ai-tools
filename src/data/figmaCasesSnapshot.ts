@@ -6733,6 +6733,54 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "@naprischep",
       "naprischep@avito.ru"
     ]
+  },
+  {
+    "figmaNodeId": "5158:14469",
+    "caseNumber": "78",
+    "size": "S",
+    "title": "uxf-bundle (uxf-analyzer + uxf-pipeline)",
+    "sourceText": [
+      "78",
+      "S",
+      "uxf-bundle (uxf-analyzer + uxf-pipeline)",
+      "Research",
+      "Link",
+      "Что делает скилл:\nСам находит свежие UXF вашей команды в DWH (не надо лазить в UXF руками и качать CSV)\nСам группирует разрезы одного опроса (Android+iOS, pro+частники и так далее) в один batch\nПомнит, какие опросы вы уже разбирали и не предлагает их снова\nЗадаёт 5 коротких вопросов про фичу (нужно для нормальной интерпретации)\nВыгружает данные, прогоняет анализатор, пишет отчёт по шаблону на 12 секций: главный вывод, инсайты с цитатами, cross-tabs, ограничения, рекомендации",
+      "Метрика успеха / Аудитория / Экономия времени",
+      "Nikita Prischep\n@naprischep\nnaprischep@avito.ru",
+      "На проде",
+      "Value после запуска",
+      "-",
+      "-",
+      "-"
+    ],
+    "sourceLinks": [],
+    "section": "Новые кейсы",
+    "sourceColumns": {
+      "caseNumber": ["78"],
+      "size": ["S"],
+      "project": ["uxf-bundle (uxf-analyzer + uxf-pipeline)"],
+      "audience": ["Research"],
+      "link": ["Link"],
+      "problem": [
+        "Что делает скилл:",
+        "Сам находит свежие UXF вашей команды в DWH (не надо лазить в UXF руками и качать CSV)",
+        "Сам группирует разрезы одного опроса (Android+iOS, pro+частники и так далее) в один batch",
+        "Помнит, какие опросы вы уже разбирали и не предлагает их снова",
+        "Задаёт 5 коротких вопросов про фичу (нужно для нормальной интерпретации)",
+        "Выгружает данные, прогоняет анализатор, пишет отчёт по шаблону на 12 секций: главный вывод, инсайты с цитатами, cross-tabs, ограничения, рекомендации"
+      ],
+      "metric": ["Метрика успеха / Аудитория / Экономия времени"],
+      "author": ["Nikita Prischep", "@naprischep", "naprischep@avito.ru"],
+      "status": ["На проде"],
+      "valueAfterLaunch": ["Value после запуска"],
+      "participants": ["-"],
+      "related": ["-"],
+      "notes": ["-"]
+    },
+    "audienceValues": ["Research"],
+    "sourceStatusValues": ["На проде"],
+    "authorValues": ["Nikita Prischep", "@naprischep", "naprischep@avito.ru"]
   }
 ];
 

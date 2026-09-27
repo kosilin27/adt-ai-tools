@@ -2698,11 +2698,11 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   {
     "figmaNodeId": "4734:14155",
     "caseNumber": "78",
-    "size": "S",
+    "size": "L",
     "title": "Stiletto Slides",
     "sourceText": [
       "78",
-      "S",
+      "L",
       "Stiletto Slides",
       "Design",
       "Будет позже",
@@ -2722,7 +2722,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "78"
       ],
       "size": [
-        "S"
+        "L"
       ],
       "project": [
         "Stiletto Slides"
@@ -6757,11 +6757,21 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "sourceLinks": [],
     "section": "Новые кейсы",
     "sourceColumns": {
-      "caseNumber": ["78"],
-      "size": ["S"],
-      "project": ["uxf-bundle (uxf-analyzer + uxf-pipeline)"],
-      "audience": ["Research"],
-      "link": ["Link"],
+      "caseNumber": [
+        "78"
+      ],
+      "size": [
+        "S"
+      ],
+      "project": [
+        "uxf-bundle (uxf-analyzer + uxf-pipeline)"
+      ],
+      "audience": [
+        "Research"
+      ],
+      "link": [
+        "Link"
+      ],
       "problem": [
         "Что делает скилл:",
         "Сам находит свежие UXF вашей команды в DWH (не надо лазить в UXF руками и качать CSV)",
@@ -6770,17 +6780,41 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "Задаёт 5 коротких вопросов про фичу (нужно для нормальной интерпретации)",
         "Выгружает данные, прогоняет анализатор, пишет отчёт по шаблону на 12 секций: главный вывод, инсайты с цитатами, cross-tabs, ограничения, рекомендации"
       ],
-      "metric": ["Метрика успеха / Аудитория / Экономия времени"],
-      "author": ["Nikita Prischep", "@naprischep", "naprischep@avito.ru"],
-      "status": ["На проде"],
-      "valueAfterLaunch": ["Value после запуска"],
-      "participants": ["-"],
-      "related": ["-"],
-      "notes": ["-"]
+      "metric": [
+        "Метрика успеха / Аудитория / Экономия времени"
+      ],
+      "author": [
+        "Nikita Prischep",
+        "@naprischep",
+        "naprischep@avito.ru"
+      ],
+      "status": [
+        "На проде"
+      ],
+      "valueAfterLaunch": [
+        "Value после запуска"
+      ],
+      "participants": [
+        "-"
+      ],
+      "related": [
+        "-"
+      ],
+      "notes": [
+        "-"
+      ]
     },
-    "audienceValues": ["Research"],
-    "sourceStatusValues": ["На проде"],
-    "authorValues": ["Nikita Prischep", "@naprischep", "naprischep@avito.ru"]
+    "audienceValues": [
+      "Research"
+    ],
+    "sourceStatusValues": [
+      "На проде"
+    ],
+    "authorValues": [
+      "Nikita Prischep",
+      "@naprischep",
+      "naprischep@avito.ru"
+    ]
   }
 ];
 

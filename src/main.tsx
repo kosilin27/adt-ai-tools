@@ -1,42 +1,1024 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Link, useLocation, useNavigate } from 'react-router-dom';
-import { tools, type Role, type Tool, type ToolStatus } from './data/tools';
-import { ideas } from './data/ideas';
-import './styles.css';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import {
+  BrowserRouter,
+  HashRouter,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { tools, type Role, type Tool, type ToolStatus, type SourceStatus } from "./data/tools";
+import { ideas } from "./data/ideas";
+import "./styles.css";
 
-const appBase = import.meta.env.DEV ? '/' : import.meta.env.BASE_URL;
-const FAVORITES_KEY = 'adt-ai-tools:favorites:v1';
-const statusLabel: Record<ToolStatus, string> = { ready: 'READY', beta: 'BETA', development: 'IN DEVELOPMENT' };
+const appBase = import.meta.env.DEV ? "/" : import.meta.env.BASE_URL === './' ? window.location.pathname.replace(/index\.html$/, '').replace(/\/$/, '') : import.meta.env.BASE_URL;
+const FAVORITES_KEY = "adt-ai-tools:favorites:v1";
+const sourceStatus = (tool: Tool) =>
+  SOURCE_STATUS_ORDER.find(status => tool.sourceStatusValues?.includes(status as SourceStatus)) || "Без статуса";
+const sourceStatusClass = (status: string) => status.toLowerCase().replace(/ /g, "-");
+const SOURCE_STATUS_ORDER: (SourceStatus | "Без статуса")[] = [
+  "На проде", "Тестируется", "Разработан", "Разрабатывается", "Без статуса",
+];
 const typeLabel = (value: string) => value.toUpperCase();
-const audienceLabel: Record<string, string> = { design: 'Design', research: 'Research', text: 'Text' };
-const taskLabel: Record<string, string> = { Text: 'Текст', Graphics: 'Графика', Animation: 'Анимация', 'Design review': 'Дизайн-ревью', Research: 'Исследования', Prototyping: 'Прототипирование', 'Design System': 'Дизайн-система', 'Team processes': 'Командные процессы', Knowledge: 'Знания', Automation: 'Автоматизация' };
+const audienceLabel: Record<string, string> = {
+  design: "Design",
+  research: "Research",
+  text: "Text",
+};
+const taskLabel: Record<string, string> = {
+  Text: "Текст",
+  Graphics: "Графика",
+  Animation: "Анимация",
+  "Design review": "Дизайн-ревью",
+  Research: "Исследования",
+  Prototyping: "Прототипирование",
+  "Design System": "Дизайн-система",
+  "Team processes": "Командные процессы",
+  Knowledge: "Знания",
+  Automation: "Автоматизация",
+};
 const taskFilters = Object.keys(taskLabel);
-const intents = [{ id: 'write-text', label: 'Написать текст', categories: ['Text'] }, { id: 'review-design', label: 'Проверить макет', categories: ['Design review'] }, { id: 'prototype', label: 'Сделать прототип', categories: ['Prototyping'] }, { id: 'automate', label: 'Автоматизировать', categories: ['Automation', 'Team processes'] }];
-const trackEvent = (name: string, properties: Record<string, string> = {}) => console.info('[ADT analytics]', name, properties);
+const intents = [
+  { id: "write-text", label: "Написать текст", categories: ["Text"] },
+  {
+    id: "review-design",
+    label: "Проверить макет",
+    categories: ["Design review"],
+  },
+  { id: "prototype", label: "Сделать прототип", categories: ["Prototyping"] },
+  {
+    id: "automate",
+    label: "Автоматизировать",
+    categories: ["Automation", "Team processes"],
+  },
+];
+const trackEvent = (name: string, properties: Record<string, string> = {}) =>
+  console.info("[ADT analytics]", name, properties);
 
-function Header() { return <header className="header"><Link to="/" className="brand">AI <span>×</span> Avito Design Team</Link><nav><Link to="/">Каталог</Link><a href={`${appBase}#ideas`}>Идеи</a></nav><div className="updated">ОБНОВЛЕНО <span>СЕН 2026</span></div></header>; }
-function Status({ status }: { status: ToolStatus }) { return <span className={`status status-${status}`}>{statusLabel[status]}</span>; }
-function AudienceBadges({ audiences, detail = false }: { audiences: Role[]; detail?: boolean }) { return <div className={`audience-badges ${detail ? 'audience-badges-detail' : ''}`}>{audiences.map(audience => <span key={audience} className={`audience-badge audience-${audience}`}>{audienceLabel[audience] || audience}</span>)}</div>; }
-function FavoriteButton({ tool, favorite, onToggle }: { tool: Tool; favorite: boolean; onToggle: (tool: Tool) => void }) { return <button className={`favorite ${favorite ? 'is-favorite' : ''}`} aria-label={favorite ? `Убрать ${tool.title} из Моё` : `Добавить ${tool.title} в Моё`} aria-pressed={favorite} onClick={event => { event.stopPropagation(); onToggle(tool); }}>{favorite ? '★' : '☆'}</button>; }
-function ToolCard({ tool, favorite, onOpen, onToggle }: { tool: Tool; favorite: boolean; onOpen: (tool: Tool) => void; onToggle: (tool: Tool) => void }) { return <article className={`tool-card ${tool.status === 'development' ? 'is-development' : ''}`} onClick={() => onOpen(tool)} tabIndex={0} onKeyDown={event => { if (event.key === 'Enter') onOpen(tool); }}><div className="card-top"><span>{typeLabel(tool.type)}</span><FavoriteButton tool={tool} favorite={favorite} onToggle={onToggle}/></div><h3>{tool.title}</h3><p>{tool.shortDescription}</p>{tool.metrics?.[0] && <div className="card-metric"><strong>{tool.metrics[0].value}</strong><span>{tool.metrics[0].label}</span></div>}<div className="card-foot"><AudienceBadges audiences={tool.audiences}/><span className="arrow">{tool.status === 'development' ? 'Пока недоступен' : <>Открыть <b>↗</b></>}</span></div></article>; }
-function SearchBar({ id, value, onChange }: { id: string; value: string; onChange: (value: string) => void }) { return <div className="search-input"><span>⌕</span><input id={id} aria-label="Что хотите сделать?" value={value} onChange={event => onChange(event.target.value)} placeholder="Найти инструмент для анимации, ревью макета, исследования, текста…"/><kbd>⌘ K</kbd></div>; }
-function FilterPanel({ task, type, status, onTask, onType, onStatus, onReset, sticky = false }: { task: string; type: string; status: string; onTask: (value: string) => void; onType: (value: string) => void; onStatus: (value: string) => void; onReset: () => void; sticky?: boolean }) { return <div className={`filter-panel ${sticky ? 'is-sticky' : ''}`} role="dialog" aria-label="Фильтры"><div className="filter-panel-head"><span>ФИЛЬТРЫ</span><button onClick={onReset}>Сбросить фильтры</button></div><label>ЗАДАЧА<select aria-label="Задача" value={task} onChange={event => onTask(event.target.value)}><option value="">Все задачи</option>{taskFilters.map(value => <option value={value} key={value}>{taskLabel[value]}</option>)}</select></label><label>ТИП<select aria-label="Тип" value={type} onChange={event => onType(event.target.value)}><option value="">Все типы</option>{['plugin', 'agent', 'bot', 'service', 'skill', 'workflow'].map(value => <option value={value} key={value}>{value.toUpperCase()}</option>)}</select></label><label>СТАТУС<select aria-label="Статус" value={status} onChange={event => onStatus(event.target.value)}><option value="">Все статусы</option><option value="ready">READY</option><option value="beta">BETA</option><option value="development">IN DEVELOPMENT</option></select></label></div>; }
-function FilterButton({ count, open, onClick }: { count: number; open: boolean; onClick: () => void }) { return <button className={`filter-button ${open ? 'active' : ''}`} aria-expanded={open} onClick={onClick}>Фильтры{count > 0 ? ` · ${count}` : ''}</button>; }
-function WorkControls({ query, role, favoriteMode, filterCount, filtersOpen, onQuery, onRole, onFavoriteMode, onFilterToggle, compact = false }: { query: string; role: Role | 'all'; favoriteMode: boolean; filterCount: number; filtersOpen: boolean; onQuery: (value: string) => void; onRole: (role: Role | 'all') => void; onFavoriteMode: () => void; onFilterToggle: () => void; compact?: boolean }) { return <div className={compact ? 'toolbar-controls compact' : 'work-controls'}>{compact ? <SearchBar id="sticky-catalog-search" value={query} onChange={onQuery}/> : <><label className="search-label" htmlFor="catalog-search">Что хотите сделать?</label><SearchBar id="catalog-search" value={query} onChange={onQuery}/></>}<div className="control-row"><div className="roles"><span>ДЛЯ ВАШЕЙ РАБОТЫ</span>{(['all', 'design', 'research', 'text'] as const).map(value => <button key={value} className={role === value ? 'active' : ''} onClick={() => onRole(value)}>{value === 'all' ? 'Все' : value === 'design' ? 'Дизайн' : value === 'research' ? 'Исследования' : 'Текст'}</button>)}</div><button className={`favorites-toggle ${favoriteMode ? 'active' : ''}`} aria-pressed={favoriteMode} onClick={onFavoriteMode}>★ Моё</button><FilterButton count={filterCount} open={filtersOpen} onClick={onFilterToggle}/></div></div>; }
-function Detail({ tool, favorite, onToggle, onClose }: { tool: Tool; favorite: boolean; onToggle: (tool: Tool) => void; onClose: () => void }) { const related = (tool.relatedToolIds || []).map(id => tools.find(item => item.id === id)).filter(Boolean) as Tool[]; const actions = tool.actions || []; const primary = actions.find(action => action.primary); const secondary = actions.filter(action => !action.primary); const actionUrls = new Set(actions.map(action => action.url)); const sourceOnlyLinks = (tool.sourceLinks || []).filter(url => !actionUrls.has(url)); useEffect(() => { document.body.style.overflow = 'hidden'; const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && onClose(); window.addEventListener('keydown', closeOnEscape); return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', closeOnEscape); }; }, [onClose]); const eventFor = (kind: string) => kind === 'guide' ? 'tool_guide_clicked' : kind === 'discussion' ? 'tool_discussion_clicked' : kind === 'announcement' ? 'tool_announcement_clicked' : kind === 'channel' ? 'tool_channel_clicked' : 'tool_action_clicked'; const sourceLinkEvent = (url: string) => { trackEvent('tool_case_source_clicked', { toolId: tool.id, figmaNodeId: tool.figmaNodeId || '', actionKind: 'caseSource', destination: url }); }; return <div className="sheet-backdrop" onMouseDown={event => event.target === event.currentTarget && onClose()}><aside className="sheet" role="dialog" aria-modal="true" aria-label={tool.title}><button className="close" onClick={onClose} aria-label="Закрыть">×</button><div className="sheet-meta"><span>{typeLabel(tool.type)}</span>{tool.status === 'beta' && <Status status={tool.status}/>} {tool.status === 'development' && <Status status={tool.status}/>}<AudienceBadges audiences={tool.audiences} detail/></div><div className="sheet-title-row"><h2>{tool.title}</h2><FavoriteButton tool={tool} favorite={favorite} onToggle={onToggle}/></div><p className="sheet-lead">{tool.shortDescription}</p>{tool.status === 'development' ? <div className="sheet-cta sheet-disabled">Инструмент пока недоступен</div> : primary ? <div className="sheet-cta"><a href={primary.url} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('tool_primary_action_clicked', { toolId: tool.id, figmaNodeId: tool.figmaNodeId || '', actionKind: primary.kind, destination: primary.url })}>{primary.label} ↗</a></div> : <p className="no-link">Ссылка на инструмент пока не добавлена</p>}{secondary.length > 0 && <div className="sheet-actions">{secondary.map(action => <a key={action.url} href={action.url} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent(eventFor(action.kind), { toolId: tool.id, figmaNodeId: tool.figmaNodeId || '', actionKind: action.kind, destination: action.url })}>{action.label} ↗</a>)}</div>}{sourceOnlyLinks.length > 0 && <section className="sheet-source-links"><small>ССЫЛКИ ИЗ КЕЙСА</small>{sourceOnlyLinks.map(url => <a key={url} href={url} target="_blank" rel="noopener noreferrer" onClick={() => sourceLinkEvent(url)}>{url} ↗</a>)}</section>}{tool.metrics?.length ? <section><small>ЭФФЕКТ</small><div className="metrics">{tool.metrics.map(metric => <div key={metric.label}><strong>{metric.value}</strong><span>{metric.label}</span></div>)}</div></section> : null}{tool.howToStart.length > 0 && <section><small>КАК НАЧАТЬ</small><ol>{tool.howToStart.map((step, index) => <li key={step}><b>0{index + 1}</b>{step}</li>)}</ol></section>}{(tool.whenToUse || tool.whatItDoes) && <section><small>ЧТО ДЕЛАЕТ И КОГДА ИСПОЛЬЗОВАТЬ</small>{tool.whenToUse && <p>{tool.whenToUse}</p>}{tool.whatItDoes && tool.whatItDoes !== tool.whenToUse && <p className="detail-secondary-copy">{tool.whatItDoes}</p>}</section>}{related.length > 0 && <section><small>ПОХОЖИЕ ИНСТРУМЕНТЫ</small><div className="related">{related.map(item => <button key={item.id} onClick={() => { onClose(); window.setTimeout(() => { window.location.href = appBase + 'tool/' + item.id; }, 0); }}>{item.title}<span>↗</span></button>)}</div></section>}<details className="case-details" open><summary>О кейсе</summary><p><strong>Создали</strong><br/>{tool.authors.map(author => <span className="author-line" key={author}>{author}<br/></span>)}</p><p><strong>Статус</strong><br/><Status status={tool.status}/> {tool.statusNote}</p><p><strong>Обновлено</strong><br/>{new Date(tool.updatedAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</p>{tool.caseSource && <p className="case-source"><strong>Источник кейса</strong><br/><a href={tool.caseSource} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('tool_case_source_clicked', { toolId: tool.id, figmaNodeId: tool.figmaNodeId || '', actionKind: 'caseSource', destination: tool.caseSource! })}>Посмотреть описание кейса ↗</a></p>}</details></aside></div>; }
-function Catalog() { const location = useLocation(); const navigate = useNavigate(); const params = useMemo(() => new URLSearchParams(location.search), [location.search]); const query = params.get('q') || ''; const role = (params.get('role') as Role | 'all') || 'all'; const intent = params.get('intent') || ''; const task = params.get('task') || ''; const type = params.get('type') || ''; const status = params.get('status') || ''; const [favorites, setFavorites] = useState<string[]>(() => { try { return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]'); } catch { return []; } }); const [favoriteMode, setFavoriteMode] = useState(false); const [filtersOpen, setFiltersOpen] = useState(false); const [sticky, setSticky] = useState(false); const [hasScrolled, setHasScrolled] = useState(false); const searchSentinel = useRef<HTMLElement>(null); const panelRef = useRef<HTMLDivElement>(null);
-  const updateUrl = (changes: Record<string, string | null>) => { const next = new URLSearchParams(location.search); Object.entries(changes).forEach(([key, value]) => value ? next.set(key, value) : next.delete(key)); navigate(next.toString() ? `/?${next.toString()}` : '/'); };
-  const selectIntent = (nextIntent: string) => updateUrl({ intent: intent === nextIntent ? null : nextIntent, task: null }); const clearFilters = () => updateUrl({ task: null, type: null, status: null }); const clearAll = () => { setFavoriteMode(false); navigate('/'); };
-  const toggleFavorite = (tool: Tool) => setFavorites(current => { const next = current.includes(tool.id) ? current.filter(id => id !== tool.id) : [...current, tool.id]; localStorage.setItem(FAVORITES_KEY, JSON.stringify(next)); trackEvent('favorite_toggled', { toolId: tool.id, figmaNodeId: tool.figmaNodeId || '', favorite: next.includes(tool.id) ? 'true' : 'false' }); return next; });
-  useEffect(() => { const onScroll = () => setHasScrolled(window.scrollY > 10); window.addEventListener('scroll', onScroll, { passive: true }); return () => window.removeEventListener('scroll', onScroll); }, []);
-  useEffect(() => { const observer = new IntersectionObserver(([entry]) => setSticky(hasScrolled && !entry.isIntersecting), { rootMargin: '-72px 0px 0px 0px' }); if (searchSentinel.current) observer.observe(searchSentinel.current); return () => observer.disconnect(); }, [hasScrolled]);
-  useEffect(() => { const onKey = (event: KeyboardEvent) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); const input = document.getElementById(sticky ? 'sticky-catalog-search' : 'catalog-search'); input?.focus(); } if (event.key === 'Escape') setFiltersOpen(false); }; window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey); }, [sticky]);
-  useEffect(() => { if (!filtersOpen) return; const onPointer = (event: PointerEvent) => { if (panelRef.current && !panelRef.current.contains(event.target as Node)) setFiltersOpen(false); }; document.addEventListener('pointerdown', onPointer); return () => document.removeEventListener('pointerdown', onPointer); }, [filtersOpen]);
-  const filtered = useMemo(() => tools.filter(tool => { const hay = [tool.title, tool.shortDescription, tool.problem, tool.whenToUse, tool.whatItDoes, tool.sourceRecord?.title, tool.sourceRecord?.sourceText.join(' '), tool.sourceRecord?.section, ...tool.categories, ...tool.impactTags, ...tool.audiences, tool.type].join(' ').toLowerCase(); const queryTokens = query.toLowerCase().split(/\s+/).filter(Boolean); const hayTokens = hay.split(/\s+/); const queryMatches = !query || queryTokens.every(token => hay.includes(token) || (token.length >= 5 && hayTokens.some(word => word.startsWith(token.slice(0, 5))))); const intentMatch = !intent || (intents.find(item => item.id === intent)?.categories.some(category => tool.categories.includes(category)) ?? false); return queryMatches && (role === 'all' || tool.audiences.includes(role)) && intentMatch && (!task || tool.categories.includes(task)) && (!type || tool.type === type) && (!status || tool.status === status) && (!favoriteMode || favorites.includes(tool.id)); }), [query, role, intent, task, type, status, favoriteMode, favorites]);
-  const groups: { status: ToolStatus; title: string }[] = [{ status: 'ready', title: 'РАБОЧИЕ' }, { status: 'beta', title: 'BETA' }, { status: 'development', title: 'В РАЗРАБОТКЕ' }]; const openTool = (tool: Tool) => { trackEvent('tool_card_opened', { toolId: tool.id, status: tool.status, type: tool.type }); navigate(`/tool/${tool.id}`); }; const pathMatch = location.pathname.match(/^\/tool\/(.+)$/); const currentTool = pathMatch ? tools.find(tool => tool.id === pathMatch[1]) : undefined; const closeDetail = () => navigate(location.search ? `/?${location.search.slice(1)}` : '/'); const activeFilterCount = [task, type, status].filter(Boolean).length;
-  return <><Header/><main><section className="hero"><div className="eyebrow">ВНУТРЕННИЙ КАТАЛОГ / 2026</div><h1>AI TOOLS<br/><em>THAT WORK</em></h1><div className="hero-bottom"><p>Инструменты, агенты и практики, которые уже помогают Avito Design Team проектировать, исследовать, писать и автоматизировать работу.</p><div className="hero-actions"><a href="#catalog" className="button button-light">Смотреть инструменты <span>↓</span></a></div></div><div className="hero-mark">✳</div></section><section className="stats"><div><strong>{tools.filter(tool => tool.status !== 'development').length}</strong><span>рабочих инструментов</span></div><div><strong>{tools.filter(tool => tool.status === 'development').length}</strong><span>в разработке</span></div></section><section ref={searchSentinel} className="search-wrap"><WorkControls query={query} role={role} favoriteMode={favoriteMode} filterCount={activeFilterCount} filtersOpen={filtersOpen} onQuery={value => updateUrl({ q: value || null, intent: null })} onRole={value => updateUrl({ role: value === 'all' ? null : value })} onFavoriteMode={() => { setFavoriteMode(value => !value); trackEvent('favorites_view_toggled', { enabled: favoriteMode ? 'false' : 'true' }); }} onFilterToggle={() => setFiltersOpen(value => !value)}/><div className="intent-row">{intents.map(item => <button key={item.id} className={intent === item.id ? 'active' : ''} onClick={() => selectIntent(item.id)}>{item.label} <span>↗</span></button>)}</div>{filtersOpen && <div ref={panelRef}><FilterPanel task={task} type={type} status={status} sticky={sticky} onTask={value => updateUrl({ task: value || null, intent: null })} onType={value => updateUrl({ type: value || null })} onStatus={value => updateUrl({ status: value || null })} onReset={clearFilters}/></div>}</section>{sticky && <div className="sticky-toolbar"><WorkControls compact query={query} role={role} favoriteMode={favoriteMode} filterCount={activeFilterCount} filtersOpen={filtersOpen} onQuery={value => updateUrl({ q: value || null, intent: null })} onRole={value => updateUrl({ role: value === 'all' ? null : value })} onFavoriteMode={() => setFavoriteMode(value => !value)} onFilterToggle={() => setFiltersOpen(value => !value)}/></div>}<section id="catalog" className="catalog-section"><div className="section-head"><div><span className="index">01</span><h2>ВСЕ ИНСТРУМЕНТЫ</h2></div><span className="result-count">{filtered.length} результатов</span></div>{intent && <div className="active-intent">Сценарий: {intents.find(item => item.id === intent)?.label}<button onClick={() => selectIntent(intent)}>×</button></div>}{groups.map(group => { const items = filtered.filter(tool => tool.status === group.status); return items.length ? <section className={`status-group status-group-${group.status}`} key={group.status}><div className="group-head"><h3>{group.title}</h3><span>{items.length}</span></div><div className="tool-grid">{items.map(tool => <ToolCard key={tool.id} tool={tool} favorite={favorites.includes(tool.id)} onOpen={openTool} onToggle={toggleFavorite}/>)}</div></section> : null; })}{filtered.length === 0 && <div className="empty">{favoriteMode && favorites.length === 0 ? <>Здесь будут инструменты, которыми вы пользуетесь чаще всего.<br/>Добавьте их в Моё с помощью ★.</> : <>Ничего не нашли.<button onClick={clearAll}>Сбросить всё</button></>}</div>}</section><Ideas/></main>{sticky && <div className="sticky-toolbar-spacer"/>}{currentTool && <Detail tool={currentTool} favorite={favorites.includes(currentTool.id)} onToggle={toggleFavorite} onClose={closeDetail}/>}<Footer/></>; }
-function Ideas() { return <section className="ideas" id="ideas"><div className="section-head"><div><span className="index">02</span><h2>ЧТО СОБЕРЁМ ДАЛЬШЕ?</h2></div><span className="result-count">{ideas.length} идей</span></div><p className="ideas-intro">Идеи, которые пока не стали рабочими инструментами. Возможно, одну из них сделаешь ты.</p><div className="ideas-grid">{ideas.map(idea => <article className="idea-card" key={idea.id}><span className="idea-label">IDEA</span><h3>{idea.title}</h3>{idea.problem && <p>{idea.problem}</p>}{idea.sourceStatus && <span className="idea-status">{idea.sourceStatus}</span>}{idea.owner && <span className="idea-owner">{idea.owner}</span>}{idea.actionUrl && <a href={idea.actionUrl} target="_blank" rel="noopener noreferrer">Открыть решение ↗</a>}</article>)}</div></section>; }
-function Footer() { return <footer><span>AI <i>×</i> Avito Design Team</span><div><a href="https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades" target="_blank" rel="noopener noreferrer">Добавить свой инструмент ↗</a><a href="mailto:aakosilin@avito.ru">Нашли ошибку? Напишите мне ↗</a></div><small>ВНУТРЕННИЙ КАТАЛОГ ADT AI</small></footer>; }
-function Root() { return <BrowserRouter basename={appBase}><Catalog/></BrowserRouter>; }
-createRoot(document.getElementById('root')!).render(<Root/>);
+function Header() {
+  return (
+    <header className="header">
+      <Link to="/" className="brand">
+        AI <span>×</span> Avito Design Team
+      </Link>
+      <nav>
+        <Link to="/">Каталог</Link>
+        <a href={`${appBase}#ideas`}>Идеи</a>
+      </nav>
+      <div className="updated">
+        ОБНОВЛЕНО <span>СЕН 2026</span>
+      </div>
+    </header>
+  );
+}
+function Status({ tool, status }: { tool?: Tool; status?: ToolStatus }) {
+  const labels = tool ? tool.sourceStatusValues?.length ? tool.sourceStatusValues : ['Без статуса'] : [status === 'ready' ? 'На проде' : status === 'development' ? 'Разрабатывается' : 'Тестируется'];
+  return <>{labels.map(label => <span key={label} className={`status status-${sourceStatusClass(label)}`}>{label}</span>)}</>;
+}
+function AudienceBadges({
+  audiences,
+  detail = false,
+}: {
+  audiences: Role[];
+  detail?: boolean;
+}) {
+  return (
+    <div
+      className={`audience-badges ${detail ? "audience-badges-detail" : ""}`}
+    >
+      {audiences.map((audience) => (
+        <span key={audience} className={`audience-badge audience-${audience}`}>
+          {audienceLabel[audience] || audience}
+        </span>
+      ))}
+    </div>
+  );
+}
+function FavoriteButton({
+  tool,
+  favorite,
+  onToggle,
+}: {
+  tool: Tool;
+  favorite: boolean;
+  onToggle: (tool: Tool) => void;
+}) {
+  return (
+    <button
+      className={`favorite ${favorite ? "is-favorite" : ""}`}
+      aria-label={
+        favorite
+          ? `Убрать ${tool.title} из Моё`
+          : `Добавить ${tool.title} в Моё`
+      }
+      aria-pressed={favorite}
+      onClick={(event) => {
+        event.stopPropagation();
+        onToggle(tool);
+      }}
+    >
+      {favorite ? "★" : "☆"}
+    </button>
+  );
+}
+function ToolCard({
+  tool,
+  favorite,
+  onOpen,
+  onToggle,
+}: {
+  tool: Tool;
+  favorite: boolean;
+  onOpen: (tool: Tool) => void;
+  onToggle: (tool: Tool) => void;
+}) {
+  return (
+    <article
+      className={`tool-card ${tool.sourceStatusValues?.includes('Разрабатывается') && !tool.sourceStatusValues?.includes('На проде') ? "is-development" : ""}`}
+      onClick={() => onOpen(tool)}
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") onOpen(tool);
+      }}
+    >
+      <div className="card-top">
+        <span>{typeLabel(tool.type)}</span>
+        <FavoriteButton tool={tool} favorite={favorite} onToggle={onToggle} />
+      </div>
+      <h3>{tool.title}</h3>
+      <p>{tool.shortDescription}</p>
+      {tool.metrics?.[0] && (
+        <div className="card-metric">
+          <strong>{tool.metrics[0].value}</strong>
+          <span>{tool.metrics[0].label}</span>
+        </div>
+      )}
+      <div className="card-foot">
+        <AudienceBadges audiences={tool.audiences} />
+        <span className="arrow">
+          {!(tool.actions || []).some(action => action.primary) ? (
+            "Пока недоступен"
+          ) : (
+            <>
+              Открыть <b>↗</b>
+            </>
+          )}
+        </span>
+      </div>
+    </article>
+  );
+}
+function SearchBar({
+  id,
+  value,
+  onChange,
+}: {
+  id: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="search-input">
+      <span>⌕</span>
+      <input
+        id={id}
+        aria-label="Что хотите сделать?"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="Найти инструмент для анимации, ревью макета, исследования, текста…"
+      />
+      <kbd>⌘ K</kbd>
+    </div>
+  );
+}
+function FilterPanel({
+  task,
+  type,
+  status,
+  onTask,
+  onType,
+  onStatus,
+  onReset,
+  sticky = false,
+}: {
+  task: string;
+  type: string;
+  status: string;
+  onTask: (value: string) => void;
+  onType: (value: string) => void;
+  onStatus: (value: string) => void;
+  onReset: () => void;
+  sticky?: boolean;
+}) {
+  return (
+    <div
+      className={`filter-panel ${sticky ? "is-sticky" : ""}`}
+      role="dialog"
+      aria-label="Фильтры"
+    >
+      <div className="filter-panel-head">
+        <span>ФИЛЬТРЫ</span>
+        <button onClick={onReset}>Сбросить фильтры</button>
+      </div>
+      <label>
+        ЗАДАЧА
+        <select
+          aria-label="Задача"
+          value={task}
+          onChange={(event) => onTask(event.target.value)}
+        >
+          <option value="">Все задачи</option>
+          {taskFilters.map((value) => (
+            <option value={value} key={value}>
+              {taskLabel[value]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        ТИП
+        <select
+          aria-label="Тип"
+          value={type}
+          onChange={(event) => onType(event.target.value)}
+        >
+          <option value="">Все типы</option>
+          {["plugin", "agent", "bot", "service", "skill", "workflow"].map(
+            (value) => (
+              <option value={value} key={value}>
+                {value.toUpperCase()}
+              </option>
+            ),
+          )}
+        </select>
+      </label>
+      <label>
+        СТАТУС
+        <select
+          aria-label="Статус"
+          value={status}
+          onChange={(event) => onStatus(event.target.value)}
+        >
+          <option value="">Все статусы</option>
+          <option value="На проде">На проде</option>
+          <option value="Тестируется">Тестируется</option>
+          <option value="Разработан">Разработан</option>
+          <option value="Разрабатывается">Разрабатывается</option>
+        </select>
+      </label>
+    </div>
+  );
+}
+function FilterButton({
+  count,
+  open,
+  onClick,
+}: {
+  count: number;
+  open: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      className={`filter-button ${open ? "active" : ""}`}
+      aria-expanded={open}
+      onClick={onClick}
+    >
+      Фильтры{count > 0 ? ` · ${count}` : ""}
+    </button>
+  );
+}
+function WorkControls({
+  query,
+  role,
+  favoriteMode,
+  filterCount,
+  filtersOpen,
+  onQuery,
+  onRole,
+  onFavoriteMode,
+  onFilterToggle,
+  compact = false,
+}: {
+  query: string;
+  role: Role | "all";
+  favoriteMode: boolean;
+  filterCount: number;
+  filtersOpen: boolean;
+  onQuery: (value: string) => void;
+  onRole: (role: Role | "all") => void;
+  onFavoriteMode: () => void;
+  onFilterToggle: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <div className={compact ? "toolbar-controls compact" : "work-controls"}>
+      {compact ? (
+        <SearchBar
+          id="sticky-catalog-search"
+          value={query}
+          onChange={onQuery}
+        />
+      ) : (
+        <>
+          <label className="search-label" htmlFor="catalog-search">
+            Что хотите сделать?
+          </label>
+          <SearchBar id="catalog-search" value={query} onChange={onQuery} />
+        </>
+      )}
+      <div className="control-row">
+        <div className="roles">
+          <span>ДЛЯ ВАШЕЙ РАБОТЫ</span>
+          {(["all", "design", "research", "text"] as const).map((value) => (
+            <button
+              key={value}
+              className={role === value ? "active" : ""}
+              onClick={() => onRole(value)}
+            >
+              {value === "all"
+                ? "Все"
+                : value === "design"
+                  ? "Дизайн"
+                  : value === "research"
+                    ? "Исследования"
+                    : "Текст"}
+            </button>
+          ))}
+        </div>
+        <button
+          className={`favorites-toggle ${favoriteMode ? "active" : ""}`}
+          aria-pressed={favoriteMode}
+          onClick={onFavoriteMode}
+        >
+          ★ Моё
+        </button>
+        <FilterButton
+          count={filterCount}
+          open={filtersOpen}
+          onClick={onFilterToggle}
+        />
+      </div>
+    </div>
+  );
+}
+function Detail({
+  tool,
+  favorite,
+  onToggle,
+  onClose,
+}: {
+  tool: Tool;
+  favorite: boolean;
+  onToggle: (tool: Tool) => void;
+  onClose: () => void;
+}) {
+  const related = (tool.relatedToolIds || [])
+    .map((id) => tools.find((item) => item.id === id))
+    .filter(Boolean) as Tool[];
+  const actions = tool.actions || [];
+  const primary = actions.find((action) => action.primary);
+  const secondary = actions.filter((action) => !action.primary);
+  const actionUrls = new Set(actions.map((action) => action.url));
+  const sourceOnlyLinks = (tool.sourceLinks || []).filter(
+    (url) => !actionUrls.has(url),
+  );
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) =>
+      event.key === "Escape" && onClose();
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [onClose]);
+  const eventFor = (kind: string) =>
+    kind === "guide"
+      ? "tool_guide_clicked"
+      : kind === "discussion"
+        ? "tool_discussion_clicked"
+        : kind === "announcement"
+          ? "tool_announcement_clicked"
+          : kind === "channel"
+            ? "tool_channel_clicked"
+            : "tool_action_clicked";
+  const sourceLinkEvent = (url: string) => {
+    trackEvent("tool_case_source_clicked", {
+      toolId: tool.id,
+      figmaNodeId: tool.figmaNodeId || "",
+      actionKind: "caseSource",
+      destination: url,
+    });
+  };
+  return (
+    <div
+      className="sheet-backdrop"
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
+      <aside
+        className="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-label={tool.title}
+      >
+        <button className="close" onClick={onClose} aria-label="Закрыть">
+          ×
+        </button>
+        <div className="sheet-meta">
+          <span>{typeLabel(tool.type)}</span>
+          <Status tool={tool} />
+          <AudienceBadges audiences={tool.audiences} detail />
+        </div>
+        <div className="sheet-title-row">
+          <h2>{tool.title}</h2>
+          <FavoriteButton tool={tool} favorite={favorite} onToggle={onToggle} />
+        </div>
+        <p className="sheet-lead">{tool.shortDescription}</p>
+        {!primary ? (
+          <div className="sheet-cta sheet-disabled">
+            Инструмент пока недоступен
+          </div>
+        ) : primary ? (
+          <div className="sheet-cta">
+            <a
+              href={primary.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent("tool_primary_action_clicked", {
+                  toolId: tool.id,
+                  figmaNodeId: tool.figmaNodeId || "",
+                  actionKind: primary.kind,
+                  destination: primary.url,
+                })
+              }
+            >
+              {primary.label} ↗
+            </a>
+          </div>
+        ) : (
+          <p className="no-link">Ссылка на инструмент пока не добавлена</p>
+        )}
+        {secondary.length > 0 && (
+          <div className="sheet-actions">
+            {secondary.map((action) => (
+              <a
+                key={action.url}
+                href={action.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent(eventFor(action.kind), {
+                    toolId: tool.id,
+                    figmaNodeId: tool.figmaNodeId || "",
+                    actionKind: action.kind,
+                    destination: action.url,
+                  })
+                }
+              >
+                {action.label} ↗
+              </a>
+            ))}
+          </div>
+        )}
+        {sourceOnlyLinks.length > 0 && (
+          <section className="sheet-source-links">
+            <small>ССЫЛКИ ИЗ КЕЙСА</small>
+            {sourceOnlyLinks.map((url) => (
+              <a
+                key={url}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => sourceLinkEvent(url)}
+              >
+                {url} ↗
+              </a>
+            ))}
+          </section>
+        )}
+        {tool.metrics?.length ? (
+          <section>
+            <small>ЭФФЕКТ</small>
+            <div className="metrics">
+              {tool.metrics.map((metric) => (
+                <div key={metric.label}>
+                  <strong>{metric.value}</strong>
+                  <span>{metric.label}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+        {tool.howToStart.length > 0 && (
+          <section>
+            <small>КАК НАЧАТЬ</small>
+            <ol>
+              {tool.howToStart.map((step, index) => (
+                <li key={step}>
+                  <b>0{index + 1}</b>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+        {(tool.whenToUse || tool.whatItDoes) && (
+          <section>
+            <small>ЧТО ДЕЛАЕТ И КОГДА ИСПОЛЬЗОВАТЬ</small>
+            {tool.whenToUse && <p>{tool.whenToUse}</p>}
+            {tool.whatItDoes && tool.whatItDoes !== tool.whenToUse && (
+              <p className="detail-secondary-copy">{tool.whatItDoes}</p>
+            )}
+          </section>
+        )}
+        {related.length > 0 && (
+          <section>
+            <small>ПОХОЖИЕ ИНСТРУМЕНТЫ</small>
+            <div className="related">
+              {related.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    onClose();
+                    window.setTimeout(() => {
+                      window.location.href = appBase + "tool/" + item.id;
+                    }, 0);
+                  }}
+                >
+                  {item.title}
+                  <span>↗</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+        <details className="case-details" open>
+          <summary>О кейсе</summary>
+          <p>
+            <strong>Создали</strong>
+            <br />
+            {tool.authors.map((author) => (
+              <span className="author-line" key={author}>
+                {author}
+                <br />
+              </span>
+            ))}
+          </p>
+          <p>
+            <strong>Статус</strong>
+            <br />
+            <Status tool={tool} />
+          </p>
+          <p>
+            <strong>Обновлено</strong>
+            <br />
+            {new Date(tool.updatedAt).toLocaleDateString("ru-RU", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+          {tool.caseSource && (
+            <p className="case-source">
+              <strong>Источник кейса</strong>
+              <br />
+              <a
+                href={tool.caseSource}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent("tool_case_source_clicked", {
+                    toolId: tool.id,
+                    figmaNodeId: tool.figmaNodeId || "",
+                    actionKind: "caseSource",
+                    destination: tool.caseSource!,
+                  })
+                }
+              >
+                Посмотреть описание кейса ↗
+              </a>
+            </p>
+          )}
+        </details>
+      </aside>
+    </div>
+  );
+}
+function Catalog() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search],
+  );
+  const query = params.get("q") || "";
+  const role = (params.get("role") as Role | "all") || "all";
+  const intent = params.get("intent") || "";
+  const task = params.get("task") || "";
+  const type = params.get("type") || "";
+  const status = params.get("status") || "";
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  });
+  const [favoriteMode, setFavoriteMode] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sticky, setSticky] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const searchSentinel = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const updateUrl = (changes: Record<string, string | null>) => {
+    const next = new URLSearchParams(location.search);
+    Object.entries(changes).forEach(([key, value]) =>
+      value ? next.set(key, value) : next.delete(key),
+    );
+    navigate(next.toString() ? `/?${next.toString()}` : "/");
+  };
+  const selectIntent = (nextIntent: string) =>
+    updateUrl({
+      intent: intent === nextIntent ? null : nextIntent,
+      task: null,
+    });
+  const clearFilters = () =>
+    updateUrl({ task: null, type: null, status: null });
+  const clearAll = () => {
+    setFavoriteMode(false);
+    navigate("/");
+  };
+  const toggleFavorite = (tool: Tool) =>
+    setFavorites((current) => {
+      const next = current.includes(tool.id)
+        ? current.filter((id) => id !== tool.id)
+        : [...current, tool.id];
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+      trackEvent("favorite_toggled", {
+        toolId: tool.id,
+        figmaNodeId: tool.figmaNodeId || "",
+        favorite: next.includes(tool.id) ? "true" : "false",
+      });
+      return next;
+    });
+  useEffect(() => {
+    const onScroll = () => setHasScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setSticky(hasScrolled && !entry.isIntersecting),
+      { rootMargin: "-72px 0px 0px 0px" },
+    );
+    if (searchSentinel.current) observer.observe(searchSentinel.current);
+    return () => observer.disconnect();
+  }, [hasScrolled]);
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        const input = document.getElementById(
+          sticky ? "sticky-catalog-search" : "catalog-search",
+        );
+        input?.focus();
+      }
+      if (event.key === "Escape") setFiltersOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [sticky]);
+  useEffect(() => {
+    if (!filtersOpen) return;
+    const onPointer = (event: PointerEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node))
+        setFiltersOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    return () => document.removeEventListener("pointerdown", onPointer);
+  }, [filtersOpen]);
+  const filtered = useMemo(
+    () =>
+      tools.filter((tool) => {
+        const hay = [
+          tool.title,
+          tool.shortDescription,
+          tool.problem,
+          tool.whenToUse,
+          tool.whatItDoes,
+          tool.sourceRecord?.title,
+          tool.sourceRecord?.sourceText.join(" "),
+          tool.sourceRecord?.section,
+          ...tool.categories,
+          ...tool.impactTags,
+          ...tool.audiences,
+          tool.type,
+        ]
+          .join(" ")
+          .toLowerCase();
+        const queryTokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+        const hayTokens = hay.split(/\s+/);
+        const queryMatches =
+          !query ||
+          queryTokens.every(
+            (token) =>
+              hay.includes(token) ||
+              (token.length >= 5 &&
+                hayTokens.some((word) => word.startsWith(token.slice(0, 5)))),
+          );
+        const intentMatch =
+          !intent ||
+          (intents
+            .find((item) => item.id === intent)
+            ?.categories.some((category) =>
+              tool.categories.includes(category),
+            ) ??
+            false);
+        return (
+          queryMatches &&
+          (role === "all" || tool.audiences.includes(role)) &&
+          intentMatch &&
+          (!task || tool.categories.includes(task)) &&
+          (!type || tool.type === type) &&
+          (!status || tool.sourceStatusValues?.includes(status as SourceStatus)) &&
+          (!favoriteMode || favorites.includes(tool.id))
+        );
+      }),
+    [query, role, intent, task, type, status, favoriteMode, favorites],
+  );
+  const groups: { status: SourceStatus | "Без статуса"; title: string }[] = [
+    { status: "На проде", title: "НА ПРОДЕ" },
+    { status: "Тестируется", title: "ТЕСТИРУЮТСЯ" },
+    { status: "Разработан", title: "РАЗРАБОТАНЫ" },
+    { status: "Разрабатывается", title: "В РАЗРАБОТКЕ" },
+    { status: "Без статуса", title: "БЕЗ СТАТУСА" },
+  ];
+  const openTool = (tool: Tool) => {
+    trackEvent("tool_card_opened", {
+      toolId: tool.id,
+      status: tool.status,
+      type: tool.type,
+    });
+    navigate(`/tool/${tool.id}`);
+  };
+  const pathMatch = location.pathname.match(/^\/tool\/(.+)$/);
+  const currentTool = pathMatch
+    ? tools.find((tool) => tool.id === pathMatch[1])
+    : undefined;
+  const closeDetail = () =>
+    navigate(location.search ? `/?${location.search.slice(1)}` : "/");
+  const activeFilterCount = [task, type, status].filter(Boolean).length;
+  return (
+    <>
+      <Header />
+      <main>
+        <section className="hero">
+          <div className="eyebrow">ВНУТРЕННИЙ КАТАЛОГ / 2026</div>
+          <h1>
+            AI TOOLS
+            <br />
+            <em>THAT WORK</em>
+          </h1>
+          <div className="hero-bottom">
+            <p>
+              Инструменты, агенты и практики, которые уже помогают Avito Design
+              Team проектировать, исследовать, писать и автоматизировать работу.
+            </p>
+            <div className="hero-actions">
+              <a href="#catalog" className="button button-light">
+                Смотреть инструменты <span>↓</span>
+              </a>
+            </div>
+          </div>
+          <div className="hero-mark">✳</div>
+        </section>
+        <section className="stats">
+          <div>
+            <strong>
+              {tools.filter((tool) => sourceStatus(tool) === "На проде").length}
+            </strong>
+            <span>на проде</span>
+          </div>
+          <div>
+            <strong>
+              {tools.filter((tool) => tool.sourceStatusValues?.includes("Тестируется")).length}
+            </strong>
+            <span>тестируются</span>
+          </div>
+          <div>
+            <strong>{tools.filter((tool) => tool.sourceStatusValues?.includes("Разработан")).length}</strong>
+            <span>разработаны</span>
+          </div>
+          <div>
+            <strong>{tools.filter((tool) => tool.sourceStatusValues?.includes("Разрабатывается")).length}</strong>
+            <span>в разработке</span>
+          </div>
+        </section>
+        <section ref={searchSentinel} className="search-wrap">
+          <WorkControls
+            query={query}
+            role={role}
+            favoriteMode={favoriteMode}
+            filterCount={activeFilterCount}
+            filtersOpen={filtersOpen}
+            onQuery={(value) => updateUrl({ q: value || null, intent: null })}
+            onRole={(value) =>
+              updateUrl({ role: value === "all" ? null : value })
+            }
+            onFavoriteMode={() => {
+              setFavoriteMode((value) => !value);
+              trackEvent("favorites_view_toggled", {
+                enabled: favoriteMode ? "false" : "true",
+              });
+            }}
+            onFilterToggle={() => setFiltersOpen((value) => !value)}
+          />
+          <div className="intent-row">
+            {intents.map((item) => (
+              <button
+                key={item.id}
+                className={intent === item.id ? "active" : ""}
+                onClick={() => selectIntent(item.id)}
+              >
+                {item.label} <span>↗</span>
+              </button>
+            ))}
+          </div>
+          {filtersOpen && (
+            <div ref={panelRef}>
+              <FilterPanel
+                task={task}
+                type={type}
+                status={status}
+                sticky={sticky}
+                onTask={(value) =>
+                  updateUrl({ task: value || null, intent: null })
+                }
+                onType={(value) => updateUrl({ type: value || null })}
+                onStatus={(value) => updateUrl({ status: value || null })}
+                onReset={clearFilters}
+              />
+            </div>
+          )}
+        </section>
+        {sticky && (
+          <div className="sticky-toolbar">
+            <WorkControls
+              compact
+              query={query}
+              role={role}
+              favoriteMode={favoriteMode}
+              filterCount={activeFilterCount}
+              filtersOpen={filtersOpen}
+              onQuery={(value) => updateUrl({ q: value || null, intent: null })}
+              onRole={(value) =>
+                updateUrl({ role: value === "all" ? null : value })
+              }
+              onFavoriteMode={() => setFavoriteMode((value) => !value)}
+              onFilterToggle={() => setFiltersOpen((value) => !value)}
+            />
+          </div>
+        )}
+        <section id="catalog" className="catalog-section">
+          <div className="section-head">
+            <div>
+              <span className="index">01</span>
+              <h2>ВСЕ ИНСТРУМЕНТЫ</h2>
+            </div>
+            <span className="result-count">{filtered.length} результатов</span>
+          </div>
+          {intent && (
+            <div className="active-intent">
+              Сценарий: {intents.find((item) => item.id === intent)?.label}
+              <button onClick={() => selectIntent(intent)}>×</button>
+            </div>
+          )}
+          {groups.map((group) => {
+            const items = filtered.filter(
+              (tool) => sourceStatus(tool) === group.status,
+            );
+            return items.length ? (
+              <section
+                className={`status-group status-group-${sourceStatusClass(group.status)}`}
+                key={group.status}
+              >
+                <div className="group-head">
+                  <h3>{group.title}</h3>
+                  <span>{items.length}</span>
+                </div>
+                <div className="tool-grid">
+                  {items.map((tool) => (
+                    <ToolCard
+                      key={tool.id}
+                      tool={tool}
+                      favorite={favorites.includes(tool.id)}
+                      onOpen={openTool}
+                      onToggle={toggleFavorite}
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null;
+          })}
+          {filtered.length === 0 && (
+            <div className="empty">
+              {favoriteMode && favorites.length === 0 ? (
+                <>
+                  Здесь будут инструменты, которыми вы пользуетесь чаще всего.
+                  <br />
+                  Добавьте их в Моё с помощью ★.
+                </>
+              ) : (
+                <>
+                  Ничего не нашли.
+                  <button onClick={clearAll}>Сбросить всё</button>
+                </>
+              )}
+            </div>
+          )}
+        </section>
+        <Ideas />
+      </main>
+      {sticky && <div className="sticky-toolbar-spacer" />}
+      {currentTool && (
+        <Detail
+          tool={currentTool}
+          favorite={favorites.includes(currentTool.id)}
+          onToggle={toggleFavorite}
+          onClose={closeDetail}
+        />
+      )}
+      <Footer />
+    </>
+  );
+}
+function Ideas() {
+  return (
+    <section className="ideas" id="ideas">
+      <div className="section-head">
+        <div>
+          <span className="index">02</span>
+          <h2>ЧТО СОБЕРЁМ ДАЛЬШЕ?</h2>
+        </div>
+        <span className="result-count">{ideas.length} идей</span>
+      </div>
+      <p className="ideas-intro">
+        Идеи, которые пока не стали рабочими инструментами. Возможно, одну из
+        них сделаешь ты.
+      </p>
+      <div className="ideas-grid">
+        {ideas.map((idea) => (
+          <article className="idea-card" key={idea.id}>
+            <span className="idea-label">IDEA</span>
+            <h3>{idea.title}</h3>
+            {idea.problem && <p>{idea.problem}</p>}
+            {idea.sourceStatus && (
+              <span className="idea-status">{idea.sourceStatus}</span>
+            )}
+            {idea.owner && <span className="idea-owner">{idea.owner}</span>}
+            {idea.actionUrl && (
+              <a
+                href={idea.actionUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Открыть решение ↗
+              </a>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+function Footer() {
+  return (
+    <footer>
+      <span>
+        AI <i>×</i> Avito Design Team
+      </span>
+      <div>
+        <a
+          href="https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Добавить свой инструмент ↗
+        </a>
+        <a href="mailto:aakosilin@avito.ru">Нашли ошибку? Напишите мне ↗</a>
+      </div>
+      <small>ВНУТРЕННИЙ КАТАЛОГ ADT AI</small>
+    </footer>
+  );
+}
+function Root() {
+  if (import.meta.env.BASE_URL === './') return <HashRouter><Catalog /></HashRouter>;
+  return (
+    <BrowserRouter basename={appBase}>
+      <Catalog />
+    </BrowserRouter>
+  );
+}
+createRoot(document.getElementById("root")!).render(<Root />);

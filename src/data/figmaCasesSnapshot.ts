@@ -9,10 +9,11 @@ export interface FigmaCaseSnapshot {
   audienceValues?: string[];
   authorValues?: string[];
   sourceStatusValues?: string[];
+  sourceStatusEvidence?: { nodeId: string; value: string }[];
   sourceColumns?: Record<string, string[]>;
 }
 
-// Live Figma snapshot for file nVLcu3bbLgz0lJhSUexjvx, page “30 Cases 2026”, frame 374:1308.
+// Live DockingBadge status evidence captured 2026-10-01.
 export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   {
     "figmaNodeId": "374:1509",
@@ -106,6 +107,20 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Алексей Моторов",
       "Георгий Раков",
       "Амир Маликов"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:1509;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I374:1509;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:1509;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -194,6 +209,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Ксения Персианцева [Goods]",
       "@kapersiantseva"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:7329;2265:9163;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:7329;2265:9163;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -283,6 +308,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "@dashabanov"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:5992;2265:9163;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:5992;2265:9163;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -363,6 +398,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Аня Акулова [Финтех]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2687:10311;374:494;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I2687:10311;374:494;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -440,6 +485,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "@aapermyakov"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3469:10969;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -515,6 +566,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Аня Мироненко"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:5594;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -588,6 +645,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Ира Шубина / @ivshubina"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:7695;373:752;1127:80341",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -661,6 +724,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Илья Гладильщиков [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2988:9922;373:752;1127:80341",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -750,6 +819,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Михаил Горлов",
       "@daspesivtseva",
       "Иван Бондарь"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I470:6413;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I470:6413;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -828,6 +907,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "@daspesivtseva",
       "@mvgorlov",
       "Иван Бондарь"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:7207;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -912,6 +997,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Марк Борзенков"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3469:10852;374:494;33:6211",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I3469:10852;374:494;33:6212",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -993,6 +1088,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Никита Мосолов",
       "Артем Кучеров"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:1580;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:1580;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -1070,6 +1175,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Басиев Роман / @rrbasiev"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:7451;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:7451;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -1148,6 +1263,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Артем Шитов"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:3855;374:494;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:3855;374:494;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -1224,6 +1349,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Дима Шерстнев / с"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:8305;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -1297,6 +1428,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Никита Чернецкий"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3188:10318;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -1371,6 +1508,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Артем Шитов"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:1651;374:494;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -1447,6 +1590,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Настя Лаврушкина"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:10246;374:494;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -1525,6 +1674,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Артем Кучеров"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:614;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -1601,6 +1756,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Дима Чуркин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:10794;374:494;33:6211",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I842:10794;374:494;33:6212",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -1678,6 +1843,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Данила Плешаков"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I1862:8991;373:752;33:6212",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -1756,6 +1927,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Матвей Граб"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I1971:9081;373:752;33:6212",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -1833,6 +2010,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Илья Гладильщиков [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2988:9842;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I2988:9842;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -1920,6 +2107,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Денис Сбитный",
       "Флипп Соломин",
       "Ксения Гаврилова"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:3761;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -1996,6 +2189,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Таня Кацубо [Goods]",
       "Настя Левакова [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:11282;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2070,6 +2269,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Настя Ражкован / ayrazhkovan"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:8061;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2143,6 +2348,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Алексей Архипов"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:10306;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2218,6 +2429,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Марк Борзенков [Goods]",
       "Настя Левакова [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:10672;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2293,6 +2510,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Марк Борзенков [Goods]",
       "Настя Лощенкина [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2465:9156;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2369,6 +2592,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Марк Борзенков [Goods]",
       "Татьяна Кацубо [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2466:9226;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2449,6 +2678,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Гоша Кобалия, Маша Чусовитина"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:9026;374:494;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -2529,6 +2764,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Артём Шитов (драйвер от диздепа)",
       "Ярослав Евставьеф (разработчик)"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2687:10083;374:494;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -2620,6 +2861,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Оксана Никоненко, Ира Андреева и Римма Полторак + тех",
       "Катя Герблих"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3469:10501;374:494;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -2693,6 +2940,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Соня Нарбут [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:11160;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2769,6 +3022,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Миша Горлов",
       "Даня Менаховский"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4734:14155;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -2842,6 +3101,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Соня Нарбут [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:11038;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -2921,6 +3186,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Сергей Михайлюк [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:9636;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -2994,6 +3265,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Витя Когдов [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3712:11319;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -3070,6 +3347,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Аня Акулова [Финтех]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2687:10197;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I2687:10197;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -3143,6 +3430,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Андрей Сахаров[Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2687:9969;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -3224,6 +3517,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Стас Машкин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I5084:13751;374:494;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -3297,6 +3596,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "@iygolubev"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3469:11086;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -3377,6 +3682,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Никита Мосолов",
       "Артем Кучеров"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:3577;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -3450,7 +3761,8 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "sourceStatusValues": [],
     "authorValues": [
       "Юля Каримова / @yakarimova"
-    ]
+    ],
+    "sourceStatusEvidence": []
   },
   {
     "figmaNodeId": "374:9880",
@@ -3538,6 +3850,24 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "???"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:9880;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I374:9880;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:9880;373:752;33:6115",
+        "value": "Разработан"
+      },
+      {
+        "nodeId": "I374:9880;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -3621,6 +3951,20 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Миша Паршин / @mnparshin",
       "AUTO"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:10612;373:752;33:6211",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I374:10612;373:752;33:6212",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:10612;373:752;1127:80341",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -3700,6 +4044,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Максим Ваганов / @mavaganov"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:10550;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -3773,6 +4123,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Маша Старикова",
       "Вика Шеревера"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:8660;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -3849,6 +4205,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Варвара Чиркова",
       "Анна Латышева"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:8904;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -3926,6 +4288,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Аня Брижань,",
       "Катя Позднякова"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:9392;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -4001,6 +4369,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Гульнур Гибаева",
       "Варвара Чиркова"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I469:8077;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -4083,6 +4457,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Римма Полторак"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:9758;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:9758;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -4163,6 +4547,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Наташа Щипакина"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:10124;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:10124;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -4238,6 +4632,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "efgrokhotov",
       "mnnizhegorodova"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2577:9936;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -4312,6 +4712,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Маша Московкина"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2589:10131;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -4385,6 +4791,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Аня Нармания / @amnarmaniya"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:9940;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -4468,6 +4880,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Ирина Андреева @imandreeva",
       "+ Шевченко Милена"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:5779;374:494;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I374:5779;374:494;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -4545,6 +4967,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Маша Сафронова [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3469:10618;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I3469:10618;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -4627,6 +5059,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Артем Литвин [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3469:10735;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I3469:10735;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -4702,6 +5144,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Аня Мироненко,",
       "Мария Чусовитина"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:5155;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -4788,6 +5236,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Шахин Зейналов",
       "Павел Демин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:8538;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -4874,6 +5328,24 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "???"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I374:10002;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I374:10002;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I374:10002;373:752;33:6115",
+        "value": "Разработан"
+      },
+      {
+        "nodeId": "I374:10002;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -4950,6 +5422,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "@imletina"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:10184;374:494;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -5024,6 +5502,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Летина Инна, Армен Аллахвердян"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I842:11404;374:494;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -5103,6 +5587,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "@avkuturzhenko"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3443:10471;2265:9163;33:6213",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -5176,6 +5666,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "@avkuturzhenko"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3444:10543;374:494;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -5249,6 +5745,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Летина Инна"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I3498:10916;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -5327,6 +5829,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Денис Сбитний,",
       "Kseniya Gavrilova",
       "Разработка от ДС"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I1960:9455;373:752;33:6114",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -5400,6 +5908,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Филипп Соломин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2270:9129;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -5480,6 +5994,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Даша Долженко",
       "@dsdolzhenko"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I580:6121;373:752;33:6114",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -5553,6 +6073,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Эмилия Ахмедьянова [Goods]"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I2957:9843;373:752;1127:74865",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -5629,6 +6155,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Денис Сбитний @dvsbitniy"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:11515;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -5714,6 +6246,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Владислав",
       "Шатиленко",
       "@vnshatilenko"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:11632;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
     ]
   },
   {
@@ -5800,6 +6338,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Никита Мосолов",
       "Амир Маликов",
       "Данила Комлев"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4996:14045;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -5885,6 +6429,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Никита Мосолов",
       "Амир Маликов",
       "Данила Комлев"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4996:13925;373:752;33:6114",
+        "value": "Тестируется"
+      }
     ]
   },
   {
@@ -5958,6 +6508,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Полина Широкшина"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:11866;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6038,6 +6594,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     "authorValues": [
       "Иван Корчагин",
       "Олеся Колюжная"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:11983;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I4108:11983;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -6114,6 +6680,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Иван Корчагин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12100;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6188,6 +6760,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Иван Корчагин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12217;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6269,6 +6847,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Иван Корчагин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12334;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6343,6 +6927,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Иван Корчагин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12451;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6417,6 +7007,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Иван Корчагин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12568;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6491,6 +7087,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Вячеслав Чехолин"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12685;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6570,6 +7172,20 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Ира Шомникова + avkrekova"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12802;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I4108:12802;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I4108:12802;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -6650,6 +7266,20 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "authorValues": [
       "Ольга Бирюкова"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I4108:12919;373:752;33:6113",
+        "value": "На проде"
+      },
+      {
+        "nodeId": "I4108:12919;373:752;33:6114",
+        "value": "Тестируется"
+      },
+      {
+        "nodeId": "I4108:12919;373:752;33:6115",
+        "value": "Разработан"
+      }
     ]
   },
   {
@@ -6732,6 +7362,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Nikita Prischep",
       "@naprischep",
       "naprischep@avito.ru"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I5003:15213;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   },
   {
@@ -6814,6 +7450,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Nikita Prischep",
       "@naprischep",
       "naprischep@avito.ru"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I5158:14469;373:752;33:6113",
+        "value": "На проде"
+      }
     ]
   }
 ];

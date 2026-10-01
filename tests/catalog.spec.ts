@@ -6,7 +6,8 @@ import { tools, validateTools, type Tool } from '../src/data/tools';
 
 const auditPath = 'test-results/catalog-audit.json';
 const caseSource = (id: string) => 'https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades?node-id=' + id.replace(':', '-');
-const detailUrl = (tool: Tool) => 'tool/' + tool.id;
+const hostedHashRoutes = /prototype-hosting\.k\.avito\.ru|artifact\.avito\.ru/.test(process.env.REMOTE_BASE_URL || '');
+const detailUrl = (tool: Tool) => (hostedHashRoutes ? '#/tool/' : 'tool/') + tool.id;
 const primaryFor = (tool: Tool) => (tool.actions || []).find(action => action.primary);
 const appRootUrl = () => new URL('./', process.env.REMOTE_BASE_URL || 'http://127.0.0.1:4173/adt-ai-tools/').toString();
 const tovTitle = 'Плагин-редактор в Figma с оценкой текста на соответствие корпоративным стандартам (TOV и редполитика), реадактирование на основе ИИ';
@@ -39,9 +40,24 @@ test('catalog smoke flow keeps tools, Ideas, search and filters', async ({ page 
   }
   await page.getByRole('button', { name: 'Фильтры' }).click();
   await expect(page.getByRole('dialog', { name: 'Фильтры' })).toBeVisible();
-  await page.getByLabel('Статус').selectOption('ready');
-  await expect(page).toHaveURL(/status=ready/);
+  await page.getByLabel('Статус', { exact: true }).selectOption('На проде');
+  const selectedUrl = new URL(page.url());
+  expect(new URLSearchParams(hostedHashRoutes ? selectedUrl.hash.split('?')[1] : selectedUrl.search).get('status')).toBe('На проде');
   await page.getByRole('button', { name: /Фильтры/ }).click();
+});
+
+test('visible multi-status badges drive counts, membership filters and Detail', async ({ page }) => {
+  await page.goto('');
+  const labels = ['На проде', 'Тестируется', 'Разработан', 'Разрабатывается'];
+  const counts = labels.map(label => tools.filter(tool => tool.sourceStatusValues?.includes(label as any)).length);
+  await expect(page.locator('.stats strong')).toHaveText(counts.map(String));
+  await page.getByRole('button', { name: 'Фильтры', exact: true }).click();
+  await page.getByLabel('Статус', { exact: true }).selectOption('На проде');
+  await expect(page.locator('#catalog .tool-card')).toHaveCount(counts[0]);
+  const multi = tools.find(tool => tool.sourceStatusValues?.includes('На проде') && tool.sourceStatusValues.length > 1)!;
+  await page.goto(detailUrl(multi));
+  const sheet = page.getByRole('dialog', { name: multi.title });
+  for (const label of multi.sourceStatusValues!) await expect(sheet.locator('.case-details .status').filter({ hasText: label })).toBeVisible();
 });
 
 test('intent filters are semantic and shareable', async ({ page }) => {
@@ -74,10 +90,9 @@ test('status groups stay ordered and shortcut focuses active search', async ({ p
   await page.keyboard.press('Meta+k');
   await expect(page.locator('#catalog-search')).toBeFocused();
   const groups = page.locator('.status-group');
-  await expect(groups).toHaveCount(3);
-  await expect(groups.nth(0)).toHaveClass(/status-group-ready/);
-  await expect(groups.nth(1)).toHaveClass(/status-group-beta/);
-  await expect(groups.nth(2)).toHaveClass(/status-group-development/);
+  await expect(groups).toHaveCount(5);
+  await expect(groups.nth(0)).toHaveClass(/status-group-на-проде/);
+  await expect(groups.nth(1)).toHaveClass(/status-group-тестируется/);
   await page.evaluate(() => window.scrollTo(0, 1200));
   await expect(page.locator('.sticky-toolbar')).toBeVisible();
   await page.keyboard.press('Meta+k');
@@ -99,7 +114,7 @@ test('mobile catalog keeps controls, drawer and detail usable', async ({ page })
 });
 
 test('TOV editor uses the live Figma primary action', async ({ page }) => {
-  await page.goto('tool/tov-editor');
+  await page.goto(detailUrl(tools.find(tool => tool.id === 'tov-editor')!));
   const cta = page.locator('.sheet-cta a');
   await expect(cta).toHaveText('Открыть плагин ↗');
   await expect(cta).toHaveAttribute('href', 'https://www.figma.com/community/plugin/1621150885892028917');
@@ -147,7 +162,7 @@ test('full source snapshot to UI actions audit', async ({ page, context }) => {
     try {
       expect(tool.caseSource).toBe(caseSource(tool.figmaNodeId || ''));
       expect(tool.actions || []).toEqual(ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || []);
-      if (tool.status === 'development' || !primary) {
+      if (!primary) {
         await expect(primaryCta).toHaveCount(0);
       } else {
         await expect(primaryCta).toHaveCount(1);
@@ -191,5 +206,18 @@ test('keyboard detail routing regression', async ({ page }) => {
   await expect(page).toHaveURL(/\/tool\/tov-editor$/);
   await expect(page.getByRole('dialog', { name: tovTitle })).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(page).toHaveURL(appRootUrl());
+  if (hostedHashRoutes) await expect(page).toHaveURL(/#\/$/);
+  else await expect(page).toHaveURL(appRootUrl());
+});
+
+test('runtime assets and refresh keep hosted status data usable', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('response', response => { if (response.status() >= 400 && /\/assets\//.test(response.url())) errors.push(response.url() + ': ' + response.status()); });
+  await page.goto(detailUrl(tools.find(tool => tool.id === 'tov-editor')!));
+  await page.reload();
+  await expect(page.locator('.case-details')).toContainText('На проде');
+  await expect(page.locator('.stats strong').first()).toHaveText(String(tools.filter(tool => tool.sourceStatusValues?.includes('На проде')).length));
+  expect(errors).toEqual([]);
+  await page.screenshot({ path: 'test-results/status-runtime.png', fullPage: true });
 });

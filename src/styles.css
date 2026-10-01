@@ -296,6 +296,10 @@ body{background:#0f1113;color:#f2f2ef}
   .tool-card h3{font-size:19px;line-height:1.18;letter-spacing:-.005em}
 }
 
+.stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sheet-meta{flex-wrap:wrap}
+.status{margin-right:8px}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* Final overrides: keep the stats divider clear and remove status-header rules. */
 .stats > div:not(:first-child){padding-left:32px;padding-right:24px}
 .group-head{border-bottom:0;margin-bottom:12px;padding-bottom:0}

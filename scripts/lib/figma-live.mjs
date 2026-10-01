@@ -73,6 +73,35 @@ function splitSourceValues(values) {
   return values.flatMap(value => normalizeText(value).split(/\n+/).map(normalizeText)).filter(Boolean);
 }
 
+export function visibleDockingBadgeStatuses(row) {
+  function visibleCell(node, hidden = false) {
+    hidden ||= node.visible === false || node.hidden === true;
+    if (hidden) return null;
+    if (node.name === '31') return node;
+    for (const child of node.children || []) {
+      const found = visibleCell(child, hidden);
+      if (found) return found;
+    }
+    return null;
+  }
+  const cell = visibleCell(row);
+  if (!cell) return { values: [], evidence: [], error: null };
+  const badges = [];
+  function visit(node, hidden = false) {
+    hidden ||= node.visible === false || node.hidden === true;
+    if (hidden) return;
+    if (node.type === 'INSTANCE' && node.name === 'DockingBadge') badges.push(node);
+    for (const child of node.children || []) visit(child, hidden);
+  }
+  visit(cell, row.visible === false || row.hidden === true);
+  const evidence = badges.flatMap(badge => {
+    const values = textNodes(badge).map(text => normalizeText(text.characters)).filter(value => KNOWN_STATUS_LABELS.has(value));
+    return values.map(value => ({ nodeId: badge.id, value }));
+  });
+  const unique = [...new Set(evidence.map(item => item.value))];
+  return { values: unique, evidence, error: null };
+}
+
 function parseStructuredColumns(row) {
   const columns = directColumnNodes(row);
   if (columns.length < 4) return null;
@@ -82,11 +111,9 @@ function parseStructuredColumns(row) {
     sourceColumns[key] = splitSourceValues(textNodes(column).map(text => text.characters));
   });
   const audienceValues = [...new Set((sourceColumns.audience || []).filter(value => KNOWN_AUDIENCE_LABELS.has(value)))];
-  const sourceStatusValues = columns.length > 8
-    ? [...new Set((sourceColumns.status || []).filter(value => KNOWN_STATUS_LABELS.has(value)))]
-    : undefined;
+  const status = visibleDockingBadgeStatuses(row);
   const authorValues = (sourceColumns.author || []).filter(value => value !== 'Кто участвует / роль' && value !== 'Автор / участники');
-  return { sourceColumns, audienceValues, ...(sourceStatusValues === undefined ? {} : { sourceStatusValues }), authorValues };
+  return { sourceColumns, audienceValues, sourceStatusValues: status.values, sourceStatusEvidence: status.evidence, ...(status.error ? { statusParseError: status.error } : {}), authorValues };
 }
 
 export function parseToolsFrame(frame) {
@@ -104,6 +131,7 @@ export function parseToolsFrame(frame) {
     if (title === 'Проект') continue;
     if (!title) throw new Error(`Unable to parse title for row ${child.id}`);
     const structured = parseStructuredColumns(child);
+    const status = visibleDockingBadgeStatuses(child);
     rows.push({
       figmaNodeId: child.id,
       ...(structured ? { caseNumber: structured.sourceColumns.caseNumber?.[0] || '', size: structured.sourceColumns.size?.[0] || '' } : {}),
@@ -111,6 +139,9 @@ export function parseToolsFrame(frame) {
       sourceText: text,
       sourceLinks: linksFrom(child).map(link => link.url),
       section: normalizeText(section),
+      sourceStatusValues: status.values,
+      sourceStatusEvidence: status.evidence,
+      ...(status.error ? { statusParseError: status.error } : {}),
       ...(structured || {}),
     });
   }
@@ -129,7 +160,7 @@ export function diffSnapshots(before, after, expectedIds) {
   for (const row of after) {
     const old = beforeById.get(row.figmaNodeId);
     if (!old) continue;
-    for (const field of ['title', 'sourceText', 'sourceLinks', 'section', 'audienceValues', 'authorValues', 'sourceStatusValues', 'sourceColumns']) {
+    for (const field of ['title', 'sourceText', 'sourceLinks', 'section', 'audienceValues', 'authorValues', 'sourceStatusValues', 'sourceStatusEvidence', 'sourceColumns']) {
       if (JSON.stringify(old[field]) !== JSON.stringify(row[field])) changed.push({ nodeId: row.figmaNodeId, field, before: old[field], after: row[field], classification: field === 'sourceLinks' ? 'safe-link-change' : 'safe' });
     }
     if (JSON.stringify(old.authorValues || []) !== JSON.stringify(row.authorValues || [])) changed.push({ nodeId: row.figmaNodeId, field: 'authors', before: old.authorValues || [], after: row.authorValues || [], classification: 'safe-author-change' });

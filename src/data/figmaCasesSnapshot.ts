@@ -30,6 +30,17 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://mt.avito.ru/avito/channels/avito-editor-plugin"
     ],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Design",
+      "Text"
+    ],
+    "authorValues": [
+      "Никита Мосолов",
+      "Артем Кучеров",
+      "Алексей Моторов",
+      "Георгий Раков",
+      "Амир Маликов"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется",
@@ -100,18 +111,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№1, №2, №3",
         "Один кластер про AI-редактор, TOV и редполитику для текстов. Решают близкую задачу контроля и улучшения текстов."
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text"
-    ],
-    "authorValues": [
-      "Никита Мосолов",
-      "Артем Кучеров",
-      "Алексей Моторов",
-      "Георгий Раков",
-      "Амир Маликов"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:7329",
@@ -137,6 +137,14 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Design",
+      "Text"
+    ],
+    "authorValues": [
+      "Ксения Персианцева [Goods]",
+      "@kapersiantseva"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -201,15 +209,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№1, №2, №3",
         "Один кластер про AI-редактор, TOV и редполитику для текстов. Решают близкую задачу контроля и улучшения текстов."
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text"
-    ],
-    "authorValues": [
-      "Ксения Персианцева [Goods]",
-      "@kapersiantseva"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:5992",
@@ -237,6 +237,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1610550602787796018/textsync"
     ],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Design",
+      "Text"
+    ],
+    "authorValues": [
+      "@dashabanov"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -303,14 +310,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text"
-    ],
-    "authorValues": [
-      "@dashabanov"
-    ]
+    }
   },
   {
     "figmaNodeId": "2687:10311",
@@ -337,6 +337,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1638816840468168578"
     ],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "Аня Акулова [Финтех]"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -396,13 +402,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "Аня Акулова [Финтех]"
-    ]
+    }
   },
   {
     "figmaNodeId": "3469:10969",
@@ -426,6 +426,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "@aapermyakov"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -479,13 +485,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "@aapermyakov"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:5594",
@@ -509,6 +509,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "Аня Мироненко"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -560,13 +566,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№1, №2, №3",
         "Один кластер про AI-редактор, TOV и редполитику для текстов. Решают близкую задачу контроля и улучшения текстов."
       ]
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "Аня Мироненко"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:7695",
@@ -590,6 +590,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "Ира Шубина / @ivshubina"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -639,13 +645,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "Ира Шубина / @ivshubina"
-    ]
+    }
   },
   {
     "figmaNodeId": "2988:9922",
@@ -669,6 +669,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "TOV и текст / Плагины для текста",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "Илья Гладильщиков [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -718,13 +724,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "Илья Гладильщиков [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "470:6413",
@@ -751,6 +751,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1638571943514590458"
     ],
     "section": "Графика/изображения",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Никита Мосолов",
+      "Артем Кучеров",
+      "Михаил Горлов",
+      "@daspesivtseva",
+      "Иван Бондарь"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -815,17 +825,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№8, №10",
         "Оба кейса про генерацию графики / изображений в стиле Авито. Отличаются интерфейсом: Figma-плагин и бот в MM."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Никита Мосолов",
-      "Артем Кучеров",
-      "Михаил Горлов",
-      "@daspesivtseva",
-      "Иван Бондарь"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:7207",
@@ -849,6 +849,14 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Графика/изображения",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "@daspesivtseva",
+      "@mvgorlov",
+      "Иван Бондарь"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -901,15 +909,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№8, №10",
         "Оба кейса про генерацию графики / изображений в стиле Авито. Отличаются интерфейсом: Figma-плагин и бот в MM."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "@daspesivtseva",
-      "@mvgorlov",
-      "Иван Бондарь"
-    ]
+    }
   },
   {
     "figmaNodeId": "3469:10852",
@@ -929,7 +929,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Марк Борзенков",
       "На проде",
       "Тестируется",
-      "Текст",
+      "Разработан",
       "Применяем в запуске Аукциона",
       "-",
       "-",
@@ -939,9 +939,18 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://artifact.avito.ru/share/zwE3KaqEvy4JjsW7zh0-Tg"
     ],
     "section": "Анимации",
+    "audienceValues": [
+      "Design",
+      "Text",
+      "Research"
+    ],
+    "authorValues": [
+      "Марк Борзенков"
+    ],
     "sourceStatusValues": [
       "На проде",
-      "Тестируется"
+      "Тестируется",
+      "Разработан"
     ],
     "sourceStatusEvidence": [
       {
@@ -951,6 +960,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       {
         "nodeId": "I3469:10852;374:494;33:6212",
         "value": "Тестируется"
+      },
+      {
+        "nodeId": "I3469:10852;374:494;33:6213",
+        "value": "Разработан"
       }
     ],
     "sourceColumns": {
@@ -983,7 +996,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "status": [
         "На проде",
         "Тестируется",
-        "Текст"
+        "Разработан"
       ],
       "valueAfterLaunch": [
         "Применяем в запуске Аукциона"
@@ -997,15 +1010,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text",
-      "Research"
-    ],
-    "authorValues": [
-      "Марк Борзенков"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:1580",
@@ -1030,6 +1035,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Анимации",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Никита Мосолов",
+      "Артем Кучеров"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -1089,14 +1101,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№11, №13",
         "Оба кейса про ускорение работы с анимациями. №11 — конвертация видео в JSON, №13 — генерация Lottie по промту."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Никита Мосолов",
-      "Артем Кучеров"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:7451",
@@ -1121,6 +1126,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Анимации",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Басиев Роман / @rrbasiev"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разрабатывается"
@@ -1177,13 +1188,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№11, №13",
         "Оба кейса про ускорение работы с анимациями. №11 — конвертация видео в JSON, №13 — генерация Lottie по промту."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Басиев Роман / @rrbasiev"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:3855",
@@ -1210,6 +1215,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1611331720808016861"
     ],
     "section": "Дизайн-ревью",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Артем Шитов"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -1267,13 +1278,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№16 и №14",
         "Оба связаны с фидбэком по макетам, но №16 шире — быстрый продуктовый фидбэк на этапе дизайна, №14 — список замечаний по дизайн-ревью."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Артем Шитов"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:8305",
@@ -1297,6 +1302,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Дизайн-ревью",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Дима Шерстнев / с"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -1349,13 +1360,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№16 и №14",
         "Оба связаны с фидбэком по макетам, но №16 шире — быстрый продуктовый фидбэк на этапе дизайна, №14 — список замечаний по дизайн-ревью."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Дима Шерстнев / с"
-    ]
+    }
   },
   {
     "figmaNodeId": "3188:10318",
@@ -1379,6 +1384,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Дизайн-ревью",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Никита Чернецкий"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -1428,13 +1439,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "Общая зона — дизайн-ревью. №15 и №65 ближе между собой: автоматическое/механическое дизайн-ревью на стейдже/проде."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Никита Чернецкий"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:1651",
@@ -1460,6 +1465,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1605221516079243201"
     ],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Артем Шитов"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -1510,13 +1521,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Артем Шитов"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:10246",
@@ -1542,6 +1547,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1636333597458971823/re-logo-resizer"
     ],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Настя Лаврушкина"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -1594,13 +1605,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Настя Лаврушкина"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:614",
@@ -1624,6 +1629,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Артем Кучеров"
+    ],
     "sourceStatusValues": [
       "Разработан"
     ],
@@ -1678,13 +1689,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Артем Кучеров"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:10794",
@@ -1711,6 +1716,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/widget/1646914114905321708/a-notes"
     ],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Дима Чуркин"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется"
@@ -1767,13 +1778,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Дима Чуркин"
-    ]
+    }
   },
   {
     "figmaNodeId": "1862:8991",
@@ -1800,6 +1805,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1608051932465313128"
     ],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design",
+      "Text"
+    ],
+    "authorValues": [
+      "Данила Плешаков"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -1851,14 +1863,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№29, №61",
         "Общая зона — автоматическая проверка и исправление макетов по правилам ДС. №29 уже более узкий: отступы между текстом и стили текста."
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text"
-    ],
-    "authorValues": [
-      "Данила Плешаков"
-    ]
+    }
   },
   {
     "figmaNodeId": "1971:9081",
@@ -1885,6 +1890,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/widget/1611717453383378342"
     ],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design",
+      "Text"
+    ],
+    "authorValues": [
+      "Матвей Граб"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -1937,14 +1949,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№17, № 66",
         "Оба кейса про сбор согласований / ОК от стейкхолдеров по макетам."
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text"
-    ],
-    "authorValues": [
-      "Матвей Граб"
-    ]
+    }
   },
   {
     "figmaNodeId": "2988:9842",
@@ -1969,6 +1974,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Илья Гладильщиков [Goods]"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -2025,13 +2036,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№21, №22",
         "Оба кейса про поиск похожих макетов, решений и референсов. №21 — через Mobbin по изображению/контексту, №22 — сбор похожих кейсов и референсов из Figma."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Илья Гладильщиков [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:3761",
@@ -2055,6 +2060,18 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Амир Маликов",
+      "Иван Волков",
+      "Никита Мосолов",
+      "Артем Кучеров",
+      "Денис Сбитный",
+      "Флипп Соломин",
+      "Ксения Гаврилова"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -2112,19 +2129,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Амир Маликов",
-      "Иван Волков",
-      "Никита Мосолов",
-      "Артем Кучеров",
-      "Денис Сбитный",
-      "Флипп Соломин",
-      "Ксения Гаврилова"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:11282",
@@ -2148,6 +2153,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Таня Кацубо [Goods]",
+      "Настя Левакова [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -2199,14 +2211,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№ 56, №67",
         "Оценка платформенной консистентности"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Таня Кацубо [Goods]",
-      "Настя Левакова [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:8061",
@@ -2230,6 +2235,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Настя Ражкован / ayrazhkovan"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -2280,13 +2291,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№21, №22",
         "Оба кейса про поиск похожих макетов, решений и референсов. №21 — через Mobbin по изображению/контексту, №22 — сбор похожих кейсов и референсов из Figma."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Настя Ражкован / ayrazhkovan"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:10306",
@@ -2310,6 +2315,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Алексей Архипов"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -2359,13 +2370,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Алексей Архипов"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:10672",
@@ -2389,6 +2394,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Марк Борзенков [Goods]",
+      "Настя Левакова [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -2439,14 +2451,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Марк Борзенков [Goods]",
-      "Настя Левакова [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "2465:9156",
@@ -2470,6 +2475,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Марк Борзенков [Goods]",
+      "Настя Лощенкина [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -2520,14 +2532,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Марк Борзенков [Goods]",
-      "Настя Лощенкина [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "2466:9226",
@@ -2551,6 +2556,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Плагины для дизайнеров",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Марк Борзенков [Goods]",
+      "Татьяна Кацубо [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -2602,14 +2614,93 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№ 56, №67",
         "Оценка платформенной консистентности"
       ]
-    },
+    }
+  },
+  {
+    "figmaNodeId": "5580:15311",
+    "caseNumber": "57",
+    "size": "M",
+    "title": "Фигма плагин для согласования макетов со смежными командами и горизонталями + бот, который создаёт тред в ММ для согласования",
+    "sourceText": [
+      "57",
+      "M",
+      "Фигма плагин для согласования макетов со смежными командами и горизонталями + бот, который создаёт тред в ММ для согласования",
+      "Design",
+      "Ссылка на макеты",
+      "Не знаю, с кем нужно согласовать макет и куда идти (команда, канал)\nНе знаю, куда идти (команда, канал)\nСогласования теряются, мы автоматически проставляем в плагине решение о согласовании и прикрепляем ссылку на тред\nМного времени тратится на написание сообщения для согласования",
+      "Сокращаем кол-во коммуникаций, повышаем прозрачность договоренностей",
+      "Тася Попова\n[Jobs]",
+      "Разрабатывается",
+      "Value после запуска",
+      "-",
+      "-",
+      "-"
+    ],
+    "sourceLinks": [
+      "https://www.figma.com/design/fYhX6pKDnFJVagVD6cArcu/%D0%9F%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD-%D0%B4%D0%BB%D1%8F-%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%81%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F?node-id=17-19650&t=AR9vz08U8yilecjx-1"
+    ],
+    "section": "Плагины для дизайнеров",
     "audienceValues": [
       "Design"
     ],
     "authorValues": [
-      "Марк Борзенков [Goods]",
-      "Татьяна Кацубо [Goods]"
-    ]
+      "Тася Попова",
+      "[Jobs]"
+    ],
+    "sourceStatusValues": [
+      "Разрабатывается"
+    ],
+    "sourceStatusEvidence": [
+      {
+        "nodeId": "I5580:15311;373:752;1127:74865",
+        "value": "Разрабатывается"
+      }
+    ],
+    "sourceColumns": {
+      "caseNumber": [
+        "57"
+      ],
+      "size": [
+        "M"
+      ],
+      "project": [
+        "Фигма плагин для согласования макетов со смежными командами и горизонталями + бот, который создаёт тред в ММ для согласования"
+      ],
+      "audience": [
+        "Design"
+      ],
+      "link": [
+        "Ссылка на макеты"
+      ],
+      "problem": [
+        "Не знаю, с кем нужно согласовать макет и куда идти (команда, канал)",
+        "Не знаю, куда идти (команда, канал)",
+        "Согласования теряются, мы автоматически проставляем в плагине решение о согласовании и прикрепляем ссылку на тред",
+        "Много времени тратится на написание сообщения для согласования"
+      ],
+      "metric": [
+        "Сокращаем кол-во коммуникаций, повышаем прозрачность договоренностей"
+      ],
+      "author": [
+        "Тася Попова",
+        "[Jobs]"
+      ],
+      "status": [
+        "Разрабатывается"
+      ],
+      "valueAfterLaunch": [
+        "Value после запуска"
+      ],
+      "participants": [
+        "-"
+      ],
+      "related": [
+        "-"
+      ],
+      "notes": [
+        "-"
+      ]
+    }
   },
   {
     "figmaNodeId": "374:9026",
@@ -2627,7 +2718,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Гоша Кобалия, Маша Чусовитина",
       "в Q3 будет готова Машина по Тревелу (селлерский опыт) и сейчас готовится пилот в Работе- тоже селлерский (хотели к концу q2, но мне кажется, не успеем)",
       "На проде",
-      "Дорабатывается",
+      "Разрабатывается",
       "Обзор всех польз данных в одном окне; наполнение бэклогов команд; создание и обогащение SPT - более быстрая поставка данные в продукт\n\nПока оценивали частями:\n1) разметка открытых ответов из CES: если в ручную - то примерно 2 недели, если через LLM - примерно 1 час на 1000 комментариев\n\n2) создание тикетов в SPT, примерно: вручную 1 час на 10-15 тикетов, с помощью ИИ - минуты на создание (потом еще нужна ручная перепроверка, но это все равно быстрее, чем самому)\n\n3) Обзор всех польз данных в одном окне; наполнение бэклогов команд; создание и обогащение SPT - более быстрая поставка данные\nв продукт",
       "-",
       "-"
@@ -2636,13 +2727,24 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/spaces/RES/pages/895376163/%D0%A1%D0%BF%D0%B5%D1%86%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8F+%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%B0+%E2%80%94+Meta+User+Voice+Travel+CES"
     ],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Гоша Кобалия, Маша Чусовитина"
+    ],
     "sourceStatusValues": [
-      "На проде"
+      "На проде",
+      "Разрабатывается"
     ],
     "sourceStatusEvidence": [
       {
         "nodeId": "I374:9026;374:494;33:6113",
         "value": "На проде"
+      },
+      {
+        "nodeId": "I374:9026;374:494;1127:74865",
+        "value": "Разрабатывается"
       }
     ],
     "sourceColumns": {
@@ -2675,7 +2777,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "status": [
         "в Q3 будет готова Машина по Тревелу (селлерский опыт) и сейчас готовится пилот в Работе- тоже селлерский (хотели к концу q2, но мне кажется, не успеем)",
         "На проде",
-        "Дорабатывается"
+        "Разрабатывается"
       ],
       "valueAfterLaunch": [
         "Обзор всех польз данных в одном окне; наполнение бэклогов команд; создание и обогащение SPT - более быстрая поставка данные в продукт",
@@ -2685,20 +2787,14 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "3) Обзор всех польз данных в одном окне; наполнение бэклогов команд; создание и обогащение SPT - более быстрая поставка данные",
         "в продукт"
       ],
-      "participants": [
-        "-"
-      ],
+      "participants": [],
       "related": [
         "-"
       ],
-      "notes": []
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Гоша Кобалия, Маша Чусовитина"
-    ]
+      "notes": [
+        "-"
+      ]
+    }
   },
   {
     "figmaNodeId": "2687:10083",
@@ -2724,6 +2820,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://docs.k.avito.ru/service-paas-docs/genai/pages/use_cases/prototype_hosting/"
     ],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Артём Шитов (драйвер от диздепа)",
+      "Ярослав Евставьеф (разработчик)"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -2779,14 +2882,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Артём Шитов (драйвер от диздепа)",
-      "Ярослав Евставьеф (разработчик)"
-    ]
+    }
   },
   {
     "figmaNodeId": "3469:10501",
@@ -2814,6 +2910,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/bygmNg"
     ],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Оксана Никоненко, Ира Андреева и Римма Полторак + тех",
+      "Катя Герблих"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -2879,14 +2982,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Оксана Никоненко, Ира Андреева и Римма Полторак + тех",
-      "Катя Герблих"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:11160",
@@ -2910,6 +3006,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Соня Нарбут [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -2959,13 +3061,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Соня Нарбут [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "4734:14155",
@@ -2989,6 +3085,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Миша Горлов",
+      "Даня Менаховский"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -3040,14 +3143,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Миша Горлов",
-      "Даня Менаховский"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:11038",
@@ -3071,6 +3167,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Соня Нарбут [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -3120,13 +3222,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Соня Нарбут [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:9636",
@@ -3152,6 +3248,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://mt.avito.ru/avito/pl/u9y5h5wrftni7b4mxpcmerynjo"
     ],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Сергей Михайлюк [Goods]"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -3209,13 +3311,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "-"
       ],
       "notes": []
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Сергей Михайлюк [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "3712:11319",
@@ -3239,6 +3335,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Витя Когдов [Goods]"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -3288,13 +3390,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "Подобный кейс у Сергея М. Как опишет в табличке, прикреплю ссылку"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Витя Когдов [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "2687:10197",
@@ -3321,6 +3417,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://apakulova.github.io/skills-matrix/"
     ],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "Аня Акулова [Финтех]"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Разработан"
@@ -3376,13 +3478,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "Аня Акулова [Финтех]"
-    ]
+    }
   },
   {
     "figmaNodeId": "2687:9969",
@@ -3408,6 +3504,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://caxapoff.github.io/design_osmotr/"
     ],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Андрей Сахаров[Goods]"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -3457,13 +3559,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Андрей Сахаров[Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "5084:13751",
@@ -3489,6 +3585,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://avikot.k.avito.ru/"
     ],
     "section": "Оптимизация процессов",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Стас Машкин"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -3546,13 +3648,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Стас Машкин"
-    ]
+    }
   },
   {
     "figmaNodeId": "3469:11086",
@@ -3576,6 +3672,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Коммуникация / Боты",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "@iygolubev"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -3625,13 +3727,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "@iygolubev"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:3577",
@@ -3656,6 +3752,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Коммуникация / Боты",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Никита Мосолов",
+      "Артем Кучеров"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -3710,14 +3813,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№30, №34",
         "Оба кейса про командных ботов для синхронизации: статусы, напоминания, дежурные, планирование, чек-листы."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Никита Мосолов",
-      "Артем Кучеров"
-    ]
+    }
   },
   {
     "figmaNodeId": "3575:11190",
@@ -3742,6 +3838,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://llm.k.avito.ru/project/afb0e117-1315-4d54-834a-9d0adffc14ce"
     ],
     "section": "Коммуникация / Боты",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "Юля Каримова / @yakarimova"
+    ],
     "sourceStatusValues": [],
     "sourceStatusEvidence": [],
     "sourceColumns": {
@@ -3772,29 +3874,23 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "author": [
         "Юля Каримова / @yakarimova"
       ],
-      "status": [
+      "status": [],
+      "valueAfterLaunch": [
         "CRM-команда тратит меньше времени на качественную постановку — быстро отвечают на несколько вопросов и получают готовый бриф, который можно скопировать в Jira&",
         "Редакторы не тратят время на выяснение подробностей, быстрее приносят тексты высокого качества.",
         "И у тех, и у других снижаются трудозатраты и временные затраты на разработку текстов рассылок."
       ],
-      "valueAfterLaunch": [
+      "participants": [
         "Виталик иногда выдаёт ошибки это не проблема бота, а системная у Виталика.",
         "Ещё хотим кастомизировать внешний вид бота — тоже вопрос к разрабам Виталика"
-      ],
-      "participants": [
-        "-"
       ],
       "related": [
         "-"
       ],
-      "notes": []
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "Юля Каримова / @yakarimova"
-    ]
+      "notes": [
+        "-"
+      ]
+    }
   },
   {
     "figmaNodeId": "374:9880",
@@ -3822,6 +3918,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Коммуникация / Боты",
+    "audienceValues": [
+      "Design",
+      "Research"
+    ],
+    "authorValues": [
+      "???"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется",
@@ -3893,14 +3996,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№30, №34",
         "Оба кейса про командных ботов для синхронизации: статусы, напоминания, дежурные, планирование, чек-листы."
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Research"
-    ],
-    "authorValues": [
-      "???"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:10612",
@@ -3926,6 +4022,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Коммуникация / Боты",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Миша Паршин / @mnparshin",
+      "AUTO"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется",
@@ -3990,14 +4093,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Миша Паршин / @mnparshin",
-      "AUTO"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:10550",
@@ -4024,6 +4120,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://chatgpt.com/g/g-6900c234c8c88191ad9e2d7daf38e418-ruchnoi-redaktor-dlia-issledovatelei"
     ],
     "section": "Коммуникация / Боты",
+    "audienceValues": [
+      "Text",
+      "Research"
+    ],
+    "authorValues": [
+      "Максим Ваганов / @mavaganov"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -4077,14 +4180,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№37, №53",
         "Оба помогают с текстовыми материалами для исследований: анкеты, опросы, приглашения, формулировки"
       ]
-    },
-    "audienceValues": [
-      "Text",
-      "Research"
-    ],
-    "authorValues": [
-      "Максим Ваганов / @mavaganov"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:8660",
@@ -4107,6 +4203,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Маша Старикова",
+      "Вика Шеревера"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -4157,14 +4260,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "-"
       ],
       "notes": []
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Маша Старикова",
-      "Вика Шеревера"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:8904",
@@ -4188,6 +4284,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Варвара Чиркова",
+      "Анна Латышева"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -4239,14 +4342,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№37, №53",
         "Оба помогают с текстовыми материалами для исследований: анкеты, опросы, приглашения, формулировки"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Варвара Чиркова",
-      "Анна Латышева"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:9392",
@@ -4270,6 +4366,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Аня Брижань,",
+      "Катя Позднякова"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -4322,14 +4425,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Аня Брижань,",
-      "Катя Позднякова"
-    ]
+    }
   },
   {
     "figmaNodeId": "469:8077",
@@ -4353,6 +4449,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Гульнур Гибаева",
+      "Варвара Чиркова"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -4403,14 +4506,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Гульнур Гибаева",
-      "Варвара Чиркова"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:9758",
@@ -4437,6 +4533,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/x2wmNg"
     ],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Римма Полторак"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -4498,13 +4600,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Римма Полторак"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:10124",
@@ -4531,6 +4627,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/sDyaNQ"
     ],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Наташа Щипакина"
+    ],
     "sourceStatusValues": [
       "Тестируется",
       "Разработан"
@@ -4590,13 +4692,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Наташа Щипакина"
-    ]
+    }
   },
   {
     "figmaNodeId": "2577:9936",
@@ -4620,6 +4716,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "efgrokhotov",
+      "mnnizhegorodova"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -4670,14 +4773,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "efgrokhotov",
-      "mnnizhegorodova"
-    ]
+    }
   },
   {
     "figmaNodeId": "2589:10131",
@@ -4701,6 +4797,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "AI агенты",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Маша Московкина"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -4751,13 +4853,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Маша Московкина"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:9940",
@@ -4781,6 +4877,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "AI агенты",
+    "audienceValues": [
+      "Text"
+    ],
+    "authorValues": [
+      "Аня Нармания / @amnarmaniya"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -4830,13 +4932,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Text"
-    ],
-    "authorValues": [
-      "Аня Нармания / @amnarmaniya"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:5779",
@@ -4860,10 +4956,17 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-"
     ],
     "sourceLinks": [
-      "https://arxiv.org/pdf/2507.02306",
-      "https://chatgpt.com/g/g-68ee5b25ffd481919f78683f6a2bc5bc-ux-audit/c/69e779af-7aa8-8324-a120-3e51ef08c598"
+      "https://chatgpt.com/g/g-68ee5b25ffd481919f78683f6a2bc5bc-ux-audit/c/69e779af-7aa8-8324-a120-3e51ef08c598",
+      "https://arxiv.org/pdf/2507.02306"
     ],
     "section": "База знаний",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Ирина Андреева @imandreeva",
+      "+ Шевченко Милена"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется"
@@ -4925,14 +5028,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Ирина Андреева @imandreeva",
-      "+ Шевченко Милена"
-    ]
+    }
   },
   {
     "figmaNodeId": "3469:10618",
@@ -4956,9 +5052,16 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-"
     ],
     "sourceLinks": [
+      "https://telegram/classifiedsnews",
       "https://t.me/classifiedsnews"
     ],
     "section": "База знаний",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Маша Сафронова [Goods]"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Разработан"
@@ -5015,13 +5118,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Маша Сафронова [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "3469:10735",
@@ -5048,6 +5145,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://teamquiz-production.up.railway.app"
     ],
     "section": "База знаний",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Артем Литвин [Goods]"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Разработан"
@@ -5109,13 +5212,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Артем Литвин [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:5155",
@@ -5139,6 +5236,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "База знаний",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Аня Мироненко,",
+      "Мария Чусовитина"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -5189,14 +5293,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Аня Мироненко,",
-      "Мария Чусовитина"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:8538",
@@ -5220,6 +5317,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "База знаний",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Шахин Зейналов",
+      "Павел Демин"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -5281,14 +5385,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Шахин Зейналов",
-      "Павел Демин"
-    ]
+    }
   },
   {
     "figmaNodeId": "374:10002",
@@ -5316,6 +5413,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "База знаний",
+    "audienceValues": [
+      "Design",
+      "Research"
+    ],
+    "authorValues": [
+      "???"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется",
@@ -5385,14 +5489,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Research"
-    ],
-    "authorValues": [
-      "???"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:10184",
@@ -5418,6 +5515,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1628831664417940031"
     ],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "@imletina"
+    ],
     "sourceStatusValues": [
       "Разработан"
     ],
@@ -5470,13 +5573,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№50, №60",
         "Один иконочный кластер AKITA: №50 генерирует набор иконок, №60 проверяет иконки на ошибки."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "@imletina"
-    ]
+    }
   },
   {
     "figmaNodeId": "842:11404",
@@ -5502,6 +5599,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1629179776041025350"
     ],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Летина Инна, Армен Аллахвердян"
+    ],
     "sourceStatusValues": [
       "Разработан"
     ],
@@ -5552,13 +5655,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№50, №60",
         "Один иконочный кластер AKITA: №50 генерирует набор иконок, №60 проверяет иконки на ошибки."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Летина Инна, Армен Аллахвердян"
-    ]
+    }
   },
   {
     "figmaNodeId": "3443:10471",
@@ -5585,6 +5682,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/spaces/DS/pages/908478754/Regress"
     ],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "@avkuturzhenko"
+    ],
     "sourceStatusValues": [
       "Разработан"
     ],
@@ -5640,13 +5743,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "@avkuturzhenko"
-    ]
+    }
   },
   {
     "figmaNodeId": "3444:10543",
@@ -5672,6 +5769,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://plato.k.avito.ru/skills/cd2ae6c4-c2f4-4371-826a-4c920a4d24a4"
     ],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "@avkuturzhenko"
+    ],
     "sourceStatusValues": [
       "Разработан"
     ],
@@ -5721,13 +5824,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "@avkuturzhenko"
-    ]
+    }
   },
   {
     "figmaNodeId": "3498:10916",
@@ -5753,6 +5850,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1654863800712143195"
     ],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Летина Инна"
+    ],
     "sourceStatusValues": [
       "Разработан"
     ],
@@ -5802,13 +5905,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "—"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Летина Инна"
-    ]
+    }
   },
   {
     "figmaNodeId": "1960:9455",
@@ -5824,7 +5921,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "Позволяет проверить макет на соответствие дизайн-системе: отступы между всеми парами шрифтов на арт-борде, соответствие семантическим цветам, легальным стилям, наличие деприкейтед компонентов и т. д.",
       "Поможет соблюдать гигиену макетов. Плагин расставит комментарии в те места на арт-борде, где что-то не так.",
       "Денис Сбитний,\nKseniya Gavrilova\nРазработка от ДС",
-      "Разрабатывается",
+      "Разработан",
       "Value после запуска",
       "-",
       "-",
@@ -5832,13 +5929,21 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Денис Сбитний,",
+      "Kseniya Gavrilova",
+      "Разработка от ДС"
+    ],
     "sourceStatusValues": [
-      "Разрабатывается"
+      "Разработан"
     ],
     "sourceStatusEvidence": [
       {
-        "nodeId": "I1960:9455;373:752;33:6114",
-        "value": "Разрабатывается"
+        "nodeId": "I1960:9455;373:752;33:6212",
+        "value": "Разработан"
       }
     ],
     "sourceColumns": {
@@ -5869,7 +5974,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "Разработка от ДС"
       ],
       "status": [
-        "Разрабатывается"
+        "Разработан"
       ],
       "valueAfterLaunch": [
         "Value после запуска"
@@ -5884,15 +5989,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
         "№29, №61",
         "Общая зона — автоматическая проверка и исправление макетов по правилам ДС. №29 уже более узкий: отступы между текстом и стили текста."
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Денис Сбитний,",
-      "Kseniya Gavrilova",
-      "Разработка от ДС"
-    ]
+    }
   },
   {
     "figmaNodeId": "2270:9129",
@@ -5918,6 +6015,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/widget/1672591916994786530"
     ],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Филипп Соломин"
+    ],
     "sourceStatusValues": [
       "Разработан"
     ],
@@ -5967,13 +6070,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Филипп Соломин"
-    ]
+    }
   },
   {
     "figmaNodeId": "580:6121",
@@ -5997,6 +6094,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Даша Долженко",
+      "@dsdolzhenko"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -6052,14 +6156,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Даша Долженко",
-      "@dsdolzhenko"
-    ]
+    }
   },
   {
     "figmaNodeId": "2957:9843",
@@ -6085,6 +6182,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://www.figma.com/community/plugin/1643602237421717731"
     ],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Эмилия Ахмедьянова [Goods]"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -6134,13 +6237,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Эмилия Ахмедьянова [Goods]"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:11515",
@@ -6164,6 +6261,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Денис Сбитний @dvsbitniy"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -6216,13 +6319,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Денис Сбитний @dvsbitniy"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:11632",
@@ -6246,6 +6343,17 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Дизайн Система (DS)",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "Денис Сбитний @dvsbitniy,",
+      "Филипп Соломин",
+      "@fosolomin,",
+      "Владислав",
+      "Шатиленко",
+      "@vnshatilenko"
+    ],
     "sourceStatusValues": [
       "Разрабатывается"
     ],
@@ -6302,18 +6410,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Денис Сбитний @dvsbitniy,",
-      "Филипп Соломин",
-      "@fosolomin,",
-      "Владислав",
-      "Шатиленко",
-      "@vnshatilenko"
-    ]
+    }
   },
   {
     "figmaNodeId": "4996:14045",
@@ -6341,6 +6438,17 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://t.me/iidem_dalshe/309"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Design",
+      "Text",
+      "Research"
+    ],
+    "authorValues": [
+      "Артем Кучеров",
+      "Никита Мосолов",
+      "Амир Маликов",
+      "Данила Комлев"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -6396,18 +6504,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text",
-      "Research"
-    ],
-    "authorValues": [
-      "Артем Кучеров",
-      "Никита Мосолов",
-      "Амир Маликов",
-      "Данила Комлев"
-    ]
+    }
   },
   {
     "figmaNodeId": "4996:13925",
@@ -6435,6 +6532,17 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://t.me/iidem_dalshe/309"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Design",
+      "Text",
+      "Research"
+    ],
+    "authorValues": [
+      "Артем Кучеров",
+      "Никита Мосолов",
+      "Амир Маликов",
+      "Данила Комлев"
+    ],
     "sourceStatusValues": [
       "Тестируется"
     ],
@@ -6489,18 +6597,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design",
-      "Text",
-      "Research"
-    ],
-    "authorValues": [
-      "Артем Кучеров",
-      "Никита Мосолов",
-      "Амир Маликов",
-      "Данила Комлев"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:11866",
@@ -6526,6 +6623,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NlbbOw"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Полина Широкшина"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -6575,13 +6678,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Полина Широкшина"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:11983",
@@ -6609,6 +6706,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NCkSNQ"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Иван Корчагин",
+      "Олеся Колюжная"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Разработан"
@@ -6667,14 +6771,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Иван Корчагин",
-      "Олеся Колюжная"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:12100",
@@ -6700,6 +6797,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NCkSNQ"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Иван Корчагин"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -6747,20 +6850,14 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "valueAfterLaunch": [
         "По предыдущей и текущей карточкам qual-interview-analyzer зафиксировано 53 скачивания без дедупликации пользователей. Оценочно сокращает анализ 5–10 интервью и подготовку проверяемого отчёта на 4–8 часов на исследование."
       ],
-      "participants": [
-        "-"
-      ],
+      "participants": [],
       "related": [
         "-"
       ],
-      "notes": []
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Иван Корчагин"
-    ]
+      "notes": [
+        "-"
+      ]
+    }
   },
   {
     "figmaNodeId": "4108:12217",
@@ -6787,6 +6884,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NCkSNQ"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Иван Корчагин"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -6837,13 +6940,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Иван Корчагин"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:12334",
@@ -6870,6 +6967,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NCkSNQ"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Иван Корчагин"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -6927,13 +7030,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Иван Корчагин"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:12451",
@@ -6960,6 +7057,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NCkSNQ"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Иван Корчагин"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -7010,13 +7113,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Иван Корчагин"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:12568",
@@ -7043,6 +7140,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NCkSNQ"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Иван Корчагин"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -7093,13 +7196,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Иван Корчагин"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:12685",
@@ -7126,6 +7223,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "https://cf.avito.ru/x/NCkSNQ"
     ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Вячеслав Чехолин"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -7176,13 +7279,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Вячеслав Чехолин"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:12802",
@@ -7208,6 +7305,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Ира Шомникова + avkrekova"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется",
@@ -7269,13 +7372,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Ира Шомникова + avkrekova"
-    ]
+    }
   },
   {
     "figmaNodeId": "4108:12919",
@@ -7301,6 +7398,12 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Ольга Бирюкова"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется",
@@ -7363,13 +7466,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Ольга Бирюкова"
-    ]
+    }
   },
   {
     "figmaNodeId": "5003:15213",
@@ -7393,6 +7490,14 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Nikita Prischep",
+      "@naprischep",
+      "naprischep@avito.ru"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -7449,15 +7554,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Nikita Prischep",
-      "@naprischep",
-      "naprischep@avito.ru"
-    ]
+    }
   },
   {
     "figmaNodeId": "5158:14469",
@@ -7481,6 +7578,14 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceLinks": [],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Research"
+    ],
+    "authorValues": [
+      "Nikita Prischep",
+      "@naprischep",
+      "naprischep@avito.ru"
+    ],
     "sourceStatusValues": [
       "На проде"
     ],
@@ -7537,99 +7642,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Research"
-    ],
-    "authorValues": [
-      "Nikita Prischep",
-      "@naprischep",
-      "naprischep@avito.ru"
-    ]
-  },
-  {
-    "figmaNodeId": "5580:15311",
-    "caseNumber": "57",
-    "size": "M",
-    "title": "Фигма плагин для согласования макетов со смежными командами и горизонталями + бот, который создаёт тред в ММ для согласования",
-    "sourceText": [
-      "57",
-      "M",
-      "Фигма плагин для согласования макетов со смежными командами и горизонталями + бот, который создаёт тред в ММ для согласования",
-      "Design",
-      "Ссылка на макеты",
-      "Не знаю, с кем нужно согласовать макет и куда идти (команда, канал)\nНе знаю, куда идти (команда, канал)\nСогласования теряются, мы автоматически проставляем в плагине решение о согласовании и прикрепляем ссылку на тред\nМного времени тратится на написание сообщения для согласования",
-      "Сокращаем кол-во коммуникаций, повышаем прозрачность договоренностей",
-      "Тася Попова\n[Jobs]",
-      "Разрабатывается",
-      "Value после запуска",
-      "-",
-      "-",
-      "-"
-    ],
-    "sourceLinks": [],
-    "section": "Плагины для дизайнеров",
-    "sourceStatusValues": [
-      "Разрабатывается"
-    ],
-    "sourceStatusEvidence": [
-      {
-        "nodeId": "I5580:15311;373:752;1127:74865",
-        "value": "Разрабатывается"
-      }
-    ],
-    "sourceColumns": {
-      "caseNumber": [
-        "57"
-      ],
-      "size": [
-        "M"
-      ],
-      "project": [
-        "Фигма плагин для согласования макетов со смежными командами и горизонталями + бот, который создаёт тред в ММ для согласования"
-      ],
-      "audience": [
-        "Design"
-      ],
-      "link": [
-        "Ссылка на макеты"
-      ],
-      "problem": [
-        "Не знаю, с кем нужно согласовать макет и куда идти (команда, канал)",
-        "Не знаю, куда идти (команда, канал)",
-        "Согласования теряются, мы автоматически проставляем в плагине решение о согласовании и прикрепляем ссылку на тред",
-        "Много времени тратится на написание сообщения для согласования"
-      ],
-      "metric": [
-        "Сокращаем кол-во коммуникаций, повышаем прозрачность договоренностей"
-      ],
-      "author": [
-        "Тася Попова",
-        "[Jobs]"
-      ],
-      "status": [
-        "Разрабатывается"
-      ],
-      "valueAfterLaunch": [
-        "Value после запуска"
-      ],
-      "participants": [
-        "-"
-      ],
-      "related": [
-        "-"
-      ],
-      "notes": [
-        "-"
-      ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "Тася Попова",
-      "[Jobs]"
-    ]
+    }
   },
   {
     "figmaNodeId": "5158:14545",
@@ -7653,8 +7666,17 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1684293912620642311/akita-skeleton"
+    ],
     "section": "Новые кейсы",
+    "audienceValues": [
+      "Design"
+    ],
+    "authorValues": [
+      "@sekonyukhova",
+      "Соня Конюхова"
+    ],
     "sourceStatusValues": [
       "На проде",
       "Тестируется",
@@ -7719,13 +7741,6 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "notes": [
         "-"
       ]
-    },
-    "audienceValues": [
-      "Design"
-    ],
-    "authorValues": [
-      "@sekonyukhova",
-      "Соня Конюхова"
-    ]
+    }
   }
 ];

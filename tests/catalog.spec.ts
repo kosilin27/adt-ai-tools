@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { ideas } from '../src/data/ideas';
-import { ACTIONS_BY_NODE_ID, TOOL_NODE_IDS } from '../src/data/figmaSource';
+import { actionsForSource } from '../src/data/figmaSource';
+import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot';
+const sourceNodeIds = FIGMA_CASES_SNAPSHOT.map(row => row.figmaNodeId);
 import { tools, validateTools, type Tool } from '../src/data/tools';
 
 const auditPath = 'test-results/catalog-audit.json';
@@ -14,16 +16,16 @@ const tovTitle = 'Плагин-редактор в Figma с оценкой те�
 
 test.beforeAll(async () => {
   validateTools(tools);
-  expect(tools.length).toBe(87);
+  expect(tools.length).toBe(sourceNodeIds.length);
   expect(ideas.length).toBe(13);
-  expect(new Set(tools.map(tool => tool.figmaNodeId)).size).toBe(87);
+  expect(new Set(tools.map(tool => tool.figmaNodeId)).size).toBe(sourceNodeIds.length);
   await mkdir('test-results', { recursive: true });
 });
 
 test('catalog smoke flow keeps tools, Ideas, search and filters', async ({ page }) => {
   await page.goto('');
   await expect(page.getByRole('heading', { name: 'AI TOOLS THAT WORK' })).toBeVisible();
-  await expect(page.locator('#catalog .tool-card')).toHaveCount(87);
+  await expect(page.locator('#catalog .tool-card')).toHaveCount(sourceNodeIds.length);
   await expect(page.locator('#ideas .idea-card')).toHaveCount(13);
   await expect(page.getByText('NEW THIS MONTH')).toHaveCount(0);
   await expect(page.getByText('6 new this month')).toHaveCount(0);
@@ -33,7 +35,7 @@ test('catalog smoke flow keeps tools, Ideas, search and filters', async ({ page 
   await page.locator('#catalog-search').fill('query-that-cannot-match');
   await expect(page.getByText('Ничего не нашли.')).toBeVisible();
   await page.getByRole('button', { name: 'Сбросить всё' }).click();
-  await expect(page.locator('#catalog .tool-card')).toHaveCount(87);
+  await expect(page.locator('#catalog .tool-card')).toHaveCount(sourceNodeIds.length);
   for (const role of ['Дизайн', 'Исследования', 'Текст']) {
     await page.locator('.search-wrap .roles').getByRole('button', { name: role, exact: true }).click();
     await expect(page.locator('#catalog .tool-card').first()).toBeVisible();
@@ -65,7 +67,7 @@ test('intent filters are semantic and shareable', async ({ page }) => {
   await page.getByRole('button', { name: /Сделать прототип/ }).click();
   await expect(page).toHaveURL(/intent=prototype/);
   await expect(page.locator('.active-intent')).toContainText('Сделать прототип');
-  await expect(page.locator('#catalog .tool-card')).not.toHaveCount(87);
+  await expect(page.locator('#catalog .tool-card')).not.toHaveCount(sourceNodeIds.length);
   await page.getByRole('button', { name: /Автоматизировать/ }).click();
   await expect(page).toHaveURL(/intent=automate/);
   await expect(page.locator('.intent-row button.active')).toHaveCount(1);
@@ -82,7 +84,7 @@ test('favorites persist, do not open cards, and filter independently', async ({ 
   await expect(page.locator('#catalog .tool-card')).toHaveCount(1);
   await page.reload();
   await expect(page.locator('.search-wrap .favorites-toggle')).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('#catalog .tool-card')).toHaveCount(87);
+  await expect(page.locator('#catalog .tool-card')).toHaveCount(sourceNodeIds.length);
 });
 
 test('status groups stay ordered and shortcut focuses active search', async ({ page }) => {
@@ -155,13 +157,13 @@ test('full source snapshot to UI actions audit', async ({ page, context }) => {
     const primaryCta = sheet.locator('.sheet-cta a');
     const row: Record<string, unknown> = {
       figmaNodeId: tool.figmaNodeId, title: tool.title, status: tool.status,
-      sourceActions: ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || [],
+      sourceActions: actionsForSource(tool.sourceRecord!),
       datasetActions: tool.actions || [], primaryCtaFound: await primaryCta.count(),
       primaryCtaHref: (await primaryCta.count()) ? await primaryCta.getAttribute('href') : null, result: 'PASS',
     };
     try {
       expect(tool.caseSource).toBe(caseSource(tool.figmaNodeId || ''));
-      expect(tool.actions || []).toEqual(ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || []);
+      expect(tool.actions || []).toEqual(actionsForSource(tool.sourceRecord!));
       if (!primary) {
         await expect(primaryCta).toHaveCount(0);
       } else {
@@ -187,12 +189,12 @@ test('full source snapshot to UI actions audit', async ({ page, context }) => {
   const guideOnly = tools.filter(tool => !primaryFor(tool) && (tool.actions || []).some(action => action.kind === 'guide')).length;
   const announcementOnly = tools.filter(tool => !primaryFor(tool) && (tool.actions || []).some(action => action.kind === 'announcement')).length;
   console.log([
-    'BUILD: PASS', 'TOOLS: ' + tools.length + ' / 87', 'IDEAS: ' + ideas.length + ' / 13',
+    'BUILD: PASS', 'TOOLS: ' + tools.length + ' / ' + sourceNodeIds.length, 'IDEAS: ' + ideas.length + ' / 13',
     'PRIMARY ACTIONS: ' + primaryCount, 'GUIDE-ONLY TOOLS: ' + guideOnly,
     'ANNOUNCEMENT-ONLY TOOLS: ' + announcementOnly,
-    'DATASET MISSING NODE IDS: ' + TOOL_NODE_IDS.filter(id => !tools.some(tool => tool.figmaNodeId === id)).length,
-    'UNKNOWN NODE IDS: ' + tools.filter(tool => !TOOL_NODE_IDS.includes(tool.figmaNodeId || '')).length,
-    'SOURCE ACTION MISMATCH: ' + tools.filter(tool => JSON.stringify(tool.actions || []) !== JSON.stringify(ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || [])).length,
+    'DATASET MISSING NODE IDS: ' + sourceNodeIds.filter(id => !tools.some(tool => tool.figmaNodeId === id)).length,
+    'UNKNOWN NODE IDS: ' + tools.filter(tool => !sourceNodeIds.includes(tool.figmaNodeId || '')).length,
+    'SOURCE ACTION MISMATCH: ' + tools.filter(tool => JSON.stringify(tool.actions || []) !== JSON.stringify(actionsForSource(tool.sourceRecord!))).length,
     'BROKEN CTA: ' + broken, 'E2E: ' + (broken ? 'FAIL' : 'PASS'),
   ].join('\n'));
   expect(broken, 'Broken CTA count: ' + broken).toBe(0);

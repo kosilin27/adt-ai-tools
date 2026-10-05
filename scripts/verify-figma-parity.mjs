@@ -1,62 +1,32 @@
-import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
-import { tools } from '../src/data/tools.ts';
-import { TOOL_NODE_IDS, IDEA_NODE_IDS, ACTIONS_BY_NODE_ID } from '../src/data/figmaSource.ts';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
+import { tools, validateTools } from '../src/data/tools.ts';
+import { curatedByNodeId } from '../src/data/curatedTools.ts';
 import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
+import { validateSourceRows } from '../src/data/figmaContract.ts';
 
-const expected = new Set(TOOL_NODE_IDS);
-const actual = new Set(tools.map(tool => tool.figmaNodeId));
-const SOURCE_STATUSES = new Set(['На проде', 'Тестируется', 'Разработан', 'Разрабатывается']);
-const rows = FIGMA_CASES_SNAPSHOT.map(source => {
-  const tool = tools.find(item => item.figmaNodeId === source.figmaNodeId);
-  const sourceActions = ACTIONS_BY_NODE_ID[source.figmaNodeId] || [];
-  const catalogActions = tool?.actions || [];
-  const titleMatch = tool?.title === source.title;
-  const linksMatch = JSON.stringify(catalogActions) === JSON.stringify(sourceActions);
-  const audienceMatch = source.audienceValues === undefined || JSON.stringify(tool?.audiences || []) === JSON.stringify([...new Set(source.audienceValues.map(value => value.toLowerCase()).filter(value => ['design', 'research', 'text'].includes(value)))])
-  const authorMatch = source.authorValues === undefined || JSON.stringify(tool?.authors || []) === JSON.stringify(source.authorValues || [])
-const statusValues = source.sourceStatusValues || [];
-const statusMatch = statusValues.every(value => SOURCE_STATUSES.has(value)) && JSON.stringify(tool?.sourceStatusValues || []) === JSON.stringify(statusValues);
-  return {
-    figmaNodeId: source.figmaNodeId,
-    figmaTitle: source.title,
-    catalogTitle: tool?.title || '',
-    titleMatch,
-    linksMatch,
-    statusMatch,
-    authorsMatch: authorMatch,
-    audienceMatch,
-    overall: Boolean(tool && titleMatch && linksMatch && statusMatch && authorMatch && audienceMatch),
+validateTools();
+assert.deepEqual(validateSourceRows(FIGMA_CASES_SNAPSHOT),[]);
+const rows = FIGMA_CASES_SNAPSHOT.map((source,index) => {
+  const tool = tools[index];
+  const fields = {
+    identity:tool.figmaNodeId === source.figmaNodeId,
+    title:tool.title === source.title,
+    sourceRecord:JSON.stringify(tool.sourceRecord) === JSON.stringify(source),
+    text:JSON.stringify(tool.sourceText) === JSON.stringify(source.sourceText),
+    links:JSON.stringify(tool.sourceLinks) === JSON.stringify(source.sourceLinks) && source.sourceLinks.every(url => tool.actions.some(action => action.url === url)),
+    authors:JSON.stringify(tool.authors) === JSON.stringify(source.authorValues),
+    audiences:JSON.stringify(tool.audiences) === JSON.stringify(source.audienceValues.map(value => value.toLowerCase())),
+    statuses:JSON.stringify(tool.sourceStatusValues) === JSON.stringify(source.sourceStatusValues),
+    section:tool.sourceSection === source.section,
+    curated:Object.entries(curatedByNodeId[source.figmaNodeId] || {}).filter(([key]) => !['actionOverrides','supplementalActions'].includes(key)).every(([key,value]) => JSON.stringify(tool[key]) === JSON.stringify(value)),
   };
+  return {figmaNodeId:source.figmaNodeId,title:source.title,fields,overall:Object.values(fields).every(Boolean)};
 });
-const primary = tools.flatMap(tool => tool.actions || []).filter(action => action.primary);
-const guideOnly = tools.filter(tool => (tool.actions || []).length > 0 && (tool.actions || []).every(action => !action.primary && action.kind === 'guide')).length;
-const announcementOnly = tools.filter(tool => (tool.actions || []).length > 0 && (tool.actions || []).every(action => !action.primary && action.kind === 'announcement')).length;
-const sourceMismatch = tools.filter(tool => JSON.stringify(tool.actions || []) !== JSON.stringify(ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || [])).length;
-const fallbackMappings = /fallback|fallbackIds|fallbackIndex/i.test(readFileSync(new URL('../src/data/tools.ts', import.meta.url), 'utf8')) ? 1 : 0;
-const checks = {
-  'FIGMA ROWS': `${FIGMA_CASES_SNAPSHOT.length} / ${FIGMA_CASES_SNAPSHOT.length}`,
-  'EXACT TITLE MATCH': `${rows.filter(row => row.titleMatch).length} / ${rows.length}`,
-  'EXPLICIT NODE MAPPING': `${[...expected].filter(id => actual.has(id)).length} / ${expected.size}`,
-  'SOURCE LINK MATCH': `${rows.filter(row => row.linksMatch).length} / ${rows.length}`,
-  'SOURCE STATUS MATCH': `${rows.filter(row => row.statusMatch).length} / ${rows.length}`,
-  'SOURCE AUTHORS MATCH': `${rows.filter(row => row.authorsMatch).length} / ${rows.length}`,
-  'SOURCE AUDIENCE MATCH': `${rows.filter(row => row.audienceMatch).length} / ${rows.length}`,
-  'ORPHAN CATALOG TOOLS': tools.filter(tool => !expected.has(tool.figmaNodeId || '')).length,
-  'ORPHAN FIGMA ROWS': TOOL_NODE_IDS.filter(id => !actual.has(id)).length,
-  'FALLBACK MAPPINGS': fallbackMappings,
-  'FIELD PARITY ERRORS': rows.filter(row => !row.overall).length + sourceMismatch,
-  'PRIMARY ACTIONS': primary.length,
-  'GUIDE-ONLY TOOLS': guideOnly,
-  'ANNOUNCEMENT-ONLY TOOLS': announcementOnly,
-  'IDEAS': IDEA_NODE_IDS.length,
-};
-const failed = Object.entries(checks).filter(([key, value]) => {
-  if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH' || key === 'SOURCE AUDIENCE MATCH') return value.split(' / ')[0] !== value.split(' / ')[1];
-  return ['ORPHAN CATALOG TOOLS','ORPHAN FIGMA ROWS','FALLBACK MAPPINGS','FIELD PARITY ERRORS'].includes(key) ? value !== 0 : false;
-});
-mkdirSync('test-results', { recursive: true });
-writeFileSync('test-results/figma-parity.json', JSON.stringify({ checks, rows }, null, 2));
-writeFileSync('test-results/figma-parity.md', `# Figma parity\n\n${Object.entries(checks).map(([key, value]) => `- ${key}: ${value}`).join('\n')}\n\n| figmaNodeId | Figma title | Catalog title | title | links | status | authors | overall |\n|---|---|---|---:|---:|---:|---:|---:|\n${rows.map(row => `| ${row.figmaNodeId} | ${row.figmaTitle.replaceAll('|', '\\|')} | ${row.catalogTitle.replaceAll('|', '\\|')} | ${row.titleMatch ? 'PASS' : 'FAIL'} | ${row.linksMatch ? 'PASS' : 'FAIL'} | ${row.statusMatch ? 'PASS' : 'FAIL'} | ${row.authorsMatch ? 'PASS' : 'FAIL'} | ${row.overall ? 'PASS' : 'FAIL'} |`).join('\n')}\n`);
-for (const [key, value] of Object.entries(checks)) console.log(`${key}: ${value}`);
-if (failed.length) { console.error(`PARITY FAIL: ${failed.map(([key]) => key).join(', ')}`); process.exit(1); }
+const checks = {sourceRows:rows.length,catalogRows:tools.length,passed:rows.filter(row => row.overall).length,fieldParityErrors:rows.filter(row => !row.overall).length,drafts:tools.filter(tool => tool.editorialState === 'draft').length,sourceLinks:FIGMA_CASES_SNAPSHOT.reduce((count,row) => count+row.sourceLinks.length,0)};
+mkdirSync('test-results',{recursive:true});
+writeFileSync('test-results/figma-parity.json',JSON.stringify({checks,rows},null,2)+'\n');
+writeFileSync('test-results/figma-parity.md',`# Figma parity\n\n${Object.entries(checks).map(([key,value]) => `- ${key}: ${value}`).join('\n')}\n\n| nodeId | title | result |\n|---|---|---|\n${rows.map(row => `| ${row.figmaNodeId} | ${row.title.replaceAll('|','\\|').replaceAll('\n',' ')} | ${row.overall ? 'PASS' : 'FAIL'} |`).join('\n')}\n`);
+console.log(JSON.stringify(checks));
+assert.equal(checks.fieldParityErrors,0,'Full source-to-catalog field parity failed');
 console.log('PARITY: PASS');

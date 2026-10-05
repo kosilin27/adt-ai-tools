@@ -19,7 +19,7 @@ const sourceStatusClass = (status: string) => status.toLowerCase().replace(/ /g,
 const SOURCE_STATUS_ORDER: (SourceStatus | "Без статуса")[] = [
   "На проде", "Тестируется", "Разработан", "Разрабатывается", "Без статуса",
 ];
-const typeLabel = (value: string) => value.toUpperCase();
+const typeLabel = (value: string) => value === "unspecified" ? "Тип не указан" : value.toUpperCase();
 const audienceLabel: Record<string, string> = {
   design: "Design",
   research: "Research",
@@ -574,11 +574,11 @@ function Detail({
           <p>
             <strong>Обновлено</strong>
             <br />
-            {new Date(tool.updatedAt).toLocaleDateString("ru-RU", {
+            {tool.updatedAt ? new Date(tool.updatedAt).toLocaleDateString("ru-RU", {
               day: "numeric",
               month: "long",
               year: "numeric",
-            })}
+            }) : "Не указано"}
           </p>
           {tool.caseSource && (
             <p className="case-source">

@@ -3,7 +3,7 @@ export type SourceStatus = 'На проде'|'Тестируется'|'Разр�
 export type ToolStatus = 'ready'|'beta'|'development';
 export type ToolType = 'plugin'|'agent'|'bot'|'service'|'skill'|'workflow';
 import { ACTIONS_BY_NODE_ID, FIGMA_FILE_URL, TOOL_NODE_IDS, type ToolAction } from './figmaSource.ts';
-import { FIGMA_CASE_BY_NODE_ID, type FigmaCaseSnapshot } from './figmaCasesSnapshot.ts';
+import { FIGMA_CASE_BY_NODE_ID, FIGMA_CASES_SNAPSHOT, type FigmaCaseSnapshot } from './figmaCasesSnapshot.ts';
 export interface Tool { id:string; figmaNodeId?:string; title:string; shortDescription:string; problem?:string; whenToUse?:string; whatItDoes?:string; audiences:Role[]; categories:string[]; type:ToolType; status:ToolStatus; sourceStatus?:SourceStatus; statusNote?:string; metrics?:{value:string;label:string}[]; impactTags:string[]; howToStart:string[]; authors:string[]; updatedAt:string; createdAt:string; relatedToolIds?:string[]; actions?:ToolAction[]; caseSource?:string; links?:{tool?:string;guide?:string;caseSource?:string}; sourceRecord?:FigmaCaseSnapshot; sourceText?:string[]; sourceLinks?:string[]; sourceSection?:string; sourceAudienceValues?:string[]; sourceStatusValues?:SourceStatus[]; featured?:boolean; }
 const seedTools:Tool[] = [
 {id:'tov-editor',title:'TOV & text editor',shortDescription:'Checks interface copy against Avito standards and suggests edits.',problem:'Different wording and late editorial reviews create extra iterations and dilute the product voice.',whenToUse:'Use when you need to review or rewrite interface text before release.',whatItDoes:'A Figma plugin with the editorial policy, tone of voice and AI-assisted rewriting in context.',audiences:['design','text'],categories:['Text','Design review'],type:'plugin',status:'beta',statusNote:'Being tested with the team.',metrics:[{value:'−50%',label:'iterations after review'},{value:'+75%',label:'first-pass rate'}],impactTags:['Improve quality','Save time'],howToStart:['Open the plugin in Figma.','Select a frame with interface copy.','Run the check and review suggestions.'],authors:['Никита Мосолов · Артем Кучеров · Алексей Моторов · Георгий Раков · Амир Маликов'],updatedAt:'2026-09-08',createdAt:'2026-06-01',relatedToolIds:['typography-text','editorial-policy'],featured:true},
@@ -73,7 +73,9 @@ const extraTools:Tool[]=[
  x('backlog-enrichment','Обогащение беклога','Дополняет тикеты актуальной информацией и помогает считать сигналы.',['research'],['Research','Automation'],'workflow','ready','374:10002'),
  x('ai-prototyping','AI-прототипирование','Создаёт прототипы для тестирования.',['design','research'],['Prototyping'],'plugin','ready','374:9636'),
  x('avikot-review-extension','Авикот — Расширение для быстрого дизайн-ревью сайтов в контуре Авито (авторизация, совместные комменты, уведосления ММ)','',['design'],['Design review'],'service','ready','5084:13751'),
- x('uxf-bundle-5158','uxf-bundle (uxf-analyzer + uxf-pipeline)','',['research'],['Research'],'workflow','ready','5158:14469')
+ x('uxf-bundle-5158','uxf-bundle (uxf-analyzer + uxf-pipeline)','',['research'],['Research'],'workflow','ready','5158:14469'),
+ x('layout-approval',"Фигма плагин для согласования макетов со смежными командами и горизонталями + бот, который создаёт тред в ММ для согласования",'',['design'],['Design review'],'plugin','development','5580:15311'),
+ x('loader-plugin','Плагин для создания лоадеров','Подготавливает лоадер по DS Akita во время подготовки спек',['design'],['Design System'],'plugin','ready','5158:14545')
 ];
 const explicitNodeIdByToolId:Record<string,string>={...sourceIdByToolId};
 for(const tool of extraTools){ if(!tool.figmaNodeId) throw new Error(`Missing explicit Figma node ID: ${tool.id}`); explicitNodeIdByToolId[tool.id]=tool.figmaNodeId; }
@@ -94,7 +96,10 @@ const normalizedTools=[...productTools,...extraTools].map(tool=>{
 export const tools:Tool[]=normalizedTools;
 export function validateTools(dataset:Tool[]=tools){
   const ids=dataset.map(tool=>tool.figmaNodeId||'');
-  if(dataset.length!==87) throw new Error('Expected 87 tools, got '+dataset.length);
+  const snapshotIds=FIGMA_CASES_SNAPSHOT.map(row=>row.figmaNodeId);
+  if(new Set(snapshotIds).size!==snapshotIds.length) throw new Error('Duplicate snapshot node ID');
+  if(snapshotIds.length!==TOOL_NODE_IDS.length||snapshotIds.some(id=>!TOOL_NODE_IDS.includes(id))) throw new Error('Snapshot node IDs do not match registry');
+  if(dataset.length!==snapshotIds.length) throw new Error('Catalog count does not match snapshot');
   if(new Set(ids).size!==ids.length) throw new Error('Duplicate Figma node ID');
   if(ids.some(id=>!TOOL_NODE_IDS.includes(id))||TOOL_NODE_IDS.some(id=>!ids.includes(id))) throw new Error('Tool node IDs do not match source snapshot');
   for(const tool of dataset){

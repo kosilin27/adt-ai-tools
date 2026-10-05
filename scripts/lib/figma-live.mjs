@@ -95,10 +95,11 @@ export function visibleDockingBadgeStatuses(row) {
   }
   visit(cell, row.visible === false || row.hidden === true);
   const evidence = badges.flatMap(badge => {
-    const values = textNodes(badge).map(text => normalizeText(text.characters)).filter(value => KNOWN_STATUS_LABELS.has(value));
+    const values = splitSourceValues(textNodes(badge).map(text => text.characters)).filter(value => value && value !== 'Статус');
     return values.map(value => ({ nodeId: badge.id, value }));
   });
-  const unique = [...new Set(evidence.map(item => item.value))];
+  // Preserve visible cell values before validation, including text outside badges.
+  const unique = [...new Set(splitSourceValues(textNodes(cell).map(text => text.characters)).filter(value => value !== 'Статус'))];
   return { values: unique, evidence, error: null };
 }
 
@@ -110,7 +111,7 @@ function parseStructuredColumns(row) {
     const key = SOURCE_COLUMN_NAMES[index] || `column${index + 1}`;
     sourceColumns[key] = splitSourceValues(textNodes(column).map(text => text.characters));
   });
-  const audienceValues = [...new Set((sourceColumns.audience || []).filter(value => KNOWN_AUDIENCE_LABELS.has(value)))];
+  const audienceValues = [...new Set((sourceColumns.audience || []).filter(value => value !== 'Кто участвует / роль'))];
   const status = visibleDockingBadgeStatuses(row);
   const authorValues = (sourceColumns.author || []).filter(value => value !== 'Кто участвует / роль' && value !== 'Автор / участники');
   return { sourceColumns, audienceValues, sourceStatusValues: status.values, sourceStatusEvidence: status.evidence, ...(status.error ? { statusParseError: status.error } : {}), authorValues };
@@ -120,6 +121,7 @@ export function parseToolsFrame(frame) {
   const rows = [];
   let section = '';
   for (const child of frame.children || []) {
+    if (child.visible === false || child.hidden === true) continue;
     const direct = textNodes(child);
     if (child.name !== 'Cell') {
       const heading = direct.map(text => normalizeText(text.characters)).find(value => value && !/^[-–—]$/.test(value));
@@ -159,11 +161,12 @@ export function diffSnapshots(before, after, expectedIds) {
   const unsafe = [];
   for (const row of after) {
     const old = beforeById.get(row.figmaNodeId);
-    if (!old) continue;
-    for (const field of ['title', 'sourceText', 'sourceLinks', 'section', 'audienceValues', 'authorValues', 'sourceStatusValues', 'sourceStatusEvidence', 'sourceColumns']) {
-      if (JSON.stringify(old[field]) !== JSON.stringify(row[field])) changed.push({ nodeId: row.figmaNodeId, field, before: old[field], after: row[field], classification: field === 'sourceLinks' ? 'safe-link-change' : 'safe' });
+    if (old) {
+      for (const field of ['caseNumber', 'size', 'title', 'sourceText', 'sourceLinks', 'section', 'audienceValues', 'authorValues', 'sourceStatusValues', 'sourceStatusEvidence', 'sourceColumns']) {
+        if (JSON.stringify(old[field]) !== JSON.stringify(row[field])) changed.push({ nodeId: row.figmaNodeId, field, before: old[field], after: row[field], classification: field === 'sourceLinks' ? 'safe-link-change' : 'safe' });
+      }
+      if (JSON.stringify(old.authorValues || []) !== JSON.stringify(row.authorValues || [])) changed.push({ nodeId: row.figmaNodeId, field: 'authors', before: old.authorValues || [], after: row.authorValues || [], classification: 'safe-author-change' });
     }
-    if (JSON.stringify(old.authorValues || []) !== JSON.stringify(row.authorValues || [])) changed.push({ nodeId: row.figmaNodeId, field: 'authors', before: old.authorValues || [], after: row.authorValues || [], classification: 'safe-author-change' });
     for (const value of row.sourceStatusValues || []) if (!KNOWN_STATUS_LABELS.has(value) && value !== 'Статус') unsafe.push({ nodeId: row.figmaNodeId, field: 'sourceStatus', before: '', after: value, classification: 'unsafe-unknown-status' });
     for (const value of row.audienceValues || []) if (!KNOWN_AUDIENCE_LABELS.has(value) && value !== 'Кто участвует / роль') unsafe.push({ nodeId: row.figmaNodeId, field: 'audience', before: '', after: value, classification: 'unsafe-unknown-audience' });
     if (row.ambiguousLinkStructure) unsafe.push({ nodeId: row.figmaNodeId, field: 'links', classification: 'unsafe-ambiguous-link' });
@@ -173,13 +176,15 @@ export function diffSnapshots(before, after, expectedIds) {
   if (added.length) unsafe.push(...added.map(row => ({ nodeId: row.figmaNodeId, field: 'row', classification: 'unsafe-added-row' })));
   if (removed.length) unsafe.push(...removed.map(row => ({ nodeId: row.figmaNodeId, field: 'row', classification: 'unsafe-removed-row' })));
   for (const row of after) if (!expected.has(row.figmaNodeId)) unsafe.push({ nodeId: row.figmaNodeId, field: 'figmaNodeId', classification: 'unsafe-unknown-row' });
+  for (const item of [...changed, ...unsafe]) item.title = afterById.get(item.nodeId)?.title || beforeById.get(item.nodeId)?.title || '';
   const orderChanged = before.map(row => row.figmaNodeId).join('|') !== after.map(row => row.figmaNodeId).join('|');
   if (orderChanged && !added.length && !removed.length) unsafe.push({ nodeId: '', field: 'row-order', classification: 'safe-order-change' });
   const structuralChanges = changed.length > 0 || added.length > 0 || removed.length > 0 || duplicateIds.length > 0 || orderChanged || unsafe.some(item => !String(item.classification).startsWith('safe-'));
-  return { changed, added, removed, duplicateIds, unsafe, orderChanged, hasChanges: structuralChanges };
+  const hardUnsafe = unsafe.filter(item => !String(item.classification).startsWith('safe-'));
+  return { changed, added, removed, duplicateIds, unsafe, orderChanged, hasChanges: structuralChanges, blockedRows: new Set(hardUnsafe.map(item => item.nodeId)).size, guardTriggers: hardUnsafe.length };
 }
 
 export function formatDiff(diff) {
   const rows = [...diff.changed, ...diff.unsafe];
-  return `# Figma sync\n\nChanged rows: ${new Set(diff.changed.map(item => item.nodeId)).size}\nAdded rows: ${diff.added.length}\nRemoved rows: ${diff.removed.length}\nOrder changed: ${diff.orderChanged ? 'yes' : 'no'}\nUnsafe changes: ${diff.unsafe.filter(item => !String(item.classification).startsWith('safe-')).length}\n\n| nodeId | field | before | after | classification |\n|---|---|---|---|---|\n${rows.map(item => `| ${item.nodeId} | ${item.field} | ${JSON.stringify(item.before ?? '')} | ${JSON.stringify(item.after ?? '')} | ${item.classification} |`).join('\n')}`;
+  return `# Figma sync\n\nChanged rows: ${new Set(diff.changed.map(item => item.nodeId)).size}\nAdded rows: ${diff.added.length}\nRemoved rows: ${diff.removed.length}\nOrder changed: ${diff.orderChanged ? 'yes' : 'no'}\nBlocked rows: ${new Set(diff.unsafe.filter(item => !String(item.classification).startsWith('safe-')).map(item => item.nodeId)).size}\nGuard triggers: ${diff.unsafe.filter(item => !String(item.classification).startsWith('safe-')).length}\n\n| nodeId | title | field | before | after | classification |\n|---|---|---|---|---|---|\n${rows.map(item => `| ${item.nodeId} | ${String(item.title || '').replaceAll('|', '\\|').replaceAll('\n', ' ')} | ${item.field} | ${JSON.stringify(item.before ?? '')} | ${JSON.stringify(item.after ?? '')} | ${item.classification} |`).join('\n')}`;
 }

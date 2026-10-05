@@ -12,7 +12,7 @@ const rows = FIGMA_CASES_SNAPSHOT.map(source => {
   const catalogActions = tool?.actions || [];
   const titleMatch = tool?.title === source.title;
   const linksMatch = JSON.stringify(catalogActions) === JSON.stringify(sourceActions);
-  const audienceMatch = source.audienceValues === undefined || JSON.stringify(tool?.audiences || []) === JSON.stringify([...new Set(source.audienceValues.map(value => value.toLowerCase()).filter(value => ['design', 'research', 'text'].includes(value)))])
+  const audienceMatch = source.audienceValues === undefined || (source.audienceValues.every(value => ['Design', 'Research', 'Text'].includes(value)) && JSON.stringify(tool?.audiences || []) === JSON.stringify([...new Set(source.audienceValues.map(value => value.toLowerCase()))]))
   const authorMatch = source.authorValues === undefined || JSON.stringify(tool?.authors || []) === JSON.stringify(source.authorValues || [])
 const statusValues = source.sourceStatusValues || [];
 const statusMatch = statusValues.every(value => SOURCE_STATUSES.has(value)) && JSON.stringify(tool?.sourceStatusValues || []) === JSON.stringify(statusValues);
@@ -33,8 +33,10 @@ const guideOnly = tools.filter(tool => (tool.actions || []).length > 0 && (tool.
 const announcementOnly = tools.filter(tool => (tool.actions || []).length > 0 && (tool.actions || []).every(action => !action.primary && action.kind === 'announcement')).length;
 const sourceMismatch = tools.filter(tool => JSON.stringify(tool.actions || []) !== JSON.stringify(ACTIONS_BY_NODE_ID[tool.figmaNodeId || ''] || [])).length;
 const fallbackMappings = /fallback|fallbackIds|fallbackIndex/i.test(readFileSync(new URL('../src/data/tools.ts', import.meta.url), 'utf8')) ? 1 : 0;
+const snapshotIds = FIGMA_CASES_SNAPSHOT.map(row => row.figmaNodeId);
 const checks = {
-  'FIGMA ROWS': `${FIGMA_CASES_SNAPSHOT.length} / ${FIGMA_CASES_SNAPSHOT.length}`,
+  'ID SET ERRORS': Number(new Set(TOOL_NODE_IDS).size !== TOOL_NODE_IDS.length) + Number(actual.size !== tools.length) + Number(new Set(snapshotIds).size !== snapshotIds.length) + snapshotIds.filter(id => !expected.has(id)).length + TOOL_NODE_IDS.filter(id => !snapshotIds.includes(id)).length,
+  'FIGMA ROWS': `${FIGMA_CASES_SNAPSHOT.length} / ${TOOL_NODE_IDS.length}`,
   'EXACT TITLE MATCH': `${rows.filter(row => row.titleMatch).length} / ${rows.length}`,
   'EXPLICIT NODE MAPPING': `${[...expected].filter(id => actual.has(id)).length} / ${expected.size}`,
   'SOURCE LINK MATCH': `${rows.filter(row => row.linksMatch).length} / ${rows.length}`,
@@ -52,7 +54,7 @@ const checks = {
 };
 const failed = Object.entries(checks).filter(([key, value]) => {
   if (key === 'FIGMA ROWS' || key === 'EXACT TITLE MATCH' || key === 'EXPLICIT NODE MAPPING' || key === 'SOURCE LINK MATCH' || key === 'SOURCE STATUS MATCH' || key === 'SOURCE AUTHORS MATCH' || key === 'SOURCE AUDIENCE MATCH') return value.split(' / ')[0] !== value.split(' / ')[1];
-  return ['ORPHAN CATALOG TOOLS','ORPHAN FIGMA ROWS','FALLBACK MAPPINGS','FIELD PARITY ERRORS'].includes(key) ? value !== 0 : false;
+  return ['ID SET ERRORS','ORPHAN CATALOG TOOLS','ORPHAN FIGMA ROWS','FALLBACK MAPPINGS','FIELD PARITY ERRORS'].includes(key) ? value !== 0 : false;
 });
 mkdirSync('test-results', { recursive: true });
 writeFileSync('test-results/figma-parity.json', JSON.stringify({ checks, rows }, null, 2));

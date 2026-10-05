@@ -1,190 +1,123 @@
+import { STATUS_LABELS, AUDIENCE_LABELS, SOURCE_COLUMNS, validateSourceRows } from '../../src/data/figmaContract.ts';
 export const FIGMA_FILE_KEY = 'nVLcu3bbLgz0lJhSUexjvx';
 export const TOOLS_FRAME_NODE_ID = '374:1308';
-export const KNOWN_STATUS_LABELS = new Set(['На проде', 'Тестируется', 'Разработан', 'Разрабатывается']);
-export const KNOWN_AUDIENCE_LABELS = new Set(['Design', 'Research', 'Text']);
-const SOURCE_COLUMN_NAMES = ['caseNumber', 'size', 'project', 'audience', 'link', 'problem', 'metric', 'author', 'status', 'valueAfterLaunch', 'participants', 'related', 'notes'];
-const API_ROOT = 'https://api.figma.com/v1';
-
+export const KNOWN_STATUS_LABELS = new Set(STATUS_LABELS);
+export const KNOWN_AUDIENCE_LABELS = new Set(AUDIENCE_LABELS);
 export const normalizeText = value => String(value ?? '')
   .replaceAll('\r\n', '\n').replace(/[\u2028\u2029]/g, '\n').replaceAll('\u00a0', ' ')
   .replace(/[ \t]+/g, ' ').replace(/[ \t]*\n[ \t]*/g, '\n').trim();
 
-async function figmaRequest(path, token) {
-  if (!token) throw new Error('FIGMA_TOKEN is not configured');
-  const response = await fetch(API_ROOT + path, { headers: { 'X-Figma-Token': token } });
-  if (!response.ok) throw new Error(`Figma API ${response.status}: ${await response.text()}`);
-  return response.json();
-}
-
 export async function fetchToolsFrame(token) {
-  const encoded = encodeURIComponent(TOOLS_FRAME_NODE_ID);
-  const payload = await figmaRequest(`/files/${FIGMA_FILE_KEY}/nodes?ids=${encoded}`, token);
-  const frame = payload.nodes?.[TOOLS_FRAME_NODE_ID]?.document;
+  if (!token) throw new Error('FIGMA_TOKEN is not configured; use an authoritative --frame-json export for a local audit');
+  const response = await fetch(`https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/nodes?ids=${encodeURIComponent(TOOLS_FRAME_NODE_ID)}`, {headers:{'X-Figma-Token':token}});
+  if (!response.ok) throw new Error(`Figma API request failed (${response.status})`);
+  const frame = (await response.json()).nodes?.[TOOLS_FRAME_NODE_ID]?.document;
   if (!frame) throw new Error(`Figma frame ${TOOLS_FRAME_NODE_ID} was not returned`);
   return frame;
 }
-
-function walk(node, visit) {
-  visit(node);
-  for (const child of node.children || []) walk(child, visit);
-}
-
-function textNodes(node, inheritedHidden = false) {
+function textNodes(node) {
   const result = [];
-  const visit = (current, hidden) => {
-    const currentHidden = hidden || current.hidden === true || current.visible === false;
-    if (!currentHidden && current.type === 'TEXT' && current.characters) result.push(current);
-    for (const child of current.children || []) visit(child, currentHidden);
-  };
-  visit(node, inheritedHidden);
+  function visit(current) {
+    if (current.hidden === true || current.visible === false) return;
+    if (current.type === 'TEXT' && current.characters) result.push(current);
+    for (const child of current.children || []) visit(child);
+  }
+  visit(node);
   return result;
 }
-
-function linksFrom(node) {
+const valuesFrom = node => textNodes(node).flatMap(text => normalizeText(text.characters).split(/\n+/)).filter(Boolean);
+export function linksFrom(node) {
   const links = [];
+  const add = link => {
+    const url = typeof link === 'string' ? link : link?.url || (link?.type === 'URL' ? link.value : null);
+    if (url) links.push(url);
+  };
   for (const text of textNodes(node)) {
-    const hyperlink = text.style?.hyperlink || text.hyperlink;
-    if (typeof hyperlink === 'string') links.push({ label: normalizeText(text.characters), url: hyperlink });
-    if (hyperlink?.url) links.push({ label: normalizeText(text.characters), url: hyperlink.url });
+    add(text.style?.hyperlink); add(text.hyperlink);
+    const usedStyleIds = new Set((text.characterStyleOverrides || []).map(String));
+    for (const [id,style] of Object.entries(text.styleOverrideTable || {})) if (usedStyleIds.has(id)) add(style.hyperlink);
+    for (const segment of text.linkSegments || []) add(segment.hyperlink);
+    links.push(...(normalizeText(text.characters).match(/https?:\/\/[^\s]+/g) || []));
   }
-  return [...new Map(links.map(link => [link.url, link])).values()];
+  return [...new Set(links)];
 }
-
-function directText(node, name) {
-  return textNodes(node).find(text => text.name === name || text.name?.toLowerCase() === name.toLowerCase());
-}
-
-function namedNode(node, name) {
-  if (node.name === name) return node;
-  for (const child of node.children || []) { const found = namedNode(child, name); if (found) return found; }
-  return null;
-}
-
-function nodeX(node, fallback) {
-  return typeof node.x === 'number' ? node.x : typeof node.absoluteBoundingBox?.x === 'number' ? node.absoluteBoundingBox.x : fallback;
-}
-
-function directColumnNodes(row) {
-  const children = (row.children || []).filter(child => textNodes(child).length || linksFrom(child).length);
-  return children.map((child, index) => ({ child, index, x: nodeX(child, index) })).sort((a, b) => a.x - b.x).map(item => item.child);
-}
-
-function splitSourceValues(values) {
-  return values.flatMap(value => normalizeText(value).split(/\n+/).map(normalizeText)).filter(Boolean);
-}
-
 export function visibleDockingBadgeStatuses(row) {
-  function visibleCell(node, hidden = false) {
-    hidden ||= node.visible === false || node.hidden === true;
-    if (hidden) return null;
-    if (node.name === '31') return node;
-    for (const child of node.children || []) {
-      const found = visibleCell(child, hidden);
-      if (found) return found;
+  const cell = (row.children || []).find(node => node.name === '31' && node.visible !== false && !node.hidden);
+  if (!cell || row.visible === false || row.hidden) return {values:[],evidence:[]};
+  const evidence = [];
+  function visit(node) {
+    if (node.visible === false || node.hidden) return;
+    if (node.type === 'INSTANCE' && node.name === 'DockingBadge') {
+      for (const value of valuesFrom(node).filter(value => value !== 'Статус')) evidence.push({nodeId:node.id,value});
+      return;
     }
-    return null;
+    for (const child of node.children || []) visit(child);
   }
-  const cell = visibleCell(row);
-  if (!cell) return { values: [], evidence: [], error: null };
-  const badges = [];
-  function visit(node, hidden = false) {
-    hidden ||= node.visible === false || node.hidden === true;
-    if (hidden) return;
-    if (node.type === 'INSTANCE' && node.name === 'DockingBadge') badges.push(node);
-    for (const child of node.children || []) visit(child, hidden);
-  }
-  visit(cell, row.visible === false || row.hidden === true);
-  const evidence = badges.flatMap(badge => {
-    const values = splitSourceValues(textNodes(badge).map(text => text.characters)).filter(value => value && value !== 'Статус');
-    return values.map(value => ({ nodeId: badge.id, value }));
-  });
-  // Preserve visible cell values before validation, including text outside badges.
-  const unique = [...new Set(splitSourceValues(textNodes(cell).map(text => text.characters)).filter(value => value !== 'Статус'))];
-  return { values: unique, evidence, error: null };
+  visit(cell);
+  return {values:[...new Set(evidence.map(item => item.value))],evidence};
 }
-
-function parseStructuredColumns(row) {
-  const columns = directColumnNodes(row);
-  if (columns.length < 4) return null;
-  const sourceColumns = {};
-  columns.forEach((column, index) => {
-    const key = SOURCE_COLUMN_NAMES[index] || `column${index + 1}`;
-    sourceColumns[key] = splitSourceValues(textNodes(column).map(text => text.characters));
-  });
-  const audienceValues = [...new Set((sourceColumns.audience || []).filter(value => value !== 'Кто участвует / роль'))];
-  const status = visibleDockingBadgeStatuses(row);
-  const authorValues = (sourceColumns.author || []).filter(value => value !== 'Кто участвует / роль' && value !== 'Автор / участники');
-  return { sourceColumns, audienceValues, sourceStatusValues: status.values, sourceStatusEvidence: status.evidence, ...(status.error ? { statusParseError: status.error } : {}), authorValues };
-}
-
-export function parseToolsFrame(frame) {
+export function parseToolsFrame(frame, {onExcluded} = {}) {
+  if (frame.id && frame.id !== TOOLS_FRAME_NODE_ID) throw new Error(`Wrong authoritative frame: ${frame.id}`);
   const rows = [];
   let section = '';
   for (const child of frame.children || []) {
-    if (child.visible === false || child.hidden === true) continue;
-    const direct = textNodes(child);
+    if (child.visible === false || child.hidden) continue;
     if (child.name !== 'Cell') {
-      const heading = direct.map(text => normalizeText(text.characters)).find(value => value && !/^[-–—]$/.test(value));
+      const heading = textNodes(child).map(text => normalizeText(text.characters)).find(value => value && !/^[-–—]$/.test(value));
       if (heading && child.type !== 'INSTANCE') section = heading;
       continue;
     }
-    const text = direct.map(item => normalizeText(item.characters)).filter(Boolean);
-    const title = directText(child, 'Проект')?.characters?.trim();
-    if (title === 'Проект') continue;
-    if (!title) throw new Error(`Unable to parse title for row ${child.id}`);
-    const structured = parseStructuredColumns(child);
+    const sourceColumns = {};
+    const parseIssues = [];
+    for (const column of child.children || []) {
+      const key = SOURCE_COLUMNS[column.name];
+      if (!key) { parseIssues.push({field:'columns',value:column.name,reason:'unknown source column layout'}); continue; }
+      if (key in sourceColumns) parseIssues.push({field:'columns',value:column.name,reason:'duplicate source column'});
+      sourceColumns[key] = valuesFrom(column);
+    }
+    const project = (child.children || []).find(column => column.name === '33');
+    const title = normalizeText(textNodes(project || {children:[]}).find(text => text.name === 'Проект')?.characters || '');
+    if (title === 'Проект' && sourceColumns.author?.includes('Кто участвует / роль') && sourceColumns.problem?.includes('Какую проблему решает')) {
+      onExcluded?.({nodeId:child.id,title,reason:'explicit table header / unfilled template prompts'});
+      continue;
+    }
+    for (const text of textNodes(child)) {
+      if (Object.values(text.styleOverrideTable || {}).some(style => style.hyperlink) && !Array.isArray(text.characterStyleOverrides)) parseIssues.push({field:'sourceLinks',value:text.id,reason:'hyperlink style overrides lack active character ranges'});
+    }
     const status = visibleDockingBadgeStatuses(child);
     rows.push({
-      figmaNodeId: child.id,
-      ...(structured ? { caseNumber: structured.sourceColumns.caseNumber?.[0] || '', size: structured.sourceColumns.size?.[0] || '' } : {}),
-      title: normalizeText(title),
-      sourceText: text,
-      sourceLinks: linksFrom(child).map(link => link.url),
-      section: normalizeText(section),
-      sourceStatusValues: status.values,
-      sourceStatusEvidence: status.evidence,
-      ...(status.error ? { statusParseError: status.error } : {}),
-      ...(structured || {}),
+      figmaNodeId:child.id, caseNumber:sourceColumns.caseNumber?.[0] || '', size:sourceColumns.size?.[0] || '',
+      title, sourceText:textNodes(child).map(text => normalizeText(text.characters)).filter(Boolean),
+      sourceLinks:linksFrom(child), section:normalizeText(section),
+      audienceValues:[...new Set((sourceColumns.audience || []).filter(value => value !== 'Кто участвует / роль'))],
+      authorValues:(sourceColumns.author || []).filter(value => !['Кто участвует / роль','Автор / участники'].includes(value)),
+      sourceStatusValues:status.values, sourceStatusEvidence:status.evidence, sourceColumns,
+      ...(parseIssues.length ? {parseIssues} : {}),
     });
   }
-  if (!rows.length) throw new Error('No tool rows parsed from authoritative frame');
   return rows;
 }
-
-export function diffSnapshots(before, after, expectedIds) {
-  const beforeById = new Map(before.map(row => [row.figmaNodeId, row]));
-  const afterById = new Map(after.map(row => [row.figmaNodeId, row]));
-  const duplicateIds = after.map(row => row.figmaNodeId).filter((id, index, ids) => ids.indexOf(id) !== index);
+export function diffSnapshots(before, after, {acceptNew = false} = {}) {
+  const beforeById = new Map(before.map(row => [row.figmaNodeId,row]));
+  const afterById = new Map(after.map(row => [row.figmaNodeId,row]));
   const added = after.filter(row => !beforeById.has(row.figmaNodeId));
   const removed = before.filter(row => !afterById.has(row.figmaNodeId));
+  const duplicateIds = after.map(row => row.figmaNodeId).filter((id,index,ids) => ids.indexOf(id) !== index);
   const changed = [];
-  const unsafe = [];
   for (const row of after) {
     const old = beforeById.get(row.figmaNodeId);
-    if (old) {
-      for (const field of ['caseNumber', 'size', 'title', 'sourceText', 'sourceLinks', 'section', 'audienceValues', 'authorValues', 'sourceStatusValues', 'sourceStatusEvidence', 'sourceColumns']) {
-        if (JSON.stringify(old[field]) !== JSON.stringify(row[field])) changed.push({ nodeId: row.figmaNodeId, field, before: old[field], after: row[field], classification: field === 'sourceLinks' ? 'safe-link-change' : 'safe' });
-      }
-      if (JSON.stringify(old.authorValues || []) !== JSON.stringify(row.authorValues || [])) changed.push({ nodeId: row.figmaNodeId, field: 'authors', before: old.authorValues || [], after: row.authorValues || [], classification: 'safe-author-change' });
+    if (!old) continue;
+    for (const field of [...new Set([...Object.keys(old),...Object.keys(row)])]) {
+      if (field !== 'figmaNodeId' && JSON.stringify(old[field]) !== JSON.stringify(row[field])) changed.push({nodeId:row.figmaNodeId,title:row.title,field,before:old[field],after:row[field],classification:'safe-field-change'});
     }
-    for (const value of row.sourceStatusValues || []) if (!KNOWN_STATUS_LABELS.has(value) && value !== 'Статус') unsafe.push({ nodeId: row.figmaNodeId, field: 'sourceStatus', before: '', after: value, classification: 'unsafe-unknown-status' });
-    for (const value of row.audienceValues || []) if (!KNOWN_AUDIENCE_LABELS.has(value) && value !== 'Кто участвует / роль') unsafe.push({ nodeId: row.figmaNodeId, field: 'audience', before: '', after: value, classification: 'unsafe-unknown-audience' });
-    if (row.ambiguousLinkStructure) unsafe.push({ nodeId: row.figmaNodeId, field: 'links', classification: 'unsafe-ambiguous-link' });
   }
-  const expected = new Set(expectedIds);
-  if (duplicateIds.length) unsafe.push(...duplicateIds.map(nodeId => ({ nodeId, field: 'figmaNodeId', classification: 'unsafe-duplicate' })));
-  if (added.length) unsafe.push(...added.map(row => ({ nodeId: row.figmaNodeId, field: 'row', classification: 'unsafe-added-row' })));
-  if (removed.length) unsafe.push(...removed.map(row => ({ nodeId: row.figmaNodeId, field: 'row', classification: 'unsafe-removed-row' })));
-  for (const row of after) if (!expected.has(row.figmaNodeId)) unsafe.push({ nodeId: row.figmaNodeId, field: 'figmaNodeId', classification: 'unsafe-unknown-row' });
-  for (const item of [...changed, ...unsafe]) item.title = afterById.get(item.nodeId)?.title || beforeById.get(item.nodeId)?.title || '';
-  const orderChanged = before.map(row => row.figmaNodeId).join('|') !== after.map(row => row.figmaNodeId).join('|');
-  if (orderChanged && !added.length && !removed.length) unsafe.push({ nodeId: '', field: 'row-order', classification: 'safe-order-change' });
-  const structuralChanges = changed.length > 0 || added.length > 0 || removed.length > 0 || duplicateIds.length > 0 || orderChanged || unsafe.some(item => !String(item.classification).startsWith('safe-'));
-  const hardUnsafe = unsafe.filter(item => !String(item.classification).startsWith('safe-'));
-  return { changed, added, removed, duplicateIds, unsafe, orderChanged, hasChanges: structuralChanges, blockedRows: new Set(hardUnsafe.map(item => item.nodeId)).size, guardTriggers: hardUnsafe.length };
+  const unsafe = validateSourceRows(after).map(issue => ({...issue,after:issue.value,classification:'unsafe-invalid-source'}));
+  for (const row of removed) unsafe.push({nodeId:row.figmaNodeId,title:row.title,field:'row',classification:'unsafe-removed-row',reason:'removal requires an explicit human decision; snapshot preserved'});
+  if (!acceptNew) for (const row of added) unsafe.push({nodeId:row.figmaNodeId,title:row.title,field:'row',classification:'unsafe-added-row',reason:'accept complete additions with npm run sync:figma -- --accept-new'});
+  const orderChanged = JSON.stringify(before.map(row => row.figmaNodeId)) !== JSON.stringify(after.map(row => row.figmaNodeId));
+  return {changed,added,removed,duplicateIds,unsafe,orderChanged,hasChanges:Boolean(changed.length || added.length || removed.length || orderChanged || unsafe.length),blockedRows:new Set(unsafe.map(item => item.nodeId)).size,guardTriggers:unsafe.length};
 }
-
 export function formatDiff(diff) {
-  const rows = [...diff.changed, ...diff.unsafe];
-  return `# Figma sync\n\nChanged rows: ${new Set(diff.changed.map(item => item.nodeId)).size}\nAdded rows: ${diff.added.length}\nRemoved rows: ${diff.removed.length}\nOrder changed: ${diff.orderChanged ? 'yes' : 'no'}\nBlocked rows: ${new Set(diff.unsafe.filter(item => !String(item.classification).startsWith('safe-')).map(item => item.nodeId)).size}\nGuard triggers: ${diff.unsafe.filter(item => !String(item.classification).startsWith('safe-')).length}\n\n| nodeId | title | field | before | after | classification |\n|---|---|---|---|---|---|\n${rows.map(item => `| ${item.nodeId} | ${String(item.title || '').replaceAll('|', '\\|').replaceAll('\n', ' ')} | ${item.field} | ${JSON.stringify(item.before ?? '')} | ${JSON.stringify(item.after ?? '')} | ${item.classification} |`).join('\n')}`;
+  const escape = value => String(typeof value === 'string' ? value : JSON.stringify(value ?? '')).replaceAll('|','\\|').replaceAll('\n',' ');
+  return `# Figma sync\n\nChanged rows: ${new Set(diff.changed.map(item => item.nodeId)).size}\nAdded rows: ${diff.added.length}\nRemoved rows: ${diff.removed.length}\nOrder changed: ${diff.orderChanged ? 'yes' : 'no'}\nBlocked rows: ${diff.blockedRows}\nGuard triggers: ${diff.guardTriggers}\n\n| nodeId | title | field | before | after | reason |\n|---|---|---|---|---|---|\n${[...diff.changed,...diff.unsafe].map(item => `| ${item.nodeId} | ${escape(item.title)} | ${item.field} | ${escape(item.before)} | ${escape(item.after)} | ${escape(item.reason || item.classification)} |`).join('\n')}\n`;
 }

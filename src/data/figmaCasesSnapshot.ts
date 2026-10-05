@@ -1,19 +1,6 @@
-export interface FigmaCaseSnapshot {
-  figmaNodeId: string;
-  caseNumber: string;
-  size: string;
-  title: string;
-  sourceText: string[];
-  sourceLinks: string[];
-  section: string;
-  audienceValues?: string[];
-  authorValues?: string[];
-  sourceStatusValues?: string[];
-  sourceStatusEvidence?: { nodeId: string; value: string }[];
-  sourceColumns?: Record<string, string[]>;
-}
-
-// Live DockingBadge status evidence captured 2026-10-01.
+// GENERATED from Figma nVLcu3bbLgz0lJhSUexjvx / 374:1308. Edit with sync:figma only.
+import type { FigmaCaseSnapshot } from './figmaTypes.ts';
+export type { FigmaCaseSnapshot } from './figmaTypes.ts';
 export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   {
     "figmaNodeId": "374:1509",
@@ -38,7 +25,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "№1, №2, №3\nОдин кластер про AI-редактор, TOV и редполитику для текстов. Решают близкую задачу контроля и улучшения текстов."
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1621150885892028917",
+      "https://mt.avito.ru/avito/channels/avito-editor-plugin"
+    ],
     "section": "TOV и текст / Плагины для текста",
     "sourceStatusValues": [
       "На проде",
@@ -243,7 +233,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1610550602787796018/textsync"
+    ],
     "section": "TOV и текст / Плагины для текста",
     "sourceStatusValues": [
       "Тестируется",
@@ -341,7 +333,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1638816840468168578"
+    ],
     "section": "TOV и текст / Плагины для текста",
     "sourceStatusValues": [
       "Тестируется",
@@ -753,7 +747,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "№8, №10\nОба кейса про генерацию графики / изображений в стиле Авито. Отличаются интерфейсом: Figma-плагин и бот в MM."
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1638571943514590458"
+    ],
     "section": "Графика/изображения",
     "sourceStatusValues": [
       "Тестируется",
@@ -939,7 +935,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://artifact.avito.ru/share/zwE3KaqEvy4JjsW7zh0-Tg"
+    ],
     "section": "Анимации",
     "sourceStatusValues": [
       "На проде",
@@ -1208,7 +1206,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "№16 и №14\nОба связаны с фидбэком по макетам, но №16 шире — быстрый продуктовый фидбэк на этапе дизайна, №14 — список замечаний по дизайн-ревью."
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1611331720808016861"
+    ],
     "section": "Дизайн-ревью",
     "sourceStatusValues": [
       "Тестируется",
@@ -1456,7 +1456,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1605221516079243201"
+    ],
     "section": "Плагины для дизайнеров",
     "sourceStatusValues": [
       "На проде"
@@ -1536,7 +1538,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1636333597458971823/re-logo-resizer"
+    ],
     "section": "Плагины для дизайнеров",
     "sourceStatusValues": [
       "На проде"
@@ -1703,7 +1707,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/widget/1646914114905321708/a-notes"
+    ],
     "section": "Плагины для дизайнеров",
     "sourceStatusValues": [
       "На проде",
@@ -1790,7 +1796,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "№29, №61\nОбщая зона — автоматическая проверка и исправление макетов по правилам ДС. №29 уже более узкий: отступы между текстом и стили текста."
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1608051932465313128"
+    ],
     "section": "Плагины для дизайнеров",
     "sourceStatusValues": [
       "На проде"
@@ -1873,7 +1881,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "№17, № 66\nОба кейса про сбор согласований / ОК от стейкхолдеров по макетам."
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/widget/1611717453383378342"
+    ],
     "section": "Плагины для дизайнеров",
     "sourceStatusValues": [
       "На проде"
@@ -2622,7 +2632,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://cf.avito.ru/spaces/RES/pages/895376163/%D0%A1%D0%BF%D0%B5%D1%86%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8F+%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%B0+%E2%80%94+Meta+User+Voice+Travel+CES"
+    ],
     "section": "Оптимизация процессов",
     "sourceStatusValues": [
       "На проде"
@@ -2678,7 +2690,8 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       ],
       "related": [
         "-"
-      ]
+      ],
+      "notes": []
     },
     "audienceValues": [
       "Research"
@@ -2707,7 +2720,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://docs.k.avito.ru/service-paas-docs/genai/pages/use_cases/prototype_hosting/"
+    ],
     "section": "Оптимизация процессов",
     "sourceStatusValues": [
       "На проде"
@@ -2794,7 +2809,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://n8n-tns.k.avito.ru/webhook/b8b1fdbd-af34-4531-a031-e34c00893306",
+      "https://cf.avito.ru/x/bygmNg"
+    ],
     "section": "Оптимизация процессов",
     "sourceStatusValues": [
       "На проде"
@@ -3129,7 +3147,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://drive.google.com/drive/folders/1rAJJGC14wwQs_mCBNgvT0xcBjS5acvC_?usp=sharing",
+      "https://mt.avito.ru/avito/pl/u9y5h5wrftni7b4mxpcmerynjo"
+    ],
     "section": "Оптимизация процессов",
     "sourceStatusValues": [
       "На проде"
@@ -3186,7 +3207,8 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       ],
       "related": [
         "-"
-      ]
+      ],
+      "notes": []
     },
     "audienceValues": [
       "Design"
@@ -3295,7 +3317,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://apakulova.github.io/skills-matrix/"
+    ],
     "section": "Оптимизация процессов",
     "sourceStatusValues": [
       "На проде",
@@ -3380,7 +3404,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://caxapoff.github.io/design_osmotr/"
+    ],
     "section": "Оптимизация процессов",
     "sourceStatusValues": [
       "На проде"
@@ -3459,7 +3485,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://avikot.k.avito.ru/"
+    ],
     "section": "Оптимизация процессов",
     "sourceStatusValues": [
       "На проде"
@@ -3710,7 +3738,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://llm.k.avito.ru/project/afb0e117-1315-4d54-834a-9d0adffc14ce"
+    ],
     "section": "Коммуникация / Боты",
     "sourceStatusValues": [],
     "sourceStatusEvidence": [],
@@ -3756,7 +3786,8 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       ],
       "related": [
         "-"
-      ]
+      ],
+      "notes": []
     },
     "audienceValues": [
       "Text"
@@ -3989,7 +4020,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "№37, №53\nОба помогают с текстовыми материалами для исследований: анкеты, опросы, приглашения, формулировки"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://chatgpt.com/g/g-6900c234c8c88191ad9e2d7daf38e418-ruchnoi-redaktor-dlia-issledovatelei"
+    ],
     "section": "Коммуникация / Боты",
     "sourceStatusValues": [
       "Тестируется"
@@ -4122,7 +4155,8 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       ],
       "related": [
         "-"
-      ]
+      ],
+      "notes": []
     },
     "audienceValues": [
       "Research"
@@ -4399,7 +4433,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://cf.avito.ru/x/x2wmNg"
+    ],
     "section": "AI агенты",
     "sourceStatusValues": [
       "Тестируется",
@@ -4491,7 +4527,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://cf.avito.ru/x/sDyaNQ"
+    ],
     "section": "AI агенты",
     "sourceStatusValues": [
       "Тестируется",
@@ -4821,7 +4859,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://arxiv.org/pdf/2507.02306",
+      "https://chatgpt.com/g/g-68ee5b25ffd481919f78683f6a2bc5bc-ux-audit/c/69e779af-7aa8-8324-a120-3e51ef08c598"
+    ],
     "section": "База знаний",
     "sourceStatusValues": [
       "На проде",
@@ -4914,7 +4955,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://t.me/classifiedsnews"
+    ],
     "section": "База знаний",
     "sourceStatusValues": [
       "На проде",
@@ -5001,7 +5044,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://teamquiz-production.up.railway.app"
+    ],
     "section": "База знаний",
     "sourceStatusValues": [
       "На проде",
@@ -5369,7 +5414,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "№50, №60\nОдин иконочный кластер AKITA: №50 генерирует набор иконок, №60 проверяет иконки на ошибки."
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1628831664417940031"
+    ],
     "section": "Дизайн Система (DS)",
     "sourceStatusValues": [
       "Разработан"
@@ -5451,7 +5498,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "❇️",
       "№50, №60\nОдин иконочный кластер AKITA: №50 генерирует набор иконок, №60 проверяет иконки на ошибки."
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1629179776041025350"
+    ],
     "section": "Дизайн Система (DS)",
     "sourceStatusValues": [
       "Разработан"
@@ -5531,7 +5580,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://nc.k.avito.ru/f/52184774",
+      "https://cf.avito.ru/spaces/DS/pages/908478754/Regress"
+    ],
     "section": "Дизайн Система (DS)",
     "sourceStatusValues": [
       "Разработан"
@@ -5616,7 +5668,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://plato.k.avito.ru/skills/cd2ae6c4-c2f4-4371-826a-4c920a4d24a4"
+    ],
     "section": "Дизайн Система (DS)",
     "sourceStatusValues": [
       "Разработан"
@@ -5695,7 +5749,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "—",
       "—"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1654863800712143195"
+    ],
     "section": "Дизайн Система (DS)",
     "sourceStatusValues": [
       "Разработан"
@@ -5858,7 +5914,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/widget/1672591916994786530"
+    ],
     "section": "Дизайн Система (DS)",
     "sourceStatusValues": [
       "Разработан"
@@ -6023,7 +6081,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://www.figma.com/community/plugin/1643602237421717731"
+    ],
     "section": "Дизайн Система (DS)",
     "sourceStatusValues": [
       "Тестируется"
@@ -6277,7 +6337,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://t.me/iidem_dalshe/309"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "Тестируется"
@@ -6369,7 +6431,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://t.me/iidem_dalshe/309"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "Тестируется"
@@ -6458,7 +6522,9 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://cf.avito.ru/x/NlbbOw"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде"
@@ -6538,7 +6604,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html",
+      "https://cf.avito.ru/x/NCkSNQ"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде",
@@ -6626,7 +6695,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html",
+      "https://cf.avito.ru/x/NCkSNQ"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде"
@@ -6680,7 +6752,8 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       ],
       "related": [
         "-"
-      ]
+      ],
+      "notes": []
     },
     "audienceValues": [
       "Research"
@@ -6709,7 +6782,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html",
+      "https://cf.avito.ru/x/NCkSNQ"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде"
@@ -6789,7 +6865,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html",
+      "https://cf.avito.ru/x/NCkSNQ"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде"
@@ -6876,7 +6955,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html",
+      "https://cf.avito.ru/x/NCkSNQ"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде"
@@ -6956,7 +7038,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html",
+      "https://cf.avito.ru/x/NCkSNQ"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде"
@@ -7036,7 +7121,10 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
       "-",
       "-"
     ],
-    "sourceLinks": [],
+    "sourceLinks": [
+      "https://prototype-hosting.k.avito.ru/prototype/research-skills-catalog-talx4/index.html",
+      "https://cf.avito.ru/x/NCkSNQ"
+    ],
     "section": "Новые кейсы",
     "sourceStatusValues": [
       "На проде"
@@ -7641,5 +7729,3 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ]
   }
 ];
-
-export const FIGMA_CASE_BY_NODE_ID = Object.fromEntries(FIGMA_CASES_SNAPSHOT.map(item => [item.figmaNodeId, item]));

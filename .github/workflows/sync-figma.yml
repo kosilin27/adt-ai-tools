@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -25,41 +27,45 @@ jobs:
       - run: npm ci
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
-      - name: Sync live Figma
+      - name: Fetch, parse, validate, diff and atomically update source
         id: sync
         env:
           FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
         run: npm run sync:figma
-      - name: Upload sync report
+      - name: Upload source diff and structural diagnostics
         if: always() && steps.sync.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:
           name: figma-sync-report
           path: test-results/figma-sync-diff.*
-          if-no-files-found: ignore
-      - name: Verify, build and E2E
-        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+          if-no-files-found: error
+      - name: Full tests, field parity, build and E2E
+        if: steps.sync.outcome == 'success'
         run: npm run verify
-      - name: Commit and push source
-        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+      - name: Commit one verified source state
+        id: commit
+        if: success() && steps.sync.outputs.has_changes == 'true'
         run: |
-          if git diff --quiet; then echo 'No source changes to commit.'; exit 0; fi
+          # Only one generated source file exists; registries and cards are runtime-derived.
+          changed_files=$(git diff --name-only)
+          test "$changed_files" = 'src/data/figmaCasesSnapshot.ts'
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add src/data/figmaCasesSnapshot.ts
+          git add -- src/data/figmaCasesSnapshot.ts
           git commit -m "chore: sync catalog from Figma"
-          git push origin main
-      - name: Deploy GitHub Pages
-        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+          git push origin HEAD:main
+      - name: Deploy verified build to GitHub Pages
+        if: success() && steps.commit.outcome == 'success'
         run: |
           git fetch origin gh-pages
-          rm -rf /tmp/adt-gh-pages
           git worktree add --detach /tmp/adt-gh-pages origin/gh-pages
           rsync -a --delete --exclude=.git dist/ /tmp/adt-gh-pages/
           touch /tmp/adt-gh-pages/.nojekyll
           git -C /tmp/adt-gh-pages add -A
-          git -C /tmp/adt-gh-pages commit -m "Deploy Figma-synced catalog" || true
-          git -C /tmp/adt-gh-pages push origin HEAD:gh-pages
+          if ! git -C /tmp/adt-gh-pages diff --cached --quiet; then
+            git -C /tmp/adt-gh-pages commit -m "Deploy Figma-synced catalog"
+            git -C /tmp/adt-gh-pages push origin HEAD:gh-pages
+          fi
       - name: Remote QA
-        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
+        if: success() && steps.commit.outcome == 'success'
         run: npm run verify:remote -- https://kosilin27.github.io/adt-ai-tools/

@@ -1,22 +1,54 @@
-# Reviewing new Figma cases
+# Figma source synchronization
 
-An addition is deliberately blocked until it has been reviewed in all three places:
+Identity is `figmaNodeId`. Human case numbers, titles, slugs and row order never determine identity.
 
-1. Register the stable Figma Node ID in `src/data/figmaSource.ts` (`TOOL_NODE_IDS`).
-2. Copy the complete reviewed `report.added` record into `FIGMA_CASES_SNAPSHOT` in `src/data/figmaCasesSnapshot.ts`, preserving literal statuses, visible evidence, authors and source links.
-3. Add a card to `extraTools` in `src/data/tools.ts` with an explicit Node ID. Add source actions only when a real source URL exists. Never fabricate metrics or authors.
-4. Run `npm run test:figma-sync`, `npm run build`, `npm run verify:figma-parity`, and `npx playwright test`. Counts come from the registered source; do not change a hardcoded total.
+## Data ownership
 
-Registry, snapshot and catalog must have unique, equal sets of IDs. Unreviewed additions, removals, duplicate live IDs and unknown IDs remain blockers. Unknown visible statuses and audiences also block, including on new rows. Ordinary field updates and row reordering remain safe.
+- `figmaCasesSnapshot.ts` is the only generated source dataset, including every parsed column, literal statuses, badge evidence, authors, audiences, text, links and source order.
+- `curatedTools.ts` is optional editorial metadata keyed by node ID. Legacy `id` values preserve existing detail URLs and favorites. They are not join keys. Categories, descriptions, product type, instructions, metrics and special action labels belong here.
+- `tools.ts` iterates source rows and merges optional editorial metadata. There is no separate tool registry, ID mapping or extra-card list.
+- Source actions contain every source URL. URL-specific labels apply while that URL is present. The one-time migration consolidates old snapshot links and old source-action URLs, after proving every old action URL appears in the live Figma row. Existing action labels remain URL-bound overrides. Optional `supplementalActions` is reserved for deliberately product-owned links; none is needed by the migrated baseline.
+- `figmaContract.ts` shares vocabulary and completeness validation between CLI and runtime. Named columns are structural schema, never a per-case registry.
 
-The CLI writes `test-results/figma-sync-diff.json` and `.md` before rejecting unsafe changes. Diagnostics distinguish blocked rows from guard triggers and show Node ID, title and reason. `--check` never writes the snapshot.
-
-## Offline fixture
-
-`scripts/fixtures/figma-sync-added-2026-10-04.json` is the saved report from run 37223045376, artifact 11310927384, commit 3cf700e79fa96a262ea485e5dac3b698f93825c3. It contains two additions, no changed existing fields, no removals and no duplicates. The regression suite reconstructs the prior baseline and checks the original two affected rows / four guard triggers, then checks the reviewed dataset.
+## One acceptance path
 
 ```sh
-npm run sync:figma -- --check --replay-report scripts/fixtures/figma-sync-added-2026-10-04.json
+npm run check:figma-live
+npm run sync:figma -- --accept-new
+npm run verify
 ```
 
-Replay is read-only and supports addition-only reports. It overlays the report additions on baseline records and appends missing additions. The report does not contain the complete live row order: this reconstruction does not verify live ordering. New snapshot records are appended without reordering existing records. With `FIGMA_TOKEN` configured, `npm run check:figma-live` checks the actual live data and order read-only.
+A new complete source row is blocked by the daily job. `--accept-new` validates the entire frame and atomically replaces the one generated snapshot. No other registration is needed. Runtime creates a deterministic draft: route `figma-<nodeId>`, no invented description, categories, dates or product type. Every source audience, author, visible badge and link is retained. Curating it later changes one optional object entry.
+
+Table headers and unfilled template rows are excluded only when their project, author and problem cells all contain the explicit template prompts. Frame parsing reports their node IDs and reasons separately. A real case titled `Проект` is retained.
+
+A complete row must have a node ID, nonempty title and section, at least one known audience, explicit source arrays and all named columns. An explicit empty status cell is valid. Empty authors or links are preserved when their source columns exist. A missing column or field is incomplete and blocks both ordinary sync and acceptance.
+
+Existing valid title/text/link/author/audience/status/section/order changes sync automatically. Links include plain URLs, text-level hyperlinks, REST style overrides and MCP text-range hyperlinks. Statuses come exclusively from effectively visible `DockingBadge` text in column `31`; the `Emotional Rubricator` status property is never used. Unknown visible badge labels fail closed. Status-cell notes remain source text, not status labels.
+
+Removed rows always block, including with `--accept-new`. The CLI never deletes a catalog row silently. A deliberate removal requires a reviewed source/curated change and verification; there is no force-removal flag.
+
+## Strictly read-only check
+
+`--check` writes only stdout/stderr. It never creates a report directory, updates source, touches GitHub output/summary files or normalizes the snapshot. It returns failure for unsafe source or unavailable credentials. Safe differences return success with their diff. Capture stdout outside the checkout when a file is needed.
+
+For an offline complete export:
+
+```sh
+npm run check:figma-live -- --frame-json /absolute/path/frame.json
+npm run check:figma-live -- --source-json /absolute/path/source-rows.json
+```
+
+`--frame-json` runs the real parser. `--source-json` validates an already-parsed export; it does not prove current live state. GitHub Actions forbids offline inputs and `--accept-new`. The old addition-only replay is removed because it cannot establish live source order or full field parity.
+
+## Workflow and atomicity
+
+The job fetches live Figma, parses, validates and diffs before any source write. The candidate merged dataset is also checked for route identity, curated orphan records and action consistency before the atomic rename. Structural/invalid events preserve the snapshot, upload diagnostics and exit failure. A same-directory temporary file, fsync and rename update the single generated file atomically. Full sync tests, type/build validation, field parity and browser E2E run before a commit. A whitelist prevents unrelated files from entering the generated commit. Only a successful verified commit/push permits deployment.
+
+Missing `FIGMA_TOKEN` fails visibly for both scheduled and manual runs. Full verification also runs on a no-change result. There are no hardcoded tool totals.
+
+## Tests
+
+`npm run test:figma-sync` exercises the 18-case regression matrix, including real CLI subprocesses. Read-only cases hash every sandbox file/directory, check clean Git status and sentinel GitHub files. Acceptance is repeated to prove stable snapshot bytes/mtime and unchanged editorial data. Removals, incomplete rows and unknown vocabulary preserve the snapshot even with acceptance enabled.
+
+Ideas are a separate editorial collection outside frame `374:1308`; their node IDs are embedded directly in the idea records and do not register tool rows.

@@ -2,7 +2,7 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {FIGMA_CASES_SNAPSHOT,FIGMA_BACKLOG_SNAPSHOT} from '../../src/data/figmaCasesSnapshot.ts';
 import {resolve} from 'node:path';
 import {connectMcp} from '../lib/mcp-client.mjs';
-import {caseSections,catalogSections,agentSections,skillSections,metaSections,renderBody,agentSkills,fingerprint,marker,html} from './render.mjs';
+import {sourceSections,setupSections,caseSections,catalogSections,agentSections,skillSections,metaSections,renderBody,agentSkills,fingerprint,marker,html} from './render.mjs';
 const apply=process.argv.includes('--apply');
 const registryPath=resolve('scripts/confluence/pages.json');
 const registry=JSON.parse(readFileSync(registryPath));
@@ -85,6 +85,17 @@ async function publishRoot(){
  if(apply){await call('edit_page',{page_id:registry.root,expected_version:page.version,operations:ops});const v=await read(registry.root);if(!v.body.includes(hash))throw new Error('Root readback mismatch');report.at(-1).verifiedVersion=v.version;}
 }
 
+async function repairLegacyNavigation(){
+ for(const id of [registry.sources,registry.catalog]){
+  if(!id)continue;const page=await read(id);const operations=[];
+  if(id===registry.sources&&page.body.includes('Актуальные числа:'))operations.push({op:'replace_block',find:'Актуальные числа:',element:'p',body:'<p>Актуальный состав вычисляется из обоих Figma frames. Текущие числа и контракт приведены в Architecture / Sync contract ниже; исторические версии доступны в истории страницы.</p>'});
+  if(id===registry.catalog&&page.body.includes('AI Cases — 98 строк из Figma'))operations.push({op:'replace_text',find:'AI Cases — 98 строк из Figma',replace:'AI Cases — актуальные кейсы и идеи Figma'});
+  if(!operations.length)continue;
+  report.push({pageId:id,operation:apply?'repair-legacy-navigation':'would-repair-navigation',fromVersion:page.version});
+  if(apply){await call('edit_page',{page_id:id,expected_version:page.version,operations});const v=await read(id);report.at(-1).verifiedVersion=v.version;}
+ }
+}
+
 try{
  registry.meta=await ensure('AI Skills for Agents',registry.parent,registry.meta);saveRegistry();
  if(registry.meta)for(const skill of agentSkills){
@@ -96,6 +107,9 @@ try{
  await publish(registry.agents,'Каталог AI — агенты',agentSections(),{legacy:true});
  await publish(registry.meta,'AI Skills for Agents',metaSections(registry));
  if(registry.meta)await publishRoot();
+ if(registry.sources)await publish(registry.sources,'Sources & Sync',sourceSections());
+ if(registry.setup)await publish(registry.setup,'Настроить себе AI',setupSections(registry));
+ await repairLegacyNavigation();
  console.log(JSON.stringify({apply,pages:report},null,2));
 }catch(error){report.push({error:error.message});console.error(error.message);process.exitCode=1;}
 finally{writeFileSync('test-results/confluence-sync.json',JSON.stringify({apply,report},null,2)+'\n');mcp.close();}

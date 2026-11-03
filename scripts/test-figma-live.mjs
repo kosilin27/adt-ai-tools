@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, cpSync, rmSync, re
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { diffSourceSets } from './lib/figma-source-sets.mjs';
 import { diffSnapshots, parseToolsFrame, linksFrom } from './lib/figma-live.mjs';
 import { SOURCE_COLUMNS, validateSourceRows } from '../src/data/figmaContract.ts';
 import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
@@ -76,6 +77,14 @@ test('16. reordered rows and reordered / empty columns never remap identity or f
   const fixture=structuredClone(frame);fixture.children[1].children.reverse();const parsed=parseToolsFrame(fixture);for(const field of ['figmaNodeId','title','audienceValues','authorValues','sourceStatusValues','sourceColumns']) assert.deepEqual(parsed[0][field],base[0][field]);
   const malformed=structuredClone(frame);malformed.children[1].children=malformed.children[1].children.filter(n=>n.name!=='31');blocked(parseToolsFrame(malformed),'missing source column');
   const unexpected=structuredClone(frame);unexpected.children[1].children.push({name:'FutureColumn',type:'FRAME',children:[]});blocked(parseToolsFrame(unexpected),'unknown source column');
+});
+
+test('19. cross-frame moves need review and keep identity; disappearance remains blocked',()=>{
+ const before={cases:base,backlog:[]};const after={cases:[base[1]],backlog:[{...base[0],section:'Backlog / Ideas'}]};
+ assert.ok(diffSourceSets(before,after).unsafe.some(r=>r.field==='membership'));
+ const accepted=diffSourceSets(before,after,{acceptMoves:true});assert.deepEqual(accepted.unsafe,[]);assert.equal(accepted.moves[0].nodeId,base[0].figmaNodeId);
+ assert.ok(diffSourceSets(after,{cases:after.cases,backlog:[]},{acceptMoves:true,acceptNew:true}).unsafe.some(r=>r.classification==='unsafe-removed-row'));
+ assert.ok(diffSourceSets(before,{cases:base,backlog:[base[0]]},{acceptMoves:true,acceptNew:true}).unsafe.some(r=>r.reason==='duplicate node identity'));
 });
 
 function digestTree(root) {

@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { ideas } from '../src/data/ideas';
 import { actionsForSource } from '../src/data/figmaSource';
-import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot';
+import { FIGMA_CASES_SNAPSHOT, FIGMA_BACKLOG_SNAPSHOT } from '../src/data/figmaCasesSnapshot';
 const sourceNodeIds = FIGMA_CASES_SNAPSHOT.map(row => row.figmaNodeId);
 import { tools, validateTools, type Tool } from '../src/data/tools';
 
 const auditPath = 'test-results/catalog-audit.json';
 const caseSource = (id: string) => 'https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades?node-id=' + id.replace(':', '-');
-const hostedHashRoutes = /prototype-hosting\.k\.avito\.ru|artifact\.avito\.ru/.test(process.env.REMOTE_BASE_URL || '');
+const hostedHashRoutes = /prototype-hosting\.k\.avito\.ru|artifact(?:\.k)?\.avito\.ru/.test(process.env.REMOTE_BASE_URL || '');
 const detailUrl = (tool: Tool) => (hostedHashRoutes ? '#/tool/' : 'tool/') + tool.id;
 const primaryFor = (tool: Tool) => (tool.actions || []).find(action => action.primary);
 const appRootUrl = () => new URL('./', process.env.REMOTE_BASE_URL || 'http://127.0.0.1:4173/adt-ai-tools/').toString();
@@ -17,7 +17,8 @@ const tovTitle = 'Плагин-редактор в Figma с оценкой те�
 test.beforeAll(async () => {
   validateTools(tools);
   expect(tools.length).toBe(sourceNodeIds.length);
-  expect(ideas.length).toBe(13);
+  expect(ideas.map(row=>row.figmaNodeId)).toEqual(FIGMA_BACKLOG_SNAPSHOT.map(row=>row.figmaNodeId));
+  expect(ideas.every(row=>!sourceNodeIds.includes(row.figmaNodeId))).toBe(true);
   expect(new Set(tools.map(tool => tool.figmaNodeId)).size).toBe(sourceNodeIds.length);
   await mkdir('test-results', { recursive: true });
 });
@@ -26,7 +27,7 @@ test('catalog smoke flow keeps tools, Ideas, search and filters', async ({ page 
   await page.goto('');
   await expect(page.getByRole('heading', { name: 'AI TOOLS THAT WORK' })).toBeVisible();
   await expect(page.locator('#catalog .tool-card')).toHaveCount(sourceNodeIds.length);
-  await expect(page.locator('#ideas .idea-card')).toHaveCount(13);
+  await expect(page.locator('#ideas .idea-card')).toHaveCount(FIGMA_BACKLOG_SNAPSHOT.length);
   await expect(page.getByText('NEW THIS MONTH')).toHaveCount(0);
   await expect(page.getByText('6 new this month')).toHaveCount(0);
   await expect(page.getByText('See what\'s new')).toHaveCount(0);
@@ -189,7 +190,7 @@ test('full source snapshot to UI actions audit', async ({ page, context }) => {
   const guideOnly = tools.filter(tool => !primaryFor(tool) && (tool.actions || []).some(action => action.kind === 'guide')).length;
   const announcementOnly = tools.filter(tool => !primaryFor(tool) && (tool.actions || []).some(action => action.kind === 'announcement')).length;
   console.log([
-    'BUILD: PASS', 'TOOLS: ' + tools.length + ' / ' + sourceNodeIds.length, 'IDEAS: ' + ideas.length + ' / 13',
+    'BUILD: PASS', 'TOOLS: ' + tools.length + ' / ' + sourceNodeIds.length, 'IDEAS: ' + ideas.length + ' / ' + FIGMA_BACKLOG_SNAPSHOT.length,
     'PRIMARY ACTIONS: ' + primaryCount, 'GUIDE-ONLY TOOLS: ' + guideOnly,
     'ANNOUNCEMENT-ONLY TOOLS: ' + announcementOnly,
     'DATASET MISSING NODE IDS: ' + sourceNodeIds.filter(id => !tools.some(tool => tool.figmaNodeId === id)).length,

@@ -4,7 +4,7 @@ Identity is `figmaNodeId`. Human case numbers, titles, slugs and row order never
 
 ## Data ownership
 
-- `figmaCasesSnapshot.ts` is the only generated source dataset, including every parsed column, literal statuses, badge evidence, authors, audiences, text, links and source order.
+- `figmaCasesSnapshot.ts` is the only generated source dataset, with separate cases and backlog arrays, including every parsed column, literal statuses, badge evidence, authors, audiences, text, links and source order.
 - `curatedTools.ts` is optional editorial metadata keyed by node ID. Legacy `id` values preserve existing detail URLs and favorites. They are not join keys. Categories, descriptions, product type, instructions, metrics and special action labels belong here.
 - `tools.ts` iterates source rows and merges optional editorial metadata. There is no separate tool registry, ID mapping or extra-card list.
 - Source actions contain every source URL. URL-specific labels apply while that URL is present. The one-time migration consolidates old snapshot links and old source-action URLs, after proving every old action URL appears in the live Figma row. Existing action labels remain URL-bound overrides. Optional `supplementalActions` is reserved for deliberately product-owned links; none is needed by the migrated baseline.
@@ -35,20 +35,20 @@ Removed rows always block, including with `--accept-new`. The CLI never deletes 
 For an offline complete export:
 
 ```sh
-npm run check:figma-live -- --frame-json /absolute/path/frame.json
+npm run check:figma-live -- --frame-json /absolute/path/frame.json --backlog-frame-json /absolute/path/backlog.json
 npm run check:figma-live -- --source-json /absolute/path/source-rows.json
 ```
 
-`--frame-json` runs the real parser. `--source-json` validates an already-parsed export; it does not prove current live state. GitHub Actions forbids offline inputs and `--accept-new`. The old addition-only replay is removed because it cannot establish live source order or full field parity.
+`--frame-json` runs the real parser. `--source-json` validates an already-parsed export; it does not prove current live state. GitHub Actions forbids offline inputs and frame-move acceptance. `--accept-new` is allowed only in an explicit workflow_dispatch run. The old addition-only replay is removed because it cannot establish live source order or full field parity.
 
 ## Workflow and atomicity
 
 The job fetches live Figma, parses, validates and diffs before any source write. The candidate merged dataset is also checked for route identity, curated orphan records and action consistency before the atomic rename. Structural/invalid events preserve the snapshot, upload diagnostics and exit failure. A same-directory temporary file, fsync and rename update the single generated file atomically. Full sync tests, type/build validation, field parity and browser E2E run before a commit. A whitelist prevents unrelated files from entering the generated commit. Only a successful verified commit/push permits deployment.
 
-Missing `FIGMA_TOKEN` fails visibly for both scheduled and manual runs. Full verification also runs on a no-change result. There are no hardcoded tool totals.
+Missing `FIGMA_TOKEN` fails visibly for both scheduled and manual runs. A no-change run skips commit, deployment and browser installation. There are no hardcoded tool totals.
 
 ## Tests
 
-`npm run test:figma-sync` exercises the 18-case regression matrix, including real CLI subprocesses. Read-only cases hash every sandbox file/directory, check clean Git status and sentinel GitHub files. Acceptance is repeated to prove stable snapshot bytes/mtime and unchanged editorial data. Removals, incomplete rows and unknown vocabulary preserve the snapshot even with acceptance enabled.
+`npm run test:figma-sync` exercises the regression matrix, including real CLI subprocesses. Read-only cases hash every sandbox file/directory, check clean Git status and sentinel GitHub files. Acceptance is repeated to prove stable snapshot bytes/mtime and unchanged editorial data. Removals, incomplete rows and unknown vocabulary preserve the snapshot even with acceptance enabled.
 
-Ideas are a separate editorial collection outside frame `374:1308`; their node IDs are embedded directly in the idea records and do not register tool rows.
+Ideas are parsed from live frame `2439:9151` into `FIGMA_BACKLOG_SNAPSHOT` in the same generated file. `ideas.ts` is runtime-derived, with no hand-maintained source records. Cross-frame moves require reviewed `--accept-moves`; disappearance across both frames remains blocked. Curated records for ideas are retained.

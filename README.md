@@ -1,13 +1,34 @@
 # ADT AI Tools Catalog
 
-## Figma sync
+Figma → AI Tools Catalog → Confluence → Agent Skills.
 
-Source: 30 Cases 2026 (`374:1308`). The catalog checks live Figma daily at 17:05 Europe/Moscow, or manually via **Actions → Sync Figma → Run workflow**.
+**Canonical repository:** [kosilin27/adt-ai-tools](https://github.com/kosilin27/adt-ai-tools). Stash becomes canonical only after team contribution, CI and production deployment are proven. GitHub Pages stays as fallback.
 
-Required GitHub secret: `FIGMA_TOKEN`. Safe changes auto-deploy to the GitHub Pages fallback; structural and unknown-status changes stop the pipeline.
+## Start
 
-Tool statuses come only from effectively visible `DockingBadge` text in the status cell, including ancestor visibility. Multiple statuses are retained. A working case is any row whose `sourceStatusValues` includes `На проде`; the binary `Emotional Rubricator` variant is ignored. Filters match any visible status; Detail shows all badges. Cards are displayed once, with `На проде` cases first and then the remaining source-status groups. Hero badge counts overlap.
+Node.js 22. Run `npm ci`, `npx playwright install chromium`, then `npm run dev`. Validate with `npm run verify`.
 
-Run `node --experimental-strip-types scripts/status-forensics.mjs` with `FIGMA_TOKEN`, or pass a complete parsed source export. Unknown vocabulary is reported as failure. See [sync architecture and acceptance](docs/figma-sync.md) for the generated-source / optional-curated model and strict read-only checks.
+## Where to change what
 
-Avito Prototype Hosting is the primary publication. Build it with `VITE_BASE=./ npm run build`; hosted details use hash routes so shared links survive refresh under a versioned hosting path. Default builds preserve `/adt-ai-tools/` and `404.html` for GitHub Pages.
+| Change | Edit |
+|---|---|
+| Source title, link, authors, audience, status, membership | Figma cases `374:1308` / Backlog `2439:9151` |
+| Description, category, how-to, special CTA | `src/data/curatedTools.ts`, keyed by Figma node ID |
+| UI | App code/styles |
+| Agent intent/instructions/examples | `src/data/agentSkills.ts` |
+
+Never edit `src/data/figmaCasesSnapshot.ts` manually. It contains both generated source arrays, updated atomically. Case numbers are not identity. Multiple statuses are preserved; working means a visible `На проде` badge.
+
+## Server sync
+
+GitHub Actions checks live Figma daily at **17:05 Europe/Moscow**; run times may be delayed by GitHub. It runs on hosted Ubuntu and does not depend on any laptop. Required secret: `FIGMA_TOKEN`.
+
+No source changes → success, no commit/deploy. Safe changes → tests → atomic source commit → bot PR/merge → GitHub Pages fallback → remote QA. New/removed/moved/malformed/unknown rows block with an artifact. A reviewed new complete row has one acceptance operation: `npm run sync:figma -- --accept-new`, or manual Actions dispatch with `accept_new=true`. Moves require explicit review and `--accept-moves`; disappearance remains blocked.
+
+## Hosting and knowledge
+
+Primary static site: existing Avito Prototype Hosting prototype **adt-ai-tools**. Build with `VITE_BASE=./ npm run build`; use hash routes. GitHub fallback uses `/adt-ai-tools/` and `404.html`.
+
+Confluence publishing: `npm run check:confluence`, then `npm run sync:confluence -- --apply` with an authenticated corporate MCP transport. It uses version checks, exact destination IDs and content fingerprints. A local publish is not proof of a scheduled server-side internal publish.
+
+[Architecture](docs/architecture.md) · [Contribution guide](docs/contributing.md) · [Source contract](docs/figma-sync.md).

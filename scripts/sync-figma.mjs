@@ -1,13 +1,15 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
-import { diffSnapshots, fetchToolsFrame, formatDiff, parseToolsFrame } from './lib/figma-live.mjs';
+import { FIGMA_CASES_SNAPSHOT, FIGMA_BACKLOG_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
+import { BACKLOG_FRAME_NODE_ID, fetchToolsFrame, formatDiff, parseToolsFrame } from './lib/figma-live.mjs';
 import { mergeTools, validateTools } from '../src/data/tools.ts';
+import { diffSourceSets } from './lib/figma-source-sets.mjs';
 import { writeSnapshotAtomically } from './lib/figma-snapshot.mjs';
 
 const args = process.argv.slice(2);
 const check = args.includes('--check');
 const acceptNew = args.includes('--accept-new');
+const acceptMoves = args.includes('--accept-moves');
 const valueFor = flag => {
   const index = args.indexOf(flag);
   if (index < 0) return null;
@@ -17,15 +19,17 @@ const valueFor = flag => {
 };
 const framePath = valueFor('--frame-json');
 const rowsPath = valueFor('--source-json');
+const backlogPath = valueFor('--backlog-frame-json');
 const reportDir = valueFor('--report-dir') || 'test-results';
-const allowed = new Set(['--check','--accept-new','--frame-json','--source-json','--report-dir','--json']);
+const allowed = new Set(['--check','--accept-new','--accept-moves','--frame-json','--backlog-frame-json','--source-json','--report-dir','--json']);
 for (let index=0; index<args.length; index++) {
   if (!allowed.has(args[index])) throw new Error(`Unknown argument: ${args[index]}`);
-  if (['--frame-json','--source-json','--report-dir'].includes(args[index])) index++;
+  if (['--frame-json','--backlog-frame-json','--source-json','--report-dir'].includes(args[index])) index++;
 }
+if (backlogPath && !framePath) throw new Error('--backlog-frame-json requires --frame-json');
 if (framePath && rowsPath) throw new Error('Use only one offline evidence input');
 if (check && args.includes('--report-dir')) throw new Error('--check is strictly read-only: capture stdout for a report');
-if (process.env.GITHUB_ACTIONS && (framePath || rowsPath || acceptNew)) throw new Error('Scheduled sync must fetch live Figma and must not accept structural additions');
+if (process.env.GITHUB_ACTIONS && (framePath || rowsPath || backlogPath || acceptMoves || (acceptNew && process.env.GITHUB_EVENT_NAME !== 'workflow_dispatch'))) throw new Error('Scheduled sync must fetch live Figma and must not accept structural additions');
 // Read-only checks never create directories, reports, GitHub outputs or summaries.
 function report(diff) {
   const markdown = formatDiff(diff);
@@ -44,10 +48,11 @@ try {
   const excludedRows = [];
   const live = rowsPath ? JSON.parse(readFileSync(rowsPath,'utf8')) : parseToolsFrame(framePath ? JSON.parse(readFileSync(framePath,'utf8')) : await fetchToolsFrame(process.env.FIGMA_TOKEN),{onExcluded:row => excludedRows.push(row)});
   if (!Array.isArray(live)) throw new Error('Source export must be an array of complete source rows');
-  const diff = diffSnapshots(FIGMA_CASES_SNAPSHOT,live,{acceptNew});
+  const backlog = backlogPath ? parseToolsFrame(JSON.parse(readFileSync(backlogPath,'utf8')),{frameId:BACKLOG_FRAME_NODE_ID,onExcluded:row=>excludedRows.push(row)}) : (framePath || rowsPath) ? [] : parseToolsFrame(await fetchToolsFrame(process.env.FIGMA_TOKEN,BACKLOG_FRAME_NODE_ID),{frameId:BACKLOG_FRAME_NODE_ID,onExcluded:row=>excludedRows.push(row)});
+  const diff = diffSourceSets({cases:FIGMA_CASES_SNAPSHOT,backlog:FIGMA_BACKLOG_SNAPSHOT},{cases:live,backlog},{acceptNew,acceptMoves});
   diff.excludedRows = excludedRows;
   diff.evidence = framePath ? 'offline frame export' : rowsPath ? 'offline parsed source export (does not prove current live state)' : 'live Figma REST frame';
-  if (!diff.unsafe.length) validateTools(mergeTools(live),live);
+  if (!diff.unsafe.length) validateTools(mergeTools(live),live,backlog);
   report(diff);
   if (diff.unsafe.length) {
     setOutput(false);
@@ -60,7 +65,7 @@ try {
     setOutput(false);
     console.log('No Figma changes detected.');
   } else {
-    const changed = writeSnapshotAtomically(live);
+    const changed = writeSnapshotAtomically(live,undefined,backlog);
     setOutput(changed);
     console.log(`Snapshot updated atomically. ${diff.added.length} accepted additions; runtime creates drafts without manual registration.`);
   }

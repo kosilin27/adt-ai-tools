@@ -38,11 +38,19 @@ export async function connectMcp() {
   });
   try {await request('initialize',{protocolVersion:'2025-03-26',capabilities:{},clientInfo:{name:'adt-ai-tools-publisher',version:'1'}});notify('notifications/initialized');}
   catch(error){child.kill();throw error;}
-  const inventory=await request('tools/list');
+  let inventory;
+  let status='';
+  for(let attempt=0;attempt<7;attempt++){
+    inventory=await request('tools/list');
+    if((inventory.tools||[]).some(t=>t.name!=='mcp_hub_status'))break;
+    if(!(inventory.tools||[]).some(t=>t.name==='mcp_hub_status'))break;
+    status=String(unwrap(await request('tools/call',{name:'mcp_hub_status',arguments:{}})));
+    if(attempt<6)await new Promise(resolve=>setTimeout(resolve,Math.min(1000*2**attempt,4000)));
+  }
   const registered=new Set((inventory.tools||[]).map(t=>t.name));
   return {call:async(server,tool,args)=>{
     const native=`${server}__${tool}`;
-    if(!registered.has(native))throw new Error(`MCP tool ${native} is not registered. Pin its server or use the documented direct connection before publishing.`);
+    if(!registered.has(native))throw new Error(`MCP tool ${native} is not registered. Pin its server or use the documented direct connection before publishing. ${status}`);
     return unwrap(await request('tools/call',{name:native,arguments:args}));
   },close:()=>child.kill()};
 }

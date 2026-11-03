@@ -12,7 +12,10 @@
     "verify:remote": "node scripts/verify-remote.mjs",
     "sync:figma": "node --experimental-strip-types scripts/sync-figma.mjs",
     "check:figma-live": "node --experimental-strip-types scripts/sync-figma.mjs --check",
-    "test:figma-sync": "node --experimental-strip-types scripts/test-figma-live.mjs"
+    "test:figma-sync": "node --experimental-strip-types scripts/test-figma-live.mjs",
+    "sync:confluence": "node --experimental-strip-types scripts/confluence/sync.mjs",
+    "check:confluence": "node --experimental-strip-types scripts/confluence/sync.mjs",
+    "verify:ci": "npm run verify"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

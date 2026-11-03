@@ -2,10 +2,15 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { tools, validateTools } from '../src/data/tools.ts';
 import { curatedByNodeId } from '../src/data/curatedTools.ts';
-import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
+import { FIGMA_CASES_SNAPSHOT, FIGMA_BACKLOG_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
+import { ideas } from '../src/data/ideas.ts';
 import { validateSourceRows } from '../src/data/figmaContract.ts';
 
 validateTools();
+assert.deepEqual(validateSourceRows([...FIGMA_CASES_SNAPSHOT,...FIGMA_BACKLOG_SNAPSHOT]),[]);
+assert.deepEqual(ideas.map(r=>r.figmaNodeId),FIGMA_BACKLOG_SNAPSHOT.map(r=>r.figmaNodeId));
+assert.ok(ideas.every(r=>!FIGMA_CASES_SNAPSHOT.some(c=>c.figmaNodeId===r.figmaNodeId)));
+for (const idea of ideas) assert.deepEqual(idea.sourceRecord,FIGMA_BACKLOG_SNAPSHOT.find(r=>r.figmaNodeId===idea.figmaNodeId));
 assert.deepEqual(validateSourceRows(FIGMA_CASES_SNAPSHOT),[]);
 const rows = FIGMA_CASES_SNAPSHOT.map((source,index) => {
   const tool = tools[index];
@@ -23,7 +28,7 @@ const rows = FIGMA_CASES_SNAPSHOT.map((source,index) => {
   };
   return {figmaNodeId:source.figmaNodeId,title:source.title,fields,overall:Object.values(fields).every(Boolean)};
 });
-const checks = {sourceRows:rows.length,catalogRows:tools.length,passed:rows.filter(row => row.overall).length,fieldParityErrors:rows.filter(row => !row.overall).length,drafts:tools.filter(tool => tool.editorialState === 'draft').length,sourceLinks:FIGMA_CASES_SNAPSHOT.reduce((count,row) => count+row.sourceLinks.length,0)};
+const checks = {backlogRows:ideas.length,sourceRows:rows.length,catalogRows:tools.length,passed:rows.filter(row => row.overall).length,fieldParityErrors:rows.filter(row => !row.overall).length,drafts:tools.filter(tool => tool.editorialState === 'draft').length,sourceLinks:FIGMA_CASES_SNAPSHOT.reduce((count,row) => count+row.sourceLinks.length,0)};
 mkdirSync('test-results',{recursive:true});
 writeFileSync('test-results/figma-parity.json',JSON.stringify({checks,rows},null,2)+'\n');
 writeFileSync('test-results/figma-parity.md',`# Figma parity\n\n${Object.entries(checks).map(([key,value]) => `- ${key}: ${value}`).join('\n')}\n\n| nodeId | title | result |\n|---|---|---|\n${rows.map(row => `| ${row.figmaNodeId} | ${row.title.replaceAll('|','\\|').replaceAll('\n',' ')} | ${row.overall ? 'PASS' : 'FAIL'} |`).join('\n')}\n`);

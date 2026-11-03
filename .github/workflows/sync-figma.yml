@@ -2,9 +2,15 @@ name: Sync Figma
 
 on:
   schedule:
+    # Hosted schedules can be delayed by GitHub.
     - cron: '5 17 * * *'
       timezone: 'Europe/Moscow'
   workflow_dispatch:
+    inputs:
+      accept_new:
+        description: 'Accept complete new live rows after source review (never removals/moves)'
+        type: boolean
+        default: false
 
 concurrency:
   group: adt-figma-sync
@@ -12,10 +18,13 @@ concurrency:
 
 permissions:
   contents: write
+  pull-requests: write
+  statuses: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,13 +34,17 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Install Playwright browser
-        run: npx playwright install --with-deps chromium
       - name: Fetch, parse, validate, diff and atomically update source
         id: sync
         env:
           FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
-        run: npm run sync:figma
+          ACCEPT_NEW: ${{ github.event_name == 'workflow_dispatch' && inputs.accept_new && 'true' || 'false' }}
+        run: |
+          if [ "$ACCEPT_NEW" = true ]; then
+            npm run sync:figma -- --accept-new
+          else
+            npm run sync:figma
+          fi
       - name: Upload source diff and structural diagnostics
         if: always() && steps.sync.outcome != 'skipped'
         uses: actions/upload-artifact@v4
@@ -39,12 +52,20 @@ jobs:
           name: figma-sync-report
           path: test-results/figma-sync-diff.*
           if-no-files-found: error
+      - name: No changes
+        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes != 'true'
+        run: echo 'Live source unchanged. No commit or deployment.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Install Playwright browser
+        if: steps.sync.outputs.has_changes == 'true'
+        run: npx playwright install --with-deps chromium
       - name: Full tests, field parity, build and E2E
-        if: steps.sync.outcome == 'success'
+        if: steps.sync.outcome == 'success' && steps.sync.outputs.has_changes == 'true'
         run: npm run verify
-      - name: Commit one verified source state
+      - name: Commit one verified source state through a PR
         id: commit
         if: success() && steps.sync.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Only one generated source file exists; registries and cards are runtime-derived.
           changed_files=$(git diff --name-only)
@@ -53,10 +74,17 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -- src/data/figmaCasesSnapshot.ts
           git commit -m "chore: sync catalog from Figma"
-          git push origin HEAD:main
+          branch="automation/figma-sync-${GITHUB_RUN_ID}"
+          git push origin "HEAD:refs/heads/$branch"
+          sha=$(git rev-parse HEAD)
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$sha" -f state=success -f context=verify -f description='Source-only commit verified by parser, parity, build and browser tests' -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          pr=$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$branch" --title 'chore: sync validated live Figma source' --body 'Generated source only. Complete live parse, source contract, parity, build and browser tests passed in this workflow. Structural removals and frame moves remain blocked.')
+          gh pr merge "$pr" --merge --match-head-commit "$sha" --delete-branch
       - name: Deploy verified build to GitHub Pages
         if: success() && steps.commit.outcome == 'success'
         run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git fetch origin gh-pages
           git worktree add --detach /tmp/adt-gh-pages origin/gh-pages
           rsync -a --delete --exclude=.git dist/ /tmp/adt-gh-pages/
@@ -68,4 +96,9 @@ jobs:
           fi
       - name: Remote QA
         if: success() && steps.commit.outcome == 'success'
-        run: npm run verify:remote -- https://kosilin27.github.io/adt-ai-tools/
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if npm run verify:remote -- https://kosilin27.github.io/adt-ai-tools/; then exit 0; fi
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            sleep 20
+          done

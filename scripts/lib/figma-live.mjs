@@ -1,18 +1,19 @@
 import { STATUS_LABELS, AUDIENCE_LABELS, SOURCE_COLUMNS, validateSourceRows } from '../../src/data/figmaContract.ts';
 export const FIGMA_FILE_KEY = 'nVLcu3bbLgz0lJhSUexjvx';
 export const TOOLS_FRAME_NODE_ID = '374:1308';
+export const BACKLOG_FRAME_NODE_ID = '2439:9151';
 export const KNOWN_STATUS_LABELS = new Set(STATUS_LABELS);
 export const KNOWN_AUDIENCE_LABELS = new Set(AUDIENCE_LABELS);
 export const normalizeText = value => String(value ?? '')
   .replaceAll('\r\n', '\n').replace(/[\u2028\u2029]/g, '\n').replaceAll('\u00a0', ' ')
   .replace(/[ \t]+/g, ' ').replace(/[ \t]*\n[ \t]*/g, '\n').trim();
 
-export async function fetchToolsFrame(token) {
+export async function fetchToolsFrame(token, frameId = TOOLS_FRAME_NODE_ID) {
   if (!token) throw new Error('FIGMA_TOKEN is not configured; use an authoritative --frame-json export for a local audit');
-  const response = await fetch(`https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/nodes?ids=${encodeURIComponent(TOOLS_FRAME_NODE_ID)}`, {headers:{'X-Figma-Token':token}});
+  const response = await fetch(`https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/nodes?ids=${encodeURIComponent(frameId)}`, {headers:{'X-Figma-Token':token}, signal:AbortSignal.timeout(60000)});
   if (!response.ok) throw new Error(`Figma API request failed (${response.status})`);
-  const frame = (await response.json()).nodes?.[TOOLS_FRAME_NODE_ID]?.document;
-  if (!frame) throw new Error(`Figma frame ${TOOLS_FRAME_NODE_ID} was not returned`);
+  const frame = (await response.json()).nodes?.[frameId]?.document;
+  if (!frame) throw new Error(`Figma frame ${frameId} was not returned`);
   return frame;
 }
 function textNodes(node) {
@@ -37,7 +38,18 @@ export function linksFrom(node) {
     const usedStyleIds = new Set((text.characterStyleOverrides || []).map(String));
     for (const [id,style] of Object.entries(text.styleOverrideTable || {})) if (usedStyleIds.has(id)) add(style.hyperlink);
     for (const segment of text.linkSegments || []) add(segment.hyperlink);
-    links.push(...(normalizeText(text.characters).match(/https?:\/\/[^\s]+/g) || []));
+    // A URL-looking label is not a second destination when its range is linked.
+    // Keep bare URLs only in unlinked ranges; preserve actual Figma targets above.
+    const linkedAt = index => {
+      const active = text.characterStyleOverrides?.[index];
+      const override = active == null ? undefined : text.styleOverrideTable?.[active];
+      if (override && 'hyperlink' in override) return Boolean(override.hyperlink);
+      if (text.hyperlink || text.style?.hyperlink) return true;
+      return (text.linkSegments || []).some(segment => Number.isInteger(segment.start) && Number.isInteger(segment.end) && segment.start <= index && index < segment.end && segment.hyperlink);
+    };
+    for (const match of String(text.characters).matchAll(/https?:\/\/[^\s]+/g)) {
+      if (![...match[0]].every((_,offset)=>linkedAt(match.index+offset))) links.push(match[0]);
+    }
   }
   return [...new Set(links)];
 }
@@ -56,10 +68,10 @@ export function visibleDockingBadgeStatuses(row) {
   visit(cell);
   return {values:[...new Set(evidence.map(item => item.value))],evidence};
 }
-export function parseToolsFrame(frame, {onExcluded} = {}) {
-  if (frame.id && frame.id !== TOOLS_FRAME_NODE_ID) throw new Error(`Wrong authoritative frame: ${frame.id}`);
+export function parseToolsFrame(frame, {onExcluded, frameId = TOOLS_FRAME_NODE_ID} = {}) {
+  if (frame.id && frame.id !== frameId) throw new Error(`Wrong authoritative frame: ${frame.id}`);
   const rows = [];
-  let section = '';
+  let section = frameId === BACKLOG_FRAME_NODE_ID ? 'Backlog / Ideas' : '';
   for (const child of frame.children || []) {
     if (child.visible === false || child.hidden) continue;
     if (child.name !== 'Cell') {

@@ -1,0 +1,23 @@
+{
+  "space": "DES",
+  "parent": "1020052010",
+  "root": "1020051967",
+  "cases": "1020052009",
+  "catalog": "1020052010",
+  "agents": "1020052000",
+  "meta": "1067440119",
+  "skills": {
+    "prototype-builder": "1067440120",
+    "qual-interview-analyzer": "1067440123",
+    "quant-survey-analyzer": "1067440125",
+    "guide-builder": "1067440127",
+    "methodology-planner": "1067440129",
+    "cf-brief-audit": "1067440131",
+    "research-rept": "1067440133",
+    "ux-audit": "1067440135",
+    "avito-text-review": "1067440137",
+    "design-review": "1067440139",
+    "uxf-bundle": "1067440141",
+    "voc-report-generator": "1067440144"
+  }
+}

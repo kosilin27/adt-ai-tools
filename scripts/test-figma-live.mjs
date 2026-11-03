@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, cpSync, rmSync, re
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { diffSourceSets } from './lib/figma-source-sets.mjs';
 import { diffSnapshots, parseToolsFrame, linksFrom } from './lib/figma-live.mjs';
 import { SOURCE_COLUMNS, validateSourceRows } from '../src/data/figmaContract.ts';
 import { FIGMA_CASES_SNAPSHOT } from '../src/data/figmaCasesSnapshot.ts';
@@ -34,6 +35,14 @@ test('5. multiple links and hyperlink formats',() => {
   assert.deepEqual(parseToolsFrame(fixture)[0].sourceLinks,['https://example.com/one','https://example.com/three','https://example.com/two']);
   assert.deepEqual(linksFrom(text('https://example.com/plain')),['https://example.com/plain']);
   blocked(change('sourceLinks',['https://example.com/a https://example.com/b']),'invalid source URL');
+});
+test('20. linked URL labels do not fabricate targets; unlinked ranges still preserve bare URLs',()=>{
+ const linked=text('https://telegram/classifiedsnews','Text',{linkSegments:[{start:0,end:'https://telegram/classifiedsnews'.length,hyperlink:{type:'URL',value:'https://t.me/classifiedsnews'}}]});
+ assert.deepEqual(linksFrom(linked),['https://t.me/classifiedsnews']);
+ const mixed=text('https://label.test https://bare.test','Text',{linkSegments:[{start:0,end:18,hyperlink:{type:'URL',value:'https://target.test'}}]});
+ assert.deepEqual(linksFrom(mixed),['https://target.test','https://bare.test']);
+ const rest=text('https://label.test','Text',{characterStyleOverrides:Array(18).fill(1),styleOverrideTable:{1:{hyperlink:{type:'URL',url:'https://target.test'}}}});
+ assert.deepEqual(linksFrom(rest),['https://target.test']);
 });
 test('6. multiple visible statuses',() => {
   const fixture=structuredClone(frame);fixture.children[1].children.find(n=>n.name==='31').children.push(badge('Тестируется','badge:2'));
@@ -76,6 +85,14 @@ test('16. reordered rows and reordered / empty columns never remap identity or f
   const fixture=structuredClone(frame);fixture.children[1].children.reverse();const parsed=parseToolsFrame(fixture);for(const field of ['figmaNodeId','title','audienceValues','authorValues','sourceStatusValues','sourceColumns']) assert.deepEqual(parsed[0][field],base[0][field]);
   const malformed=structuredClone(frame);malformed.children[1].children=malformed.children[1].children.filter(n=>n.name!=='31');blocked(parseToolsFrame(malformed),'missing source column');
   const unexpected=structuredClone(frame);unexpected.children[1].children.push({name:'FutureColumn',type:'FRAME',children:[]});blocked(parseToolsFrame(unexpected),'unknown source column');
+});
+
+test('19. cross-frame moves need review and keep identity; disappearance remains blocked',()=>{
+ const before={cases:base,backlog:[]};const after={cases:[base[1]],backlog:[{...base[0],section:'Backlog / Ideas'}]};
+ assert.ok(diffSourceSets(before,after).unsafe.some(r=>r.field==='membership'));
+ const accepted=diffSourceSets(before,after,{acceptMoves:true});assert.deepEqual(accepted.unsafe,[]);assert.equal(accepted.moves[0].nodeId,base[0].figmaNodeId);
+ assert.ok(diffSourceSets(after,{cases:after.cases,backlog:[]},{acceptMoves:true,acceptNew:true}).unsafe.some(r=>r.classification==='unsafe-removed-row'));
+ assert.ok(diffSourceSets(before,{cases:base,backlog:[base[0]]},{acceptMoves:true,acceptNew:true}).unsafe.some(r=>r.reason==='duplicate node identity'));
 });
 
 function digestTree(root) {

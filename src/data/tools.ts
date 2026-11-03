@@ -1,5 +1,5 @@
 import { FIGMA_FILE_URL, actionsForSource } from './figmaSource.ts';
-import { FIGMA_CASES_SNAPSHOT, type FigmaCaseSnapshot } from './figmaCasesSnapshot.ts';
+import { FIGMA_CASES_SNAPSHOT, FIGMA_BACKLOG_SNAPSHOT, type FigmaCaseSnapshot } from './figmaCasesSnapshot.ts';
 import { curatedByNodeId } from './curatedTools.ts';
 import { validateSourceRows } from './figmaContract.ts';
 import type { Tool, Role, SourceStatus } from './toolTypes.ts';
@@ -32,13 +32,13 @@ export function mergeTools(rows: FigmaCaseSnapshot[]): Tool[] {
   });
 }
 export const tools: Tool[] = mergeTools(FIGMA_CASES_SNAPSHOT);
-export function validateTools(dataset: Tool[] = tools, sourceRows: FigmaCaseSnapshot[] = FIGMA_CASES_SNAPSHOT) {
+export function validateTools(dataset: Tool[] = tools, sourceRows: FigmaCaseSnapshot[] = FIGMA_CASES_SNAPSHOT, backlog: FigmaCaseSnapshot[] = FIGMA_BACKLOG_SNAPSHOT) {
   const expected = sourceRows.map(row => row.figmaNodeId);
   const ids = dataset.map(tool => tool.figmaNodeId);
   if (new Set(ids).size !== ids.length) throw new Error('Duplicate Figma node ID');
   if (new Set(dataset.map(tool => tool.id)).size !== dataset.length) throw new Error('Duplicate catalog route ID');
   if (ids.length !== expected.length || expected.some(id => !ids.includes(id))) throw new Error('Catalog ID set does not match snapshot');
-  for (const id of Object.keys(curatedByNodeId)) if (!expected.includes(id)) throw new Error('Orphan curated metadata: ' + id);
+  for (const id of Object.keys(curatedByNodeId)) if (!expected.includes(id) && !backlog.some(row => row.figmaNodeId === id)) throw new Error('Orphan curated metadata: ' + id);
   for (const tool of dataset) {
     const source = sourceRows.find(row => row.figmaNodeId === tool.figmaNodeId)!;
     if (tool.title !== source.title) throw new Error('Title mismatch: ' + tool.figmaNodeId);

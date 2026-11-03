@@ -171,27 +171,16 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "374:7695": {
     "id": "stiletto-bot",
-    "shortDescription": "Командный бот для генерации графики в стиле Avito.",
-    "whenToUse": "Когда нужно быстро получить брендированное изображение в мессенджере.",
-    "whatItDoes": "Интерфейс бота для генерации визуальных материалов на моделях внутри контура Avito.",
+    "shortDescription": "Автоматически проверяет скрипты КЦ по тону и редакционной политике Авито.",
     "categories": [
-      "Graphics"
+      "Text"
     ],
-    "type": "bot",
+    "type": "skill",
     "status": "beta",
-    "statusNote": "Usage metrics are being established.",
-    "impactTags": [
-      "Save time"
-    ],
-    "howToStart": [
-      "Open the bot in the team messenger.",
-      "Describe the image and context."
-    ],
+    "impactTags": [],
+    "howToStart": [],
     "updatedAt": "2026-09-01",
-    "createdAt": "2026-07-01",
-    "relatedToolIds": [
-      "graphics-plugin"
-    ]
+    "createdAt": "2026-07-01"
   },
   "3469:10852": {
     "id": "confetti-shader",
@@ -229,66 +218,30 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "2988:9922": {
     "id": "video-to-json",
-    "shortDescription": "Мгновенно конвертирует видео в JSON без сложного пайплайна.",
-    "whenToUse": "Когда нужно быстро подготовить анимацию к передаче в разработку.",
-    "whatItDoes": "Превращает видео в JSON для handoff и убирает ручные шаги пайплайна.",
+    "shortDescription": "Добавляет систему комментариев и отслеживания правок редакторов.",
     "categories": [
-      "Animation",
-      "Automation"
+      "Text"
     ],
-    "type": "service",
+    "type": "plugin",
     "status": "beta",
-    "metrics": [
-      {
-        "value": "−85%",
-        "label": "animation preparation TTM"
-      },
-      {
-        "value": "−90%",
-        "label": "manual pipeline steps"
-      }
-    ],
-    "impactTags": [
-      "Save time",
-      "Remove manual work"
-    ],
-    "howToStart": [
-      "Open the converter.",
-      "Upload a video.",
-      "Download the JSON output."
-    ],
+    "impactTags": [],
+    "howToStart": [],
     "updatedAt": "2026-09-08",
     "createdAt": "2026-07-15",
-    "relatedToolIds": [
-      "lottie-prompt",
-      "confetti-shader"
-    ],
     "featured": true
   },
   "374:7207": {
     "id": "lottie-prompt",
-    "shortDescription": "Генерирует Lottie-анимацию по текстовому описанию прямо в Figma.",
-    "whenToUse": "Когда нужно быстро проверить идею анимации без долгой интеграции.",
-    "whatItDoes": "Плагин Figma превращает короткое описание движения в первый вариант анимации.",
+    "shortDescription": "Командный Mattermost-бот для генерации графики в стиле Авито.",
     "categories": [
-      "Animation",
-      "Prototyping"
+      "Graphics"
     ],
-    "type": "plugin",
+    "type": "bot",
     "status": "development",
-    "statusNote": "Being developed and tested.",
-    "impactTags": [
-      "Save time"
-    ],
-    "howToStart": [
-      "Write the motion brief.",
-      "Generate a first version."
-    ],
+    "impactTags": [],
+    "howToStart": [],
     "updatedAt": "2026-08-22",
-    "createdAt": "2026-08-22",
-    "relatedToolIds": [
-      "video-to-json"
-    ]
+    "createdAt": "2026-08-22"
   },
   "374:3855": {
     "id": "reviews",
@@ -331,67 +284,29 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "374:1580": {
     "id": "feedback-service",
-    "shortDescription": "Помогает быстро получить обратную связь по продуктовым макетам на этапе дизайна.",
-    "whenToUse": "Когда нужен ранний продуктовый feedback с сохранением контекста задачи.",
-    "whatItDoes": "Сохраняет обратную связь рядом с задачей, чтобы каждая итерация учитывала общий контекст.",
+    "shortDescription": "Конвертирует видео в JSON.",
     "categories": [
-      "Design review",
-      "Research"
+      "Animation"
     ],
     "type": "service",
     "status": "development",
-    "impactTags": [
-      "Improve quality"
-    ],
-    "howToStart": [
-      "Add the service to a design task.",
-      "Share the layout for feedback."
-    ],
+    "impactTags": [],
+    "howToStart": [],
     "updatedAt": "2026-08-25",
-    "createdAt": "2026-08-25",
-    "relatedToolIds": [
-      "reviews"
-    ]
+    "createdAt": "2026-08-25"
   },
   "374:7451": {
     "id": "real-content",
-    "shortDescription": "За секунды заполняет карточки в Figma реальным контентом айтемов.",
-    "whenToUse": "Когда прототипу нужен реалистичный контент перед тестированием.",
-    "whatItDoes": "Массово подставляет релевантные данные в карточки для реалистичных макетов.",
+    "shortDescription": "Генерирует Lottie-анимацию по текстовому описанию прямо в Figma.",
     "categories": [
-      "Prototyping",
-      "Automation"
+      "Animation"
     ],
     "type": "plugin",
     "status": "ready",
-    "metrics": [
-      {
-        "value": "−70%",
-        "label": "TTM"
-      },
-      {
-        "value": "531",
-        "label": "items generated"
-      },
-      {
-        "value": "35 h",
-        "label": "time saved"
-      }
-    ],
-    "impactTags": [
-      "Save time",
-      "Work without specialist"
-    ],
-    "howToStart": [
-      "Open the plugin.",
-      "Select the cards.",
-      "Generate relevant content."
-    ],
+    "impactTags": [],
+    "howToStart": [],
     "updatedAt": "2026-08-26",
     "createdAt": "2026-08-26",
-    "relatedToolIds": [
-      "charts-plugin"
-    ],
     "featured": true
   },
   "374:1651": {
@@ -479,55 +394,30 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "374:8305": {
     "id": "research-skills",
-    "shortDescription": "Каталог AI-скиллов и агентов, которые уже используются в исследованиях.",
-    "whenToUse": "Когда исследовательской задаче нужен готовый AI-сценарий.",
-    "whatItDoes": "Собирает skills, инструкции по установке и карту исследовательских агентов.",
+    "shortDescription": "Проверяет макеты по эвристикам Нильсена и помогает получить обратную связь.",
     "categories": [
-      "Research",
-      "Knowledge"
+      "Design review"
     ],
-    "type": "skill",
+    "type": "plugin",
     "status": "ready",
-    "impactTags": [
-      "Find knowledge",
-      "Work without specialist"
-    ],
-    "howToStart": [
-      "Open the catalog.",
-      "Choose a skill.",
-      "Follow the installation guide."
-    ],
+    "impactTags": [],
+    "howToStart": [],
     "updatedAt": "2026-09-03",
     "createdAt": "2026-07-01",
-    "relatedToolIds": [
-      "interview-analyzer"
-    ],
     "featured": true
   },
   "3188:10318": {
     "id": "interview-analyzer",
-    "shortDescription": "Кодирует транскрипты интервью и готовит отчёт с привязкой к доказательствам.",
-    "whenToUse": "Когда есть транскрипты и нужно найти паттерны, гипотезы и структуру отчёта.",
-    "whatItDoes": "Строит матрицу «респондент × задача», находит паттерны и связывает выводы с цитатами.",
+    "shortDescription": "Ведёт дизайн-ревью от замечаний на макете до проверки реализации и PR с исправлениями.",
     "categories": [
-      "Research",
-      "Knowledge"
+      "Design review"
     ],
-    "type": "skill",
+    "type": "plugin",
     "status": "ready",
-    "impactTags": [
-      "Save time",
-      "Improve quality"
-    ],
-    "howToStart": [
-      "Prepare a transcript in TXT, MD, DOCX, PDF or Google Docs.",
-      "Run the skill in Claude Code or Codex."
-    ],
+    "impactTags": [],
+    "howToStart": [],
     "updatedAt": "2026-09-03",
-    "createdAt": "2026-07-01",
-    "relatedToolIds": [
-      "research-skills"
-    ]
+    "createdAt": "2026-07-01"
   },
   "374:5992": {
     "id": "text-version-control",
@@ -553,12 +443,11 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "374:614": {
     "id": "script-tov-check",
-    "shortDescription": "Автоматически проверяет скрипты КЦ по TOV и редакционной политике.",
+    "shortDescription": "Заполняет макеты реальным контентом объявлений.",
     "categories": [
-      "Text",
       "Automation"
     ],
-    "type": "skill",
+    "type": "plugin",
     "status": "development",
     "impactTags": [],
     "howToStart": [],
@@ -567,10 +456,9 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "1862:8991": {
     "id": "comments-system",
-    "shortDescription": "Добавляет систему управления комментариями редакторов.",
+    "shortDescription": "Проверяет и исправляет отступы между текстами в Figma.",
     "categories": [
-      "Text",
-      "Team processes"
+      "Design review"
     ],
     "type": "plugin",
     "status": "beta",
@@ -589,10 +477,9 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "2988:9842": {
     "id": "design-review-auto",
-    "shortDescription": "Механически проверяет расхождения между макетами и реализацией.",
+    "shortDescription": "Ищет похожие макеты в Mobbin по изображению и контексту.",
     "categories": [
-      "Design review",
-      "Automation"
+      "Knowledge"
     ],
     "type": "plugin",
     "status": "development",
@@ -647,12 +534,11 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "374:3761": {
     "id": "visual-search",
-    "shortDescription": "Ищет похожие макеты по изображению и контексту.",
+    "shortDescription": "Преобразует структуру макетов и компоненты дизайн-системы в файлы для разработки.",
     "categories": [
-      "Knowledge",
-      "Graphics"
+      "Automation"
     ],
-    "type": "service",
+    "type": "plugin",
     "status": "beta",
     "impactTags": [],
     "howToStart": [],
@@ -661,10 +547,9 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "374:8061": {
     "id": "safe-json-handoff",
-    "shortDescription": "Превращает изменения в макете в безопасный JSON для разработки.",
+    "shortDescription": "Собирает похожие кейсы и референсы из макетов Figma.",
     "categories": [
-      "Automation",
-      "Design System"
+      "Knowledge"
     ],
     "type": "plugin",
     "status": "beta",
@@ -689,10 +574,9 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "842:10306": {
     "id": "similar-layouts",
-    "shortDescription": "Собирает похожие кейсы и референсы из Figma для повторного использования.",
+    "shortDescription": "Помогает находить edge cases при проектировании интерфейса.",
     "categories": [
-      "Knowledge",
-      "Graphics"
+      "Design review"
     ],
     "type": "service",
     "status": "development",
@@ -703,12 +587,11 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "842:10672": {
     "id": "edge-case-generator",
-    "shortDescription": "Помогает не пропускать corner cases при разработке и дизайне.",
+    "shortDescription": "Хранит соответствие компонентов Figma и реализации в продакшене.",
     "categories": [
-      "Design review",
-      "Automation"
+      "Design System"
     ],
-    "type": "skill",
+    "type": "service",
     "status": "development",
     "impactTags": [],
     "howToStart": [],
@@ -717,10 +600,9 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "2465:9156": {
     "id": "figma-production-map",
-    "shortDescription": "Хранит соответствие компонентов Figma и продакшена и синхронизирует обновления.",
+    "shortDescription": "Показывает технический стек CJM и синхронизирует обновления.",
     "categories": [
-      "Design System",
-      "Knowledge"
+      "Design System"
     ],
     "type": "service",
     "status": "development",
@@ -731,10 +613,9 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "2466:9226": {
     "id": "cjm-tech-stack",
-    "shortDescription": "Показывает актуальное состояние backend-driven UI, Bricks и native-стека.",
+    "shortDescription": "Помогает оценить консистентность интерфейсов между платформами.",
     "categories": [
-      "Design System",
-      "Knowledge"
+      "Design review"
     ],
     "type": "service",
     "status": "development",
@@ -745,12 +626,11 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "374:9880": {
     "id": "platform-consistency",
-    "shortDescription": "Оценивает консистентность платформенных интерфейсов и синхронизацию обновлений.",
+    "shortDescription": "Напоминает участникам о шагах процесса и координирует работу.",
     "categories": [
-      "Design review",
-      "Design System"
+      "Team processes"
     ],
-    "type": "service",
+    "type": "bot",
     "status": "development",
     "impactTags": [],
     "howToStart": [],
@@ -981,12 +861,11 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "4108:11866": {
     "id": "reminder-coordinator",
-    "shortDescription": "Напоминает о шагах процесса, дежурных и согласованиях.",
+    "shortDescription": "Анализирует опросы, интервью и юзабилити-тесты, готовит Excel и черновик отчёта MR+UX.",
     "categories": [
-      "Team processes",
-      "Automation"
+      "Research"
     ],
-    "type": "bot",
+    "type": "skill",
     "status": "development",
     "impactTags": [],
     "howToStart": [],
@@ -1432,10 +1311,9 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
   },
   "580:6121": {
     "id": "avito-ds-autohub",
-    "shortDescription": "Собирает мастер-компонент, спецификацию и код для Storybook.",
+    "shortDescription": "Синхронизирует дизайн-систему Авито с Автохабом.",
     "categories": [
-      "Design System",
-      "Automation"
+      "Design System"
     ],
     "type": "workflow",
     "status": "development",

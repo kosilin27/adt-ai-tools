@@ -1,0 +1,55 @@
+name: Publish catalog fallback
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: adt-pages-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run verify
+      - name: Publish verified Pages fallback
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin gh-pages
+          git worktree add --detach /tmp/adt-gh-pages origin/gh-pages
+          rsync -a --delete --exclude=.git dist/ /tmp/adt-gh-pages/
+          touch /tmp/adt-gh-pages/.nojekyll
+          git -C /tmp/adt-gh-pages add -A
+          if ! git -C /tmp/adt-gh-pages diff --cached --quiet; then
+            git -C /tmp/adt-gh-pages commit -m "Deploy verified catalog from $GITHUB_SHA"
+            git -C /tmp/adt-gh-pages push origin HEAD:gh-pages
+          fi
+      - name: Real deployed QA
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if npm run verify:remote -- https://kosilin27.github.io/adt-ai-tools/; then exit 0; fi
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            sleep 20
+          done
+      - name: Internal publisher boundary
+        run: echo 'Pages fallback published. Prototype Hosting and Confluence require an approved internal runner identity; this run does not claim internal production deployment.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-release-verification
+          path: test-results/
+          if-no-files-found: warn

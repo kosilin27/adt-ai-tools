@@ -36,6 +36,14 @@ test('5. multiple links and hyperlink formats',() => {
   assert.deepEqual(linksFrom(text('https://example.com/plain')),['https://example.com/plain']);
   blocked(change('sourceLinks',['https://example.com/a https://example.com/b']),'invalid source URL');
 });
+test('20. linked URL labels do not fabricate targets; unlinked ranges still preserve bare URLs',()=>{
+ const linked=text('https://telegram/classifiedsnews','Text',{linkSegments:[{start:0,end:'https://telegram/classifiedsnews'.length,hyperlink:{type:'URL',value:'https://t.me/classifiedsnews'}}]});
+ assert.deepEqual(linksFrom(linked),['https://t.me/classifiedsnews']);
+ const mixed=text('https://label.test https://bare.test','Text',{linkSegments:[{start:0,end:18,hyperlink:{type:'URL',value:'https://target.test'}}]});
+ assert.deepEqual(linksFrom(mixed),['https://target.test','https://bare.test']);
+ const rest=text('https://label.test','Text',{characterStyleOverrides:Array(18).fill(1),styleOverrideTable:{1:{hyperlink:{type:'URL',url:'https://target.test'}}}});
+ assert.deepEqual(linksFrom(rest),['https://target.test']);
+});
 test('6. multiple visible statuses',() => {
   const fixture=structuredClone(frame);fixture.children[1].children.find(n=>n.name==='31').children.push(badge('Тестируется','badge:2'));
   assert.deepEqual(parseToolsFrame(fixture)[0].sourceStatusValues,['На проде','Тестируется']);safe(parseToolsFrame(fixture));

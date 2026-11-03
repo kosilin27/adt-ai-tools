@@ -38,7 +38,18 @@ export function linksFrom(node) {
     const usedStyleIds = new Set((text.characterStyleOverrides || []).map(String));
     for (const [id,style] of Object.entries(text.styleOverrideTable || {})) if (usedStyleIds.has(id)) add(style.hyperlink);
     for (const segment of text.linkSegments || []) add(segment.hyperlink);
-    links.push(...(normalizeText(text.characters).match(/https?:\/\/[^\s]+/g) || []));
+    // A URL-looking label is not a second destination when its range is linked.
+    // Keep bare URLs only in unlinked ranges; preserve actual Figma targets above.
+    const linkedAt = index => {
+      const active = text.characterStyleOverrides?.[index];
+      const override = active == null ? undefined : text.styleOverrideTable?.[active];
+      if (override && 'hyperlink' in override) return Boolean(override.hyperlink);
+      if (text.hyperlink || text.style?.hyperlink) return true;
+      return (text.linkSegments || []).some(segment => Number.isInteger(segment.start) && Number.isInteger(segment.end) && segment.start <= index && index < segment.end && segment.hyperlink);
+    };
+    for (const match of String(text.characters).matchAll(/https?:\/\/[^\s]+/g)) {
+      if (![...match[0]].every((_,offset)=>linkedAt(match.index+offset))) links.push(match[0]);
+    }
   }
   return [...new Set(links)];
 }

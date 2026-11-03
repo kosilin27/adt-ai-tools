@@ -74,11 +74,12 @@ async function publish(id,title,sections,{legacy=false}={}){
 }
 async function publishRoot(){
  const page=await read(registry.root);
- const section=`<p>В актуальном основном frame: ${FIGMA_CASES_SNAPSHOT.length} кейсов; видимый статус «На проде» — у ${FIGMA_CASES_SNAPSHOT.filter(r=>r.sourceStatusValues.includes('На проде')).length}. Backlog / Ideas: ${FIGMA_BACKLOG_SNAPSHOT.length}. Identity: figmaNodeId. Перенесённые кейсы сохраняют исходные ID и metadata.</p><p><a href="https://cf.avito.ru/spaces/DES/pages/${registry.meta}">AI Skills for Agents — найти capability по задаче</a> · <a href="https://cf.avito.ru/spaces/DES/pages/${registry.cases}">Актуальные кейсы и идеи</a></p><p>Исторические показатели покрытия Jobs ниже не пересчитывались этим source sync; актуальный состав кейсов приведён выше.</p>`;
+ const section=`<p>В актуальном основном frame: ${FIGMA_CASES_SNAPSHOT.length} кейсов; видимый статус «На проде» — у ${FIGMA_CASES_SNAPSHOT.filter(r=>r.sourceStatusValues.includes('На проде')).length}. Backlog / Ideas: ${FIGMA_BACKLOG_SNAPSHOT.length}. Identity: figmaNodeId. Перенесённые кейсы сохраняют исходные ID и metadata.</p><p><a href="https://cf.avito.ru/spaces/DES/pages/${registry.meta}">AI Skills for Agents — найти capability по задаче</a> · <a href="https://cf.avito.ru/spaces/DES/pages/${registry.cases}">Актуальные кейсы и идеи</a></p><p>Исторические показатели покрытия Jobs сохранены без пересчёта; актуальный состав кейсов приведён в этой секции.</p>`;
  const hash=fingerprint({section});
  if(page.body.includes(`ADT sync fingerprint: ${hash}`)){report.push({pageId:registry.root,operation:'unchanged',version:page.version});return;}
  const ops=[{op:'replace_section',heading:'Актуальная синхронизация',body:section+marker(hash)}];
  if(page.body.includes('кейсов и инициатив'))ops.push({op:'replace_block',find:'кейсов и инициатив',element:'li',body:`<li><strong>${FIGMA_CASES_SNAPSHOT.length}</strong> кейсов в основном Figma frame</li>`});
+ if(page.body.includes('кейсов в основном Figma frame'))ops.push({op:'replace_block',find:'кейсов в основном Figma frame',element:'li',body:`<li><strong>${FIGMA_CASES_SNAPSHOT.length}</strong> кейсов в основном Figma frame</li>`});
  if(page.body.includes('идей в backlog'))ops.push({op:'replace_block',find:'идей в backlog',element:'li',body:`<li><strong>${FIGMA_BACKLOG_SNAPSHOT.length}</strong> идей в backlog</li>`});
  report.push({pageId:registry.root,operation:apply?'update-root':'would-update-root',fromVersion:page.version});
  if(apply){await call('edit_page',{page_id:registry.root,expected_version:page.version,operations:ops});const v=await read(registry.root);if(!v.body.includes(hash))throw new Error('Root readback mismatch');report.at(-1).verifiedVersion=v.version;}

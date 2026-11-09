@@ -1714,11 +1714,11 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   },
   {
     "figmaNodeId": "5847:15530",
-    "caseNumber": "16",
+    "caseNumber": "100",
     "size": "S",
     "title": "Агент для проверки макетов перед передачей\nв разработку",
     "sourceText": [
-      "16",
+      "100",
       "S",
       "Агент для проверки макетов перед передачей\nв разработку",
       "Design",
@@ -1750,7 +1750,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceColumns": {
       "caseNumber": [
-        "16"
+        "100"
       ],
       "size": [
         "S"
@@ -1792,11 +1792,11 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   },
   {
     "figmaNodeId": "5158:15648",
-    "caseNumber": "1",
+    "caseNumber": "101",
     "size": "S",
     "title": "Скилл для дизайн ревью от разработчиков",
     "sourceText": [
-      "1",
+      "101",
       "S",
       "Скилл для дизайн ревью от разработчиков",
       "Design",
@@ -1826,13 +1826,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceStatusEvidence": [
       {
-        "nodeId": "I5158:15648;373:752;33:6113",
+        "nodeId": "I5158:15648;374:494;33:6113",
         "value": "На проде"
       }
     ],
     "sourceColumns": {
       "caseNumber": [
-        "1"
+        "101"
       ],
       "size": [
         "S"
@@ -7786,11 +7786,11 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   },
   {
     "figmaNodeId": "5158:14545",
-    "caseNumber": "1",
+    "caseNumber": "102",
     "size": "S",
     "title": "Плагин для создания лоадеров",
     "sourceText": [
-      "1",
+      "102",
       "S",
       "Плагин для создания лоадеров",
       "Design",
@@ -7838,7 +7838,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceColumns": {
       "caseNumber": [
-        "1"
+        "102"
       ],
       "size": [
         "S"
@@ -7885,11 +7885,11 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   },
   {
     "figmaNodeId": "5158:14697",
-    "caseNumber": "1",
+    "caseNumber": "103",
     "size": "S",
     "title": "Ресайзер логотипов для крупных работодателей",
     "sourceText": [
-      "1",
+      "103",
       "S",
       "Ресайзер логотипов для крупных работодателей",
       "Design",
@@ -7918,13 +7918,13 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceStatusEvidence": [
       {
-        "nodeId": "I5158:14697;373:752;33:6114",
+        "nodeId": "I5158:14697;374:494;33:6114",
         "value": "Тестируется"
       }
     ],
     "sourceColumns": {
       "caseNumber": [
-        "1"
+        "103"
       ],
       "size": [
         "S"
@@ -7970,11 +7970,11 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
   },
   {
     "figmaNodeId": "5158:14773",
-    "caseNumber": "1",
+    "caseNumber": "104",
     "size": "L",
     "title": "Flow Studio. Внутренний веб-сервис для удобной работы с кликабельными прототипами. Отсматривай весь флоу целиком, правь тексты и сохраняй изменения в постоянной ссылке.\n\nПри успешных тестах хотелось бы развить сервис до аналога Тильды с возможностью добавлять и убирать блоки из ДС.",
     "sourceText": [
-      "1",
+      "104",
       "L",
       "Flow Studio. Внутренний веб-сервис для удобной работы с кликабельными прототипами. Отсматривай весь флоу целиком, правь тексты и сохраняй изменения в постоянной ссылке.\n\nПри успешных тестах хотелось бы развить сервис до аналога Тильды с возможностью добавлять и убирать блоки из ДС.",
       "Design",
@@ -8019,7 +8019,7 @@ export const FIGMA_CASES_SNAPSHOT: FigmaCaseSnapshot[] = [
     ],
     "sourceColumns": {
       "caseNumber": [
-        "1"
+        "104"
       ],
       "size": [
         "L"

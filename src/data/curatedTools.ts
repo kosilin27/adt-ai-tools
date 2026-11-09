@@ -750,22 +750,7 @@ export const curatedByNodeId: Record<string, CuratedTool> = {
     "howToStart": [],
     "updatedAt": "2026-09-01",
     "createdAt": "2026-09-01"
-  },
-  "3712:11319": {
-    "id": "figma-prototype-builder",
-    "shortDescription": "Собирает кликабельный прототип из макетов Figma для UX-тестов.",
-    "categories": [
-      "Prototyping",
-      "Automation"
-    ],
-    "type": "plugin",
-    "status": "development",
-    "impactTags": [],
-    "howToStart": [],
-    "updatedAt": "2026-09-01",
-    "createdAt": "2026-09-01"
-  },
-  "2687:10197": {
+  },  "2687:10197": {
     "id": "competency-matrix",
     "shortDescription": "Помогает оценить навыки и понять готовность к повышению грейда.",
     "categories": [

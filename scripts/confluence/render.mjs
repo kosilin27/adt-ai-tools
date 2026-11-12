@@ -3,13 +3,13 @@ import {tools} from '../../src/data/tools.ts';
 import {FIGMA_BACKLOG_SNAPSHOT} from '../../src/data/figmaCasesSnapshot.ts';
 import {agentSkills} from '../../src/data/agentSkills.ts';
 export const html = value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-const p=t=>`<p>${html(t)}</p>`;
-const link=(url,label)=>`<a href="${html(url)}">${html(label)}</a>`;
-const list=items=>`<ul>${items.map(t=>`<li>${html(t)}</li>`).join('')}</ul>`;
-const steps=items=>`<ol>${items.map(t=>`<li>${html(t)}</li>`).join('')}</ol>`;
-const table=(headers,rows)=>`<table><tbody><tr>${headers.map(t=>`<th>${html(t)}</th>`).join('')}</tr>${rows.map(row=>`<tr>${row.map(t=>`<td>${t}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-const sourceLink=row=>link(`https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades?node-id=${row.figmaNodeId.replace(':','-')}`,row.figmaNodeId);
-const status=row=>row.sourceStatusValues.length?row.sourceStatusValues.join(' · '):'Не указан в источнике';
+export const p=t=>`<p>${html(t)}</p>`;
+export const link=(url,label)=>`<a href="${html(url)}">${html(label)}</a>`;
+export const list=items=>`<ul>${items.map(t=>`<li>${html(t)}</li>`).join('')}</ul>`;
+export const steps=items=>`<ol>${items.map(t=>`<li>${html(t)}</li>`).join('')}</ol>`;
+export const table=(headers,rows)=>`<table><tbody><tr>${headers.map(t=>`<th>${html(t)}</th>`).join('')}</tr>${rows.map(row=>`<tr>${row.map(t=>`<td>${t}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+export const sourceLink=row=>link(`https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades?node-id=${row.figmaNodeId.replace(':','-')}`,row.figmaNodeId);
+export const status=row=>row.sourceStatusValues.length?row.sourceStatusValues.join(' · '):'Не указан в источнике';
 export const fingerprint=sections=>createHash('sha256').update(JSON.stringify(sections)).digest('hex');
 export const marker=hash=>p(`ADT sync fingerprint: ${hash}`);
 const literal=values=>html((values||[]).join('\n')).replaceAll('\n','<br />');
@@ -18,7 +18,7 @@ export function caseSections(){return {
  'Актуальные кейсы — Figma sync':p(`Кейсов: ${tools.length}. Со статусом «На проде»: ${tools.filter(t=>t.sourceStatusValues.includes('На проде')).length}. Идей: ${FIGMA_BACKLOG_SNAPSHOT.length}. Identity: figmaNodeId. Статусы многозначные; отсутствие статуса не означает готовность.`)+table(['Source ID','Название','Раздел','Audience','Авторы','Статусы','Кратко','Ссылки'],tools.map(t=>[sourceLink(t.sourceRecord),html(t.title),html(t.sourceSection),literal(t.sourceAudienceValues),literal(t.authors),html(status(t.sourceRecord)),html(t.shortDescription||t.sourceRecord.sourceColumns.problem?.join(' ')||''),t.sourceLinks.map(u=>link(u,u)).join('<br />')])),
  'Backlog / Ideas — Figma sync':p('Перенесённые из основного каталога сущности сохранены по тем же ID. Это идеи, а не обещание рабочей capability.')+table(['Source ID','Название','Audience','Авторы','Статусы','Описание','Ссылки'],FIGMA_BACKLOG_SNAPSHOT.map(r=>[sourceLink(r),html(r.title),literal(r.audienceValues),literal(r.authorValues),html(status(r)),literal(r.sourceColumns.problem),r.sourceLinks.map(u=>link(u,u)).join('<br />')])),
 };}
-export function catalogSections(){return {'Актуальная витрина — sync':p(`Состав: ${tools.length} кейсов и ${FIGMA_BACKLOG_SNAPSHOT.length} идей. Готовность определяется видимыми Figma badges; curated product type не задаёт source status.`)+p('Figma → generated source + curated metadata → runtime catalog → Prototype Hosting / Confluence → Agent Skills.')+table(['Инструмент','Тип','Категории','Audience','Описание','Source status','Источник'],tools.map(t=>[html(t.title),html(t.type),literal(t.categories),literal(t.sourceAudienceValues),html(t.shortDescription),html(status(t.sourceRecord)),sourceLink(t.sourceRecord)]))};}
+export function catalogSections(agentPage){return {'Актуальная витрина — sync':p(`Состав: ${tools.length} кейсов и ${FIGMA_BACKLOG_SNAPSHOT.length} идей. Готовность определяется видимыми Figma badges; curated product type не задаёт source status.`)+p('Figma → generated source + curated metadata → runtime catalog → Prototype Hosting / Confluence → Agent Skills.')+table(['Инструмент','Тип','Категории','Audience','Описание','Source status','Источник','Agent page'],tools.map(t=>[html(t.title),html(t.type),literal(t.categories),literal(t.sourceAudienceValues),html(t.shortDescription),html(status(t.sourceRecord)),sourceLink(t.sourceRecord),agentPage(t.figmaNodeId)]))};}
 export function agentSections(){const rows=tools.filter(t=>t.type==='agent'||agentSkills.some(s=>s.nodeIds.includes(t.figmaNodeId)));return {'Актуальные Agents и Skills — sync':p('Capability и доступность исполнения — разные проверки. Source status берётся из Figma. Перед запуском прочитать конкретную Skill page и prerequisites.')+table(['Название','Audience','Авторы','Source status','Источник'],rows.map(t=>[html(t.title),literal(t.sourceAudienceValues),literal(t.authors),html(status(t.sourceRecord)),sourceLink(t.sourceRecord)]))};}
 export function skillSections(skill){
  const rows=skill.nodeIds.map(id=>{const t=tools.find(t=>t.figmaNodeId===id);if(!t)throw new Error(`Skill ${skill.key}: missing source ${id}`);return t.sourceRecord;});

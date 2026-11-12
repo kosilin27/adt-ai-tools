@@ -1,21 +1,33 @@
-import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,renameSync,rmdirSync} from 'node:fs';
 import {FIGMA_CASES_SNAPSHOT,FIGMA_BACKLOG_SNAPSHOT} from '../../src/data/figmaCasesSnapshot.ts';
 import {resolve} from 'node:path';
 import {connectMcp} from '../lib/mcp-client.mjs';
 import {sourceSections,setupSections,caseSections,catalogSections,agentSections,skillSections,metaSections,renderBody,agentSkills,fingerprint,marker,html} from './render.mjs';
+import {agentCaseLink,caseDiscoverySections} from './case-pages.mjs';
+import {publishCasePages} from './publish-case-pages.mjs';
 const apply=process.argv.includes('--apply');
 const registryPath=resolve('scripts/confluence/pages.json');
 const registry=JSON.parse(readFileSync(registryPath));
+registry.casePages ??= {};
 const report=[];mkdirSync('test-results',{recursive:true});
-const mcp=await connectMcp();
+const lockPath = registryPath + '.lock';
+let locked = false;
+let mcp;
 const call=(tool,args)=>mcp.call('confluence-mcp',tool,args);
 const read=id=>call('get_page',{ref:String(id),format:'storage',max_inline_bytes:1000000});
 const heading=(h,b)=>`<h2>${html(h)}</h2>${b}`;
 const text=s=>s.replace(/<[^>]+>/g,'').replaceAll('&amp;','&').replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&quot;','"').replaceAll('&#39;',"'");
-function saveRegistry(){if(apply)writeFileSync(registryPath,JSON.stringify(registry,null,2)+'\n');}
-async function locate(title,parent){
+function saveRegistry(){
+ if(!apply)return;
+ const next=JSON.stringify(registry,null,2)+'\n';
+ if(readFileSync(registryPath,'utf8')===next)return;
+ const temporary=resolve(lockPath,'pages.json');
+ writeFileSync(temporary,next);
+ renameSync(temporary,registryPath);
+}
+async function locate(title,parent,relationship='ancestor'){
  const escaped=title.replaceAll('\\','\\\\').replaceAll('"','\\"');
- const found=await call('search',{query:`space = "${registry.space}" AND title = "${escaped}" AND ancestor = ${parent}`,query_type:'cql',limit:50});
+ const found=await call('search',{query:`space = "${registry.space}" AND title = "${escaped}" AND ${relationship} = ${parent}`,query_type:'cql',limit:50});
  const ids=[...new Set([...String(typeof found==='string'?found:JSON.stringify(found)).matchAll(/\*\*ID:\*\* (\d+)/g)].map(m=>m[1]))];
  if(ids.length>1)throw new Error(`Ambiguous Confluence title: ${title}`);
  return ids[0]||null;
@@ -67,7 +79,10 @@ async function publish(id,title,sections,{legacy=false}={}){
  if(current.body.includes('<h2>Sync metadata</h2>'))operations.push({op:'replace_section',heading:'Sync metadata',body:marker(hash)});
  else operations.push({op:'insert_block',find:anchor,element:'h1',occurrence:1,position:'after',body:heading('Sync metadata',marker(hash))});
  report.push({pageId:id,title,operation:apply?'update':'would-update',fromVersion:current.version,fingerprint:hash,operations:operations.length});
- if(!apply)return;
+ if(!apply){
+  await call('edit_page',{page_id:id,expected_version:current.version,operations,dry_run:true});
+  return;
+ }
  await call('edit_page',{page_id:id,expected_version:current.version,operations});
  const verified=await read(id);if(!verified.body.includes(stamp)||verified.version<=current.version)throw new Error(`Readback mismatch ${id}`);
  report.at(-1).verifiedVersion=verified.version;
@@ -97,19 +112,27 @@ async function repairLegacyNavigation(){
 }
 
 try{
+ if(apply){
+  mkdirSync(lockPath);
+  locked=true;
+  Object.assign(registry,JSON.parse(readFileSync(registryPath)));
+  registry.casePages ??= {};
+ }
+ mcp=await connectMcp();
+ const readiness=await publishCasePages({registry,apply,call,read,locate,saveRegistry,report});
  registry.meta=await ensure('AI Skills for Agents',registry.parent,registry.meta);saveRegistry();
  if(registry.meta)for(const skill of agentSkills){
   registry.skills[skill.key]=await ensure(skill.name,registry.meta,registry.skills[skill.key]);saveRegistry();
   await publish(registry.skills[skill.key],skill.name,skillSections(skill));
  }
  await publish(registry.cases,'Каталог AI — кейсы Figma',caseSections(),{legacy:true});
- await publish(registry.catalog,'Каталог AI',catalogSections(),{legacy:true});
+ await publish(registry.catalog,'Каталог AI',catalogSections(id=>agentCaseLink(registry,id)),{legacy:true});
  await publish(registry.agents,'Каталог AI — агенты',agentSections(),{legacy:true});
- await publish(registry.meta,'AI Skills for Agents',metaSections(registry));
+ await publish(registry.meta,'AI Skills for Agents',{...metaSections(registry),...caseDiscoverySections(registry,readiness)});
  if(registry.meta)await publishRoot();
  if(registry.sources)await publish(registry.sources,'Sources & Sync',sourceSections());
  if(registry.setup)await publish(registry.setup,'Настроить себе AI',setupSections(registry));
  await repairLegacyNavigation();
  console.log(JSON.stringify({apply,pages:report},null,2));
 }catch(error){report.push({error:error.message});console.error(error.message);process.exitCode=1;}
-finally{writeFileSync('test-results/confluence-sync.json',JSON.stringify({apply,report},null,2)+'\n');mcp.close();}
+finally{writeFileSync('test-results/confluence-sync.json',JSON.stringify({apply,report},null,2)+'\n');mcp?.close();if(locked)rmdirSync(lockPath);}

@@ -122,15 +122,31 @@ test('registry maps Figma IDs, recovered pages are adopted and repeat sync is a 
   await assert.rejects(run(false), /Invalid or duplicate casePages mapping/);
 });
 
-test('one discovery entry with scoped search and no duplicate case tables', () => {
+test('one agent discovery entry plus one human catalog', () => {
   const meta = Object.values(metaSections(registry)).join('');
   assert.ok(meta.includes(`ancestor = ${registry.cases}`));
   assert.ok(meta.includes(`ancestor = ${registry.meta}`));
   for (const id of Object.values(registry.skills)) assert.ok(meta.includes(`/pages/${id}`));
-  const navigation = [caseSections, catalogSections, agentSections].map(render => Object.values(render(registry)).join(''));
-  for (const body of navigation) assert.ok(body.includes(`/pages/${registry.meta}`));
-  for (const body of [meta, ...navigation]) {
+
+  const cases = Object.values(caseSections(registry)).join('');
+  const agents = Object.values(agentSections(registry)).join('');
+  const catalog = Object.values(catalogSections(registry)).join('');
+
+  for (const body of [cases, agents]) assert.ok(body.includes(`/pages/${registry.meta}`));
+  for (const body of [meta, cases, agents]) {
     assert.ok(!body.includes('<table>'));
     for (const id of Object.values(registry.casePages)) assert.ok(!body.includes(`/pages/${id}`));
+  }
+
+  assert.ok(catalog.includes(`/pages/${registry.meta}`));
+  assert.ok(catalog.includes('<table>'));
+  assert.ok(catalog.includes('Cmd/Ctrl+F'));
+  assert.ok(catalog.includes('Владелец'));
+  assert.ok(catalog.includes('Открыть карточку'));
+  assert.equal((catalog.match(/Открыть карточку/g) || []).length, tools.length);
+  for (const tool of tools) {
+    const id = registry.casePages[tool.figmaNodeId];
+    assert.ok(id, tool.figmaNodeId);
+    assert.ok(catalog.includes(`/pages/${id}`), tool.figmaNodeId);
   }
 });

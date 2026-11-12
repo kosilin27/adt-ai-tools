@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "verify": "npm run test:figma-sync && npm run test:mcp-startup && npm run build && npm run verify:figma-parity && playwright test",
+    "verify": "npm run test:figma-sync && npm run test:mcp-startup && npm run test:confluence-render && npm run build && npm run verify:figma-parity && playwright test",
     "verify:figma-parity": "node --experimental-strip-types scripts/verify-figma-parity.mjs",
     "verify:remote": "node scripts/verify-remote.mjs",
     "sync:figma": "node --experimental-strip-types scripts/sync-figma.mjs",
@@ -16,7 +16,8 @@
     "sync:confluence": "node --experimental-strip-types scripts/confluence/sync.mjs",
     "check:confluence": "node --experimental-strip-types scripts/confluence/sync.mjs",
     "verify:ci": "npm run verify",
-    "test:mcp-startup": "node scripts/test-mcp-startup.mjs"
+    "test:mcp-startup": "node scripts/test-mcp-startup.mjs",
+    "test:confluence-render": "node --experimental-strip-types --test scripts/confluence/test-case-pages.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

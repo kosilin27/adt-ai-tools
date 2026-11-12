@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
 import {tools} from '../../src/data/tools.ts';
-import {agentSkills, catalogSections, html} from './render.mjs';
+import {agentSkills, agentSections, caseSections, catalogSections, html, metaSections} from './render.mjs';
 import {
-  agentCaseLink, caseBody, caseDiscoverySections, caseModels, caseReadiness, caseSummary, caseUpdate,
+  caseBody, caseModels, caseReadiness, caseSummary, caseUpdate,
   clean, identity, managedHeading, pendingReadiness, ready, retiredState, section, sectionsIn,
 } from './case-pages.mjs';
 import {publishCasePages} from './publish-case-pages.mjs';
@@ -118,11 +118,19 @@ test('registry maps Figma IDs, recovered pages are adopted and repeat sync is a 
   delete workingRegistry.casePages[models[0].figmaNodeId];
   assert.equal((await run(true)).filter(row => row.operation === 'unchanged').length, tools.length);
   assert.equal(writes, tools.length);
-  const pageId = workingRegistry.casePages[models[0].figmaNodeId];
-  const link = agentCaseLink(workingRegistry, models[0].figmaNodeId);
-  assert.ok(link.includes(pageId));
-  assert.ok(Object.values(catalogSections(id => agentCaseLink(workingRegistry,id)))[0].includes(link));
-  assert.ok(caseDiscoverySections(workingRegistry, new Map([[models[0].figmaNodeId, ready]]))['Все кейсы'].includes(link));
   workingRegistry.casePages['human title'] = '123';
   await assert.rejects(run(false), /Invalid or duplicate casePages mapping/);
+});
+
+test('one discovery entry with scoped search and no duplicate case tables', () => {
+  const meta = Object.values(metaSections(registry)).join('');
+  assert.ok(meta.includes(`ancestor = ${registry.cases}`));
+  assert.ok(meta.includes(`ancestor = ${registry.meta}`));
+  for (const id of Object.values(registry.skills)) assert.ok(meta.includes(`/pages/${id}`));
+  const navigation = [caseSections, catalogSections, agentSections].map(render => Object.values(render(registry)).join(''));
+  for (const body of navigation) assert.ok(body.includes(`/pages/${registry.meta}`));
+  for (const body of [meta, ...navigation]) {
+    assert.ok(!body.includes('<table>'));
+    for (const id of Object.values(registry.casePages)) assert.ok(!body.includes(`/pages/${id}`));
+  }
 });

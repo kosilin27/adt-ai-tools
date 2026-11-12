@@ -240,26 +240,3 @@ export function caseReadiness(page) {
   if (blocks?.length !== 1) return pendingReadiness;
   return readText(blocks[0]) === ready ? ready : pendingReadiness;
 }
-
-export function agentCaseLink(registry, figmaNodeId, label = 'Agent page') {
-  const id = registry.casePages[figmaNodeId];
-  return id ? link(casePageUrl(registry, id), label) : html('Pending');
-}
-
-export function caseDiscoverySections(registry, readiness) {
-  return {
-    'Как агенту искать capability': steps([
-      'Определи намерение пользователя и найди кейс по естественной формулировке задачи.',
-      'Просмотри страницы кейсов и подробные curated Skill pages.',
-      `Предпочитай кейсы с Agent readiness «${ready}».`,
-      'Проверь Source status, ограничения и необходимые входные данные.',
-      'Перейди к оригинальной инструкции или инструменту.',
-      'Если подходящего кейса нет, сообщи об этом.',
-    ]),
-    'Все кейсы': table(['Название','Intent / кратко','Size','Type','Audience','Source status','Owner','Agent readiness','Confluence link'],
-      tools.map(tool => [
-        tool.title, caseSummary(tool), tool.sourceRecord.size, tool.type, tool.sourceAudienceValues.join(' · '),
-        status(tool.sourceRecord), tool.authors.join(' · '), readiness.get(tool.figmaNodeId) || pendingReadiness,
-      ].map(html).concat(agentCaseLink(registry, tool.figmaNodeId)))),
-  };
-}

@@ -68,8 +68,8 @@ export function metaSections(registry) {
    ])+
    p(`CQL для карточек: ${caseScope} AND text ~ "ключевая фраза"`)+
    p(`CQL для инструкций: ${skillScope} AND text ~ "ключевая фраза"`)+
-   `<p>Без CQL используй поиск в DES и проверяй тип документа. Если поиска нет, открой ${link(pageUrl(registry,registry.cases),'дерево карточек кейсов')} или одну из инструкций ниже.</p>`,
-  'Подробные инструкции к отдельным возможностям':`<ul>${skillLinks}</ul>`,
+   `<p>Без CQL используй поиск в DES и проверяй тип документа. Если поиска нет, открой ${link(pageUrl(registry,registry.cases),'дерево карточек кейсов')} или одну из инструкций ниже.</p>`+
+   `<h3>Подробные инструкции к отдельным возможностям</h3><ul>${skillLinks}</ul>`,
   'Page contract':p('Case page — карточка одного figmaNodeId с данными из Figma и инструкциями владельца. Curated Skill page — подробная инструкция к возможности, которая может охватывать несколько figmaNodeId. Figma задаёт identity, состав и исходные статусы. Актуальная готовность к работе агента хранится на карточке кейса.'),
   'Corporate standard':p('Confluence публикует описание и ссылки. Устанавливаемые Agent Skills следуют формату SKILL.md.')+
    `<p>${link('https://docs.k.avito.ru/skills-hub/concepts/agent-skills/','Agent Skills: корпоративная документация')} · ${link('https://cf.avito.ru/spaces/RES/pages/890382644','Research Skills — оригинальные инструкции')}</p>`,

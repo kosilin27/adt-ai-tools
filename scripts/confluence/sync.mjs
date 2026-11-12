@@ -49,7 +49,7 @@ const retiredHeadings = {
  catalog: ['Актуальная витрина — sync', 'Все данные каталога', 'SYNC', 'Синхронизация с Figma — 15 октября 2026'],
  agents: ['Актуальные Agents и Skills — sync', 'Input / Output / Knowledge sources', 'SYNC',
   'Новые агенты и скиллы из актуального Figma — 15 октября 2026'],
- meta: ['Все кейсы', 'Agent discovery instructions', 'Discovery index'],
+ meta: ['Все кейсы', 'Agent discovery instructions', 'Discovery index', 'Подробные инструкции к отдельным возможностям'],
 };
 const hasHeading = (body, title) => body.includes(`<h2>${html(title)}</h2>`);
 
@@ -81,7 +81,8 @@ async function publish(id,title,sections,{retired=[], obsoleteIntro=[]}={}){
   if(hasHeading(current.body,h))operations.push({op:'replace_section',heading:h,body:b});
   else operations.push({op:'insert_block',find:anchor,element:'h1',occurrence:1,position:'after',body:heading(h,b)});
  }
- if(current.body.includes('<h2>Sync metadata</h2>'))operations.push({op:'replace_section',heading:'Sync metadata',body:marker(hash)});
+ const previousStamp=current.body.match(/<p>ADT sync fingerprint: [a-f0-9]{64}<\/p>/)?.[0];
+ if(previousStamp)operations.push({op:'replace_block',find:text(previousStamp),element:'p',body:marker(hash)});
  else operations.push({op:'insert_block',find:anchor,element:'h1',occurrence:1,position:'after',body:heading('Sync metadata',marker(hash))});
  report.push({pageId:id,title,operation:apply?'update':'would-update',fromVersion:current.version,fingerprint:hash,operations:operations.length});
  if(!apply){

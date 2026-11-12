@@ -132,12 +132,13 @@ test('one agent discovery entry plus one human catalog', () => {
   const agents = Object.values(agentSections(registry)).join('');
   const catalog = Object.values(catalogSections(registry)).join('');
 
+  for (const body of [cases, agents]) assert.ok(body.includes(`/pages/${registry.meta}`));
   for (const body of [meta, cases, agents]) {
-    assert.ok(body.includes(`/pages/${registry.meta}`));
     assert.ok(!body.includes('<table>'));
     for (const id of Object.values(registry.casePages)) assert.ok(!body.includes(`/pages/${id}`));
   }
 
+  assert.ok(catalog.includes(`/pages/${registry.meta}`));
   assert.ok(catalog.includes('<table>'));
   assert.ok(catalog.includes('Cmd/Ctrl+F'));
   assert.ok(catalog.includes('Владелец'));

@@ -16,31 +16,52 @@ const literal=values=>html((values||[]).join('\n')).replaceAll('\n','<br />');
 export const pageUrl = (registry, id) => `https://cf.avito.ru/spaces/${registry.space}/pages/${id}`;
 export const discoveryLink = registry => link(pageUrl(registry, registry.meta), 'AI Skills for Agents — единый вход для агента');
 
+const sourcePlaceholder = /^(?:[-–—?…\s]+|❇️|\?\?\?|какую проблему решает|value (?:после запуска|в конце года)|метрики\s*\/\s*аудитория\s*\/\s*экономия времени|экономия времени|аудитория|метрика успеха|участники|связанные кейсы|позже|tbd|n\/a)$/iu;
+const cleanSourceValues = values => (values || []).map(value => String(value).trim()).filter(value => value && !sourcePlaceholder.test(value));
+const sourceCell = values => {
+ const clean = cleanSourceValues(values);
+ return clean.length ? literal(clean) : html('Нужно заполнить');
+};
+const toolSourceLinks = tool => {
+ const links = [];
+ links.push(link(`https://www.figma.com/design/nVLcu3bbLgz0lJhSUexjvx/30-AI-Process-Upgrades?node-id=${tool.figmaNodeId.replace(':','-')}`,'Figma'));
+ for (const url of tool.sourceLinks || []) links.push(link(url,url));
+ return [...new Set(links)].join('<br />');
+};
+
 export function caseSections(registry) {
  return {
-  'Страницы кейсов':p(`Дочерние страницы этой папки содержат отдельные карточки кейсов. В активном снимке Figma: ${tools.length}. Идентификатор кейса — figmaNodeId.`)+
-   `<p>Для поиска инструмента по задаче открой ${discoveryLink(registry)}.</p>`,
+  'Каталог активных AI-кейсов':p(`Здесь собраны все активные AI-кейсы Design Department из Figma. В текущем снимке: ${tools.length}. Найдите своё имя или название кейса через Cmd/Ctrl+F, затем откройте «Страницу для агента» и проверьте инструкцию. Когда всё ок, поставьте Agent readiness → «Готово для агентов».`)+
+   `<p>Для поиска capability самим агентом используйте ${discoveryLink(registry)}.</p>`+
+   table(
+    ['№','Size','Проект','Команда / Audience','Какую проблему решает','Метрики / экономия времени','Владелец / участники','Статус','Value после запуска','Нужна помощь','Связанные кейсы / заметки','Source','Страница для агента'],
+    tools.map(t=>{
+     const row=t.sourceRecord;
+     const pageId=registry.casePages?.[t.figmaNodeId];
+     return [
+      html(row.caseNumber || ''),
+      html(row.size || ''),
+      html(t.title),
+      sourceCell(row.audienceValues),
+      sourceCell(row.sourceColumns.problem),
+      sourceCell(row.sourceColumns.metric),
+      sourceCell(row.authorValues),
+      html(status(row)),
+      sourceCell(row.sourceColumns.valueAfterLaunch),
+      sourceCell(row.sourceColumns.participants),
+      sourceCell([...(row.sourceColumns.related || []), ...(row.sourceColumns.notes || [])]),
+      toolSourceLinks(t),
+      pageId ? link(pageUrl(registry,pageId),'Открыть страницу') : html('Pending'),
+     ];
+    })
+   ),
  };
 }
 
 export function catalogSections(registry) {
- const rows = [...tools].sort((a,b) => {
-  const sectionOrder = String(a.sourceSection || '').localeCompare(String(b.sourceSection || ''), 'ru');
-  return sectionOrder || String(a.title || '').localeCompare(String(b.title || ''), 'ru');
- });
  return {
-  'Готовые инструменты и плагины':`<p>Витрина для сотрудников: ${link('https://prototype-hosting.k.avito.ru/prototype/adt-ai-tools-5stb3/5/index.html','AI Tools')}. Резервная витрина: ${link('https://artifact.avito.ru/share/O3vtJD5CMQh7QIwJUgwzGg/index.html','Artifact')}. Исходный код: ${link('https://github.com/kosilin27/adt-ai-tools','GitHub')}.</p>`,
-  'Все AI-кейсы':p('Это человеческий индекс активных кейсов. Найдите своё имя или название кейса через Cmd/Ctrl+F и откройте карточку. Для поиска capability агентом используйте AI Skills for Agents.')+
-   `<p>${discoveryLink(registry)}.</p>`+
-   table(['Название','Владелец','Раздел','Size','Статус','Страница'],rows.map(t=>[
-    html(t.title),
-    literal(t.authors),
-    html(t.sourceSection),
-    html(t.sourceRecord.size || ''),
-    html(status(t.sourceRecord)),
-    registry.casePages?.[t.figmaNodeId] ? link(pageUrl(registry, registry.casePages[t.figmaNodeId]), 'Открыть карточку') : html('Pending'),
-   ])),
-  'Поиск и подключение':`<p>Поиск возможностей для агента: ${discoveryLink(registry)}. Подключение инструментов: ${link(pageUrl(registry, registry.setup),'Настроить себе AI')}. ${link(pageUrl(registry,'1020052017'),'Предложить кейс')}.</p>`,
+  'Готовые инструменты и плагины':`<p>Витрина для сотрудников: ${link('https://prototype-hosting.k.avito.ru/prototype/adt-ai-tools-5stb3/5/index.html','AI Tools')}. Резервная витрина: ${link('https://artifact.avito.ru/share/O3vtJD5CMQh7QIwJUgwzGg/index.html','Artifact')}.</p>`,
+  'Каталог и подключение':`<p>Полный каталог кейсов: ${link(pageUrl(registry,registry.cases),'Каталог AI — кейсы Figma')}. Поиск возможностей для агента: ${discoveryLink(registry)}. Подключение инструментов: ${link(pageUrl(registry,registry.setup),'Настроить себе AI')}. ${link(pageUrl(registry,'1020052017'),'Предложить кейс')}.</p>`,
  };
 }
 

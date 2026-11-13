@@ -122,7 +122,7 @@ test('registry maps Figma IDs, recovered pages are adopted and repeat sync is a 
   await assert.rejects(run(false), /Invalid or duplicate casePages mapping/);
 });
 
-test('one agent discovery entry plus one human catalog', () => {
+test('one agent discovery entry plus one full human catalog on the case parent', () => {
   const meta = Object.values(metaSections(registry)).join('');
   assert.ok(meta.includes(`ancestor = ${registry.cases}`));
   assert.ok(meta.includes(`ancestor = ${registry.meta}`));
@@ -132,21 +132,27 @@ test('one agent discovery entry plus one human catalog', () => {
   const agents = Object.values(agentSections(registry)).join('');
   const catalog = Object.values(catalogSections(registry)).join('');
 
-  for (const body of [cases, agents]) assert.ok(body.includes(`/pages/${registry.meta}`));
-  for (const body of [meta, cases, agents]) {
-    assert.ok(!body.includes('<table>'));
-    for (const id of Object.values(registry.casePages)) assert.ok(!body.includes(`/pages/${id}`));
-  }
-
-  assert.ok(catalog.includes(`/pages/${registry.meta}`));
-  assert.ok(catalog.includes('<table>'));
-  assert.ok(catalog.includes('Cmd/Ctrl+F'));
-  assert.ok(catalog.includes('Владелец'));
-  assert.ok(catalog.includes('Открыть карточку'));
-  assert.equal((catalog.match(/Открыть карточку/g) || []).length, tools.length);
+  assert.ok(cases.includes('<table>'));
+  assert.ok(cases.includes('Cmd/Ctrl+F'));
+  assert.ok(cases.includes('Страница для агента'));
+  assert.equal((cases.match(/Открыть страницу/g) || []).length, tools.length);
   for (const tool of tools) {
     const id = registry.casePages[tool.figmaNodeId];
     assert.ok(id, tool.figmaNodeId);
-    assert.ok(catalog.includes(`/pages/${id}`), tool.figmaNodeId);
+    assert.ok(cases.includes(`/pages/${id}`), tool.figmaNodeId);
+  }
+  for (const header of ['Какую проблему решает','Метрики / экономия времени','Value после запуска','Нужна помощь','Связанные кейсы / заметки']) {
+    assert.ok(cases.includes(header), header);
+  }
+
+  assert.ok(catalog.includes(`/pages/${registry.cases}`));
+  assert.ok(catalog.includes(`/pages/${registry.meta}`));
+  assert.ok(!catalog.includes('<table>'));
+  assert.ok(!agents.includes('<table>'));
+  assert.ok(!meta.includes('<table>'));
+  for (const id of Object.values(registry.casePages)) {
+    assert.ok(!catalog.includes(`/pages/${id}`));
+    assert.ok(!agents.includes(`/pages/${id}`));
+    assert.ok(!meta.includes(`/pages/${id}`));
   }
 });

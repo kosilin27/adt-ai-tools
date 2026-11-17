@@ -31,10 +31,10 @@ const toolSourceLinks = tool => {
 
 export function caseSections(registry) {
  return {
-  'Каталог активных AI-кейсов':p(`Здесь собраны все активные AI-кейсы Design Department из Figma. В текущем снимке: ${tools.length}. Найдите своё имя или название кейса через Cmd/Ctrl+F, затем откройте «Страницу для агента» и проверьте инструкцию. Когда всё ок, поставьте Agent readiness → «Готово для агентов».`)+
-   `<p>Для поиска capability самим агентом используйте ${discoveryLink(registry)}.</p>`+
+  'Каталог активных AI-кейсов':p('Здесь собраны все активные AI-кейсы Design Department. Найдите своё имя или название кейса через Cmd/Ctrl+F. Если вы владелец кейса — откройте его страницу, проверьте инструкцию для агента и после проверки поставьте Agent readiness → «Готово для агентов».')+
+   `<p>Активных кейсов: ${tools.length}. Поиск по задаче для агентов: ${discoveryLink(registry)}.</p>`+
    table(
-    ['№','Size','Проект','Команда / Audience','Какую проблему решает','Метрики / экономия времени','Владелец / участники','Статус','Value после запуска','Нужна помощь','Связанные кейсы / заметки','Source','Страница для агента'],
+    ['№','Size','Название кейса','Команда / Audience','Какую проблему решает','Метрики / экономия времени','Автор / владелец / участники','Статус','Value после запуска','С чем нужна помощь','Связанные кейсы / заметки','Ссылки из Figma','Страница кейса'],
     tools.map(t=>{
      const row=t.sourceRecord;
      const pageId=registry.casePages?.[t.figmaNodeId];
@@ -56,6 +56,11 @@ export function caseSections(registry) {
     })
    ),
  };
+}
+
+export function rootCatalogSection(registry) {
+ return p('Все актуальные AI-кейсы Design Department. В каталоге есть авторы и владельцы, статусы, метрики и ссылки. У каждого кейса есть отдельная страница с инструкцией для агента.')+
+  `<p><strong>${link(pageUrl(registry,registry.cases),'Открыть полный каталог AI-кейсов →')}</strong></p>`;
 }
 
 export function catalogSections(registry) {
@@ -103,7 +108,7 @@ export function metaSections(registry) {
    ])+
    p(`CQL для карточек: ${caseScope} AND text ~ "ключевая фраза"`)+
    p(`CQL для инструкций: ${skillScope} AND text ~ "ключевая фраза"`)+
-   `<p>Без CQL используй поиск в DES и проверяй тип документа. Если поиска нет, открой ${link(pageUrl(registry,registry.cases),'дерево карточек кейсов')} или одну из инструкций ниже.</p>`+
+   `<p>Без CQL используй поиск в DES и проверяй тип документа. Если поиска нет, открой ${link(pageUrl(registry,registry.cases),'полный каталог кейсов')} и перейди по ссылке в колонке «Страница кейса» или используй одну из инструкций ниже.</p>`+
    `<h3>Подробные инструкции к отдельным возможностям</h3><ul>${skillLinks}</ul>`,
   'Page contract':p('Case page — карточка одного figmaNodeId с данными из Figma и инструкциями владельца. Curated Skill page — подробная инструкция к возможности, которая может охватывать несколько figmaNodeId. Figma задаёт identity, состав и исходные статусы. Актуальная готовность к работе агента хранится на карточке кейса.'),
   'Corporate standard':p('Confluence публикует описание и ссылки. Устанавливаемые Agent Skills следуют формату SKILL.md.')+

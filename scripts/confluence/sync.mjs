@@ -2,7 +2,7 @@ import {readFileSync,writeFileSync,mkdirSync,renameSync,rmdirSync} from 'node:fs
 import {FIGMA_CASES_SNAPSHOT,FIGMA_BACKLOG_SNAPSHOT} from '../../src/data/figmaCasesSnapshot.ts';
 import {resolve} from 'node:path';
 import {connectMcp} from '../lib/mcp-client.mjs';
-import {sourceSections,setupSections,caseSections,catalogSections,agentSections,skillSections,metaSections,renderBody,agentSkills,fingerprint,marker,html,discoveryLink} from './render.mjs';
+import {sourceSections,setupSections,caseSections,catalogSections,rootCatalogSection,agentSections,skillSections,metaSections,renderBody,agentSkills,fingerprint,marker,html,discoveryLink} from './render.mjs';
 import {publishCasePages} from './publish-case-pages.mjs';
 const apply=process.argv.includes('--apply');
 const discoveryOnly=process.argv.includes('--discovery-only');
@@ -45,19 +45,21 @@ async function ensure(title,parent,known){
 // Retire only the previously published, explicitly identified discovery sections.
 const retiredHeadings = {
  cases: ['Актуальные кейсы — Figma sync', 'Backlog / Ideas — Figma sync', 'SYNC',
-  'Ещё 11 актуальных строк из Figma', 'Синхронизация с актуальным Figma — 15 октября 2026'],
- catalog: ['Актуальная витрина — sync', 'Все данные каталога', 'SYNC', 'Синхронизация с Figma — 15 октября 2026'],
+  'Страницы кейсов', 'Ещё 11 актуальных строк из Figma', 'Синхронизация с актуальным Figma — 15 октября 2026'],
+ catalog: ['Поиск и подключение', 'Актуальная витрина — sync', 'Все данные каталога', 'SYNC', 'Синхронизация с Figma — 15 октября 2026'],
  agents: ['Актуальные Agents и Skills — sync', 'Input / Output / Knowledge sources', 'SYNC',
   'Новые агенты и скиллы из актуального Figma — 15 октября 2026'],
  meta: ['Все кейсы', 'Agent discovery instructions', 'Discovery index', 'Подробные инструкции к отдельным возможностям'],
 };
 const hasHeading = (body, title) => body.includes(`<h2>${html(title)}</h2>`);
 
-async function publish(id,title,sections,{retired=[], obsoleteIntro=[]}={}){
+async function publish(id,title,sections,{retired=[], obsoleteIntro=[],alignTitle=false}={}){
  if(!id)return;
  const current=await read(id);if(!current?.body||!current.version)throw new Error(`Unreadable or unversioned page ${id}`);
  const hash=fingerprint(sections),stamp=`ADT sync fingerprint: ${hash}`;
- if(current.body.includes(stamp)&&!retired.some(h=>hasHeading(current.body,h))){report.push({pageId:id,title,operation:'unchanged',version:current.version});return;}
+ const anchor=text(current.body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1]||'');
+ const titleMatches = page => !alignTitle || (page.title===title && page.body.includes(`<h1>${html(title)}</h1>`));
+ if(titleMatches(current)&&current.body.includes(stamp)&&!retired.some(h=>hasHeading(current.body,h))){report.push({pageId:id,title,operation:'unchanged',version:current.version});return;}
  if(current.body.includes('ADT managed discovery page. Initializing structured content.')){
   report.push({pageId:id,title,operation:apply?'initialize':'would-initialize',fromVersion:current.version,fingerprint:hash});
   if(apply){
@@ -66,7 +68,6 @@ async function publish(id,title,sections,{retired=[], obsoleteIntro=[]}={}){
   }
   return;
  }
- const anchor=text(current.body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1]||'');
  if(!anchor)throw new Error(`Missing heading anchor ${id}`);
  const operations=[];
  for(const h of retired){
@@ -84,27 +85,41 @@ async function publish(id,title,sections,{retired=[], obsoleteIntro=[]}={}){
  const previousStamp=current.body.match(/<p>ADT sync fingerprint: [a-f0-9]{64}<\/p>/)?.[0];
  if(previousStamp)operations.push({op:'replace_block',find:text(previousStamp),element:'p',body:marker(hash)});
  else operations.push({op:'insert_block',find:anchor,element:'h1',occurrence:1,position:'after',body:heading('Sync metadata',marker(hash))});
+ if(alignTitle && anchor!==title)operations.push({op:'replace_block',find:anchor,element:'h1',body:`<h1>${html(title)}</h1>`});
+ if(alignTitle && current.title!==title)operations.push({op:'set_title',title});
  report.push({pageId:id,title,operation:apply?'update':'would-update',fromVersion:current.version,fingerprint:hash,operations:operations.length});
  if(!apply){
   await call('edit_page',{page_id:id,expected_version:current.version,operations,dry_run:true});
   return;
  }
  await call('edit_page',{page_id:id,expected_version:current.version,operations});
- const verified=await read(id);if(!verified.body.includes(stamp)||verified.version<=current.version||retired.some(h=>hasHeading(verified.body,h)))throw new Error(`Readback mismatch ${id}`);
+ const verified=await read(id);if(!titleMatches(verified)||!verified.body.includes(stamp)||verified.version<=current.version||retired.some(h=>hasHeading(verified.body,h)))throw new Error(`Readback mismatch ${id}`);
  report.at(-1).verifiedVersion=verified.version;
 }
 async function publishRoot(){
  const page=await read(registry.root);
  const section=`<p>В актуальном основном frame: ${FIGMA_CASES_SNAPSHOT.length} кейсов; видимый статус «На проде» — у ${FIGMA_CASES_SNAPSHOT.filter(r=>r.sourceStatusValues.includes('На проде')).length}. Backlog / Ideas: ${FIGMA_BACKLOG_SNAPSHOT.length}. Identity: figmaNodeId. Перенесённые кейсы сохраняют исходные ID и metadata.</p><p>${discoveryLink(registry)}</p><p>Исторические показатели покрытия Jobs сохранены без пересчёта; актуальный состав кейсов приведён в этой секции.</p>`;
- const hash=fingerprint({section});
- if(page.body.includes(`ADT sync fingerprint: ${hash}`)){report.push({pageId:registry.root,operation:'unchanged',version:page.version});return;}
+ const catalogHeading='Каталог AI-кейсов';
+ const catalog=rootCatalogSection(registry);
+ const legacyHeading='Посмотреть каталог AI';
+ const hasCatalog=body=>body.includes(heading(catalogHeading,catalog))&&!hasHeading(body,legacyHeading);
+ const hash=fingerprint({section,catalog});
+ if(hasCatalog(page.body)&&page.body.includes(`ADT sync fingerprint: ${hash}`)){report.push({pageId:registry.root,operation:'unchanged',version:page.version});return;}
  const ops=[{op:'replace_section',heading:'Актуальная синхронизация',body:section+marker(hash)}];
+ if(hasHeading(page.body,legacyHeading)){
+  ops.push({op:'replace_section',heading:legacyHeading,body:''});
+  ops.push({op:'replace_block',find:legacyHeading,element:'h2',body:''});
+ }
+ if(!hasCatalog(page.body)){
+  if(hasHeading(page.body,catalogHeading))ops.push({op:'replace_section',heading:catalogHeading,body:catalog});
+  else ops.push({op:'insert_block',find:'Здесь собрали всё, что уже есть у дизайн-команды по AI',element:'p',position:'after',body:heading(catalogHeading,catalog)});
+ }
  if(page.body.includes('кейсов и инициатив'))ops.push({op:'replace_block',find:'кейсов и инициатив',element:'li',body:`<li><strong>${FIGMA_CASES_SNAPSHOT.length}</strong> кейсов в основном Figma frame</li>`});
  if(page.body.includes('кейсов в основном Figma frame'))ops.push({op:'replace_block',find:'кейсов в основном Figma frame',element:'li',body:`<li><strong>${FIGMA_CASES_SNAPSHOT.length}</strong> кейсов в основном Figma frame</li>`});
  if(page.body.includes('идей в backlog'))ops.push({op:'replace_block',find:'идей в backlog',element:'li',body:`<li><strong>${FIGMA_BACKLOG_SNAPSHOT.length}</strong> идей в backlog</li>`});
  report.push({pageId:registry.root,operation:apply?'update-root':'would-update-root',fromVersion:page.version});
  if(!apply){await call('edit_page',{page_id:registry.root,expected_version:page.version,operations:ops,dry_run:true});return;}
- if(apply){await call('edit_page',{page_id:registry.root,expected_version:page.version,operations:ops});const v=await read(registry.root);if(!v.body.includes(hash))throw new Error('Root readback mismatch');report.at(-1).verifiedVersion=v.version;}
+ if(apply){await call('edit_page',{page_id:registry.root,expected_version:page.version,operations:ops});const v=await read(registry.root);if(!v.body.includes(hash)||!hasCatalog(v.body))throw new Error('Root readback mismatch');report.at(-1).verifiedVersion=v.version;}
 }
 
 async function repairLegacyNavigation(){
@@ -134,11 +149,15 @@ try{
   }
  }
  if(!registry.meta)throw new Error('Canonical discovery page is not registered');
+ if(apply||discoveryOnly){
+  const missing=FIGMA_CASES_SNAPSHOT.filter(row=>!/^\d+$/.test(registry.casePages[row.figmaNodeId]));
+  if(missing.length)throw new Error(`Run full Confluence sync to register active Case pages: ${missing.map(row=>row.figmaNodeId).join(', ')}`);
+ }
  await publish(registry.meta,'AI Skills for Agents',metaSections(registry),{retired:retiredHeadings.meta});
  const internalIntro = 'этот раздел не является отдельным входом для сотрудников.';
  await publish(registry.cases,'Каталог AI — кейсы Figma',caseSections(registry),
-  {retired:retiredHeadings.cases,obsoleteIntro:[internalIntro]});
- await publish(registry.catalog,'Каталог AI',catalogSections(registry),{retired:retiredHeadings.catalog});
+  {retired:retiredHeadings.cases,obsoleteIntro:[internalIntro],alignTitle:true});
+ await publish(registry.catalog,'Каталог AI',catalogSections(registry),{retired:retiredHeadings.catalog,alignTitle:true});
  await publish(registry.agents,'Каталог AI — агенты',agentSections(registry),
   {retired:retiredHeadings.agents,obsoleteIntro:[internalIntro,'здесь собраны агенты, которые уже помогают в работе Design Team.']});
  if(registry.meta)await publishRoot();

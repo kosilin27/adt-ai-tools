@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
 import {tools} from '../../src/data/tools.ts';
-import {agentSkills, agentSections, caseSections, catalogSections, html, metaSections} from './render.mjs';
+import {agentSkills, agentSections, caseSections, catalogSections, html, metaSections, pageUrl, rootCatalogSection, sourceLink} from './render.mjs';
 import {
   caseBody, caseModels, caseReadiness, caseSummary, caseUpdate,
   clean, identity, managedHeading, pendingReadiness, ready, retiredState, section, sectionsIn,
@@ -132,18 +132,31 @@ test('one agent discovery entry plus one full human catalog on the case parent',
   const agents = Object.values(agentSections(registry)).join('');
   const catalog = Object.values(catalogSections(registry)).join('');
 
-  assert.ok(cases.includes('<table>'));
+  const rows = [...cases.matchAll(/<tr>(<td>[\s\S]*?)<\/tr>/g)].map(match => match[1]);
+  assert.equal(rows.length, tools.length);
   assert.ok(cases.includes('Cmd/Ctrl+F'));
-  assert.ok(cases.includes('Страница для агента'));
+  assert.ok(cases.includes('Страница кейса'));
   assert.equal((cases.match(/Открыть страницу/g) || []).length, tools.length);
-  for (const tool of tools) {
+  assert.equal(new Set(tools.map(tool => registry.casePages[tool.figmaNodeId])).size, tools.length);
+  for (const [index, tool] of tools.entries()) {
     const id = registry.casePages[tool.figmaNodeId];
-    assert.ok(id, tool.figmaNodeId);
-    assert.ok(cases.includes(`/pages/${id}`), tool.figmaNodeId);
+    assert.match(id, /^\d+$/, tool.figmaNodeId);
+    const cells = [...rows[index].matchAll(/<td>([\s\S]*?)<\/td>/g)].map(match => match[1]);
+    assert.equal(cells.length, 13);
+    assert.ok(cells[11].includes(sourceLink(tool.sourceRecord).split('>')[0] + '>'), tool.figmaNodeId);
+    const authors = tool.authors.map(author => author.trim()).filter(author => author && author !== '???');
+    const authorCell = cells[6].replaceAll('<br />', '\n');
+    if (!authors.length) assert.equal(authorCell, 'Нужно заполнить', tool.figmaNodeId);
+    for (const author of authors) assert.ok(authorCell.includes(html(author)), tool.figmaNodeId);
+    assert.equal(cells[12], `<a href="${pageUrl(registry, id)}">Открыть страницу</a>`, tool.figmaNodeId);
   }
-  for (const header of ['Какую проблему решает','Метрики / экономия времени','Value после запуска','Нужна помощь','Связанные кейсы / заметки']) {
-    assert.ok(cases.includes(header), header);
+  for (const header of ['Какую проблему решает','Метрики / экономия времени','Автор / владелец / участники',
+    'Value после запуска','С чем нужна помощь','Связанные кейсы / заметки']) {
+    assert.ok(cases.includes(`<th>${header}</th>`), header);
   }
+  const root = rootCatalogSection(registry);
+  assert.ok(root.includes(`<strong><a href="${pageUrl(registry, registry.cases)}">`));
+  assert.ok(!root.includes('<table>'));
 
   assert.ok(catalog.includes(`/pages/${registry.cases}`));
   assert.ok(catalog.includes(`/pages/${registry.meta}`));
